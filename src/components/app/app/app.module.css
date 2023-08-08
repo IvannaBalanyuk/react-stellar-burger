@@ -1,0 +1,15 @@
+.app {
+  background-color: #131316;
+  color: #f2f2f3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  justify-content: center;
+  column-gap: calc(var(--offset-base-size) * 10);
+}

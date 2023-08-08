@@ -1,0 +1,9 @@
+.list {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: calc(var(--offset-base-size)  * 2);
+}
