@@ -14,6 +14,24 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
     const sauceRef = createRef();
     const mainRef = createRef();
 
+    const buns = React.useMemo(() => {
+        return ingredients.filter(item => item.type === 'bun');
+      },
+      [ingredients]
+    );
+
+    const sauces = React.useMemo(() => {
+        return ingredients.filter(item => item.type === 'sauce');
+      },
+      [ingredients]
+    );
+
+    const main = React.useMemo(() => {
+        return ingredients.filter(item => item.type === 'main');
+      },
+      [ingredients]
+    );
+
     return (
       <section className={`${section} pt-10 pb-10`}>
         <h2 className="text text_type_main-large mb-5">Соберите бургер</h2>
@@ -24,7 +42,7 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
             onClick={
               () => {
                 setCurrent('bun');
-                bunRef.current.scrollIntoView();
+                bunRef.current.scrollIntoView({behavior: "smooth", block: "start"});
               }
             }
           >
@@ -36,7 +54,7 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
             onClick={
               () => {
                 setCurrent('sauce');
-                sauceRef.current.scrollIntoView();
+                sauceRef.current.scrollIntoView({behavior: "smooth", block: "start"});
               }
             }
           >
@@ -48,7 +66,7 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
             onClick={
               () => {
                 setCurrent('main');
-                mainRef.current.scrollIntoView();
+                mainRef.current.scrollIntoView({behavior: "smooth", block: "start"});
               }
             }
           >
@@ -60,46 +78,52 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
               <li id='bun'>
                 <h2 className='text text_type_main-medium' ref={bunRef}>Булки</h2>
                   <ul className={`${list_type_ingredients} pl-4`}>
-                    {ingredients.map((ingredient) =>
-                      ingredient.type === 'bun' ? (
-                        <Ingredient 
-                          ingredient={ingredient} 
-                          counters={counters} 
-                          onClick={onClick} 
-                          key={ingredient._id} 
-                        />
-                      ) : null,
-                    )}
+                    {buns.length > 0 &&
+                      buns.map((ingredient) =>
+                        (
+                          <Ingredient 
+                            ingredient={ingredient} 
+                            counters={counters} 
+                            onClick={onClick} 
+                            key={ingredient._id} 
+                          />
+                        )
+                      )
+                    }
                   </ul>
               </li>
               <li id='sauce'>
                 <h2 className='text text_type_main-medium' ref={sauceRef}>Соусы</h2>
                   <ul className={`${list_type_ingredients} pl-4`}>
-                    {ingredients.map((ingredient) =>
-                      ingredient.type === 'sauce' ? (
+                    {sauces.length > 0 &&
+                      sauces.map((ingredient) =>
+                        (
                         <Ingredient 
                           ingredient={ingredient} 
                           counters={counters} 
                           onClick={onClick} 
                           key={ingredient._id} 
                         />
-                      ) : null,
-                    )}
+                        )
+                      )
+                    }
                   </ul>
               </li>
               <li id='main'>
-                <h2 className='text text_type_main-medium' ref={mainRef}>Соусы</h2>
+                <h2 className='text text_type_main-medium' ref={mainRef}>Начинки</h2>
                   <ul className={`${list_type_ingredients} pl-4`}>
-                    {ingredients.map((ingredient) =>
-                      ingredient.type === 'main' ? (
-                        <Ingredient 
-                          ingredient={ingredient} 
-                          counters={counters} 
-                          onClick={onClick} 
-                          key={ingredient._id} 
-                        />
-                      ) : null,
-                    )}
+                    {main.length > 0 &&
+                      main.map((ingredient) =>
+                        (
+                          <Ingredient 
+                            ingredient={ingredient} 
+                            counters={counters} 
+                            onClick={onClick} 
+                            key={ingredient._id} 
+                          />
+                        )
+                      )
+                    }
                   </ul>
               </li>
           </ul>

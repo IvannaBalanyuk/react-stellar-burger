@@ -1,27 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from './burger-constructor.module.css';
 import { Button, DragIcon, ConstructorElement, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import { burgerPropType } from '../../utils/prop-types';
 
-const BurgerConstructor = React.memo(({ burger, totalPrice, onClick }) => {
-    const {section, bun, list, item, order, total, element} = styles;
+const BurgerConstructor = React.memo(({ burger, onClick }) => {
+    const {section, item_type_bun, list, item_type_content, order, total, element} = styles;
     
-    const bunsArr = burger.filter(item => item.type === 'bun');
+    const bun = burger.filter(item => item.type === 'bun')[0];
     const contentArr = burger.filter(item => {
-      return item.type === 'sauce' || item.type === 'main';
+      return item.type !== 'bun';
     });
+
+    const [totalPrice, setTotalPrice] = useState(0);
+
+    React.useEffect(() => {
+        if (burger.length > 0) {
+          const pricesArr = burger.map(item => item.price);
+          const newTotalPrice = pricesArr.reduce((previousValue, item) => {
+            return previousValue + item;
+        });
+          setTotalPrice(newTotalPrice);
+        }
+      },
+      [burger]
+    );
 
     return (
       <section className={`${section} pt-25 pb-10 pl-4`}>
-        {bunsArr.length > 0 && (
-          <div className={`${bun} pl-12 pr-4`}>
+        {bun && (
+          <div className={`${item_type_bun} pl-12 pr-4`}>
             <ConstructorElement
               type='top'
               isLocked={true}
-              text={`${bunsArr[0].name} + (верх)`}
-              price={bunsArr[0].price}
-              thumbnail={bunsArr[0].image}
+              text={`${bun.name} + (верх)`}
+              price={bun.price}
+              thumbnail={bun.image}
               extraClass={`${element}`}
             />
           </div>
@@ -30,7 +44,7 @@ const BurgerConstructor = React.memo(({ burger, totalPrice, onClick }) => {
           {contentArr.length > 0 && (
             contentArr.map((ingredient) => {
               return (
-                <li className={`ingredient ${item}`} key={ingredient.index} id={ingredient.index}>
+                <li className={`ingredient ${item_type_content}`} key={ingredient.index} id={ingredient.index}>
                   <DragIcon type='primary' />
                   <ConstructorElement
                     text={ingredient.name}
@@ -44,14 +58,14 @@ const BurgerConstructor = React.memo(({ burger, totalPrice, onClick }) => {
             })
           )}
         </ul>
-        {bunsArr.length > 0 && (
-          <div className={`${bun} pl-12 pr-4`}>
+        {bun && (
+          <div className={`${item_type_bun} pl-12 pr-4`}>
               <ConstructorElement
                 type='bottom'
                 isLocked={true}
-                text={`${bunsArr[0].name} + (низ)`}
-                price={bunsArr[0].price}
-                thumbnail={bunsArr[0].image}
+                text={`${bun.name} + (низ)`}
+                price={bun.price}
+                thumbnail={bun.image}
                 extraClass={`${element}`}
               />
             </div>
@@ -74,7 +88,6 @@ const BurgerConstructor = React.memo(({ burger, totalPrice, onClick }) => {
 
 BurgerConstructor.propTypes = {
   burger: burgerPropType,
-  totalPrice: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired
 }; 
 

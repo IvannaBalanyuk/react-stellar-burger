@@ -6,9 +6,8 @@ import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
 
 const App = () => {
-  const [counters, setСounters] = useState({});
+  const [counters, setCounters] = useState({});
   const [burger, setBurger] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
 
   const getCurrentBun = React.useCallback(() => {
     return burger.find(item => item.type === 'bun');
@@ -18,14 +17,6 @@ const App = () => {
     return burger.filter(item => item._id === ingredient._id).length;
   }, [burger]);
 
-  const updateTotalPrice = React.useCallback((data) => {
-    const pricesArr = data.map(item => item.price);
-    const newTotalPrice = pricesArr.reduce((previousValue, item) => {
-      return previousValue + item;
-  });
-    setTotalPrice(newTotalPrice)
-  }, []);
-
   const handleIngredientClick = React.useCallback((ingredient) => {
       const currentBun = getCurrentBun();
       const currentCount = getCurrentCount(ingredient);
@@ -33,12 +24,10 @@ const App = () => {
       const newCounters = counters;
 
       setBurger([...burger, newBurgerIngredient]);
-      updateTotalPrice([...burger, newBurgerIngredient]);
 
       if (newBurgerIngredient.type === 'bun' && currentBun) {
         const burgerLessBun = burger.filter(item => item._id !== currentBun._id);
         setBurger([...burgerLessBun, newBurgerIngredient]);
-        updateTotalPrice([...burgerLessBun, newBurgerIngredient]);
 
         newCounters[`${currentBun._id}`] = 0;
         newCounters[`${newBurgerIngredient._id}`] = 1;
@@ -48,9 +37,9 @@ const App = () => {
         newCounters[`${newBurgerIngredient._id}`] = currentCount + 1;
       }
 
-      setСounters(newCounters);
+      setCounters(newCounters);
     },
-    [burger, counters, getCurrentBun, getCurrentCount, updateTotalPrice]
+    [burger, counters, getCurrentBun, getCurrentCount]
   );
 
   const handleDeleteClick = React.useCallback((e) => {
@@ -60,13 +49,12 @@ const App = () => {
       const newCounters = counters;
       const currentCount = getCurrentCount(targetIngredient);
       newCounters[`${targetIngredient._id}`] = currentCount - 1;
-      setСounters(newCounters);
+      setCounters(newCounters);
 
       const newBurger = burger.filter(item => item.index !== targetIngredient.index);
-      updateTotalPrice(newBurger);
       setBurger(newBurger);
     },
-    [burger, counters, getCurrentCount, updateTotalPrice]
+    [burger, counters, getCurrentCount]
   );
 
   return (
@@ -76,11 +64,12 @@ const App = () => {
         <BurgerIngredients 
           ingredients={ingredientsData} 
           counters={counters} 
-          onClick={handleIngredientClick} />
+          onClick={handleIngredientClick} 
+        />
         <BurgerConstructor 
           burger={burger} 
           onClick={handleDeleteClick} 
-          totalPrice={totalPrice} />
+        />
       </main>
     </div>
   );
