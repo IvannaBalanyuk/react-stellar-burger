@@ -1,6 +1,6 @@
 import styles from './nav-panel.module.css';
 
-function NavPanel(props) {
+const NavPanel = (props) => {
   return (
     <nav>
       <ul className={styles.list}>

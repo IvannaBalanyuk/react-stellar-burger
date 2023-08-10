@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 import styles from './nav-link.module.css';
+import PropTypes from 'prop-types';
 
-function NavLink({ extraClass = '', url, text, ...props }) {
+const NavLink = ({ extraClass = '', url, text, ...props }) => {
   const className = clsx(
     'text',
     'text_type_main-default',
@@ -17,5 +18,11 @@ function NavLink({ extraClass = '', url, text, ...props }) {
     </li>
   );
 }
+
+NavLink.propTypes = {
+  extraClass: PropTypes.string,
+  url: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired
+}; 
 
 export default NavLink;

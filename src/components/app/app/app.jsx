@@ -5,7 +5,7 @@ import AppHeader from "../../app-header/app-header";
 import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
 
-function App () {
+const App = () => {
   const [counters, setСounters] = useState({});
   const [burger, setBurger] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -29,7 +29,7 @@ function App () {
   const handleIngredientClick = React.useCallback((ingredient) => {
       const currentBun = getCurrentBun();
       const currentCount = getCurrentCount(ingredient);
-      const newBurgerIngredient = {...ingredient, number: `${ingredient._id}#${currentCount + 1}`};
+      const newBurgerIngredient = {...ingredient, index: `${ingredient._id}#${currentCount + 1}`};
       const newCounters = counters;
 
       setBurger([...burger, newBurgerIngredient]);
@@ -53,19 +53,21 @@ function App () {
     [burger, counters, getCurrentBun, getCurrentCount, updateTotalPrice]
   );
 
-  const handleDeleteClick = (e) => {
-    const targetElement = e.target.closest('.ingredient');
-    const targetIngredient = burger.find(item => item._id === targetElement.id.split('#')[0]);
+  const handleDeleteClick = React.useCallback((e) => {
+      const targetElement = e.target.closest('.ingredient');
+      const targetIngredient = burger.find(item => item._id === targetElement.id.split('#')[0]);
 
-    const newCounters = counters;
-    const currentCount = getCurrentCount(targetIngredient);
-    newCounters[`${targetIngredient._id}`] = currentCount - 1;
-    setСounters(newCounters);
+      const newCounters = counters;
+      const currentCount = getCurrentCount(targetIngredient);
+      newCounters[`${targetIngredient._id}`] = currentCount - 1;
+      setСounters(newCounters);
 
-    const newBurger = burger.filter(item => item.number !== targetIngredient.number);
-    updateTotalPrice(newBurger);
-    setBurger(newBurger);
-  }
+      const newBurger = burger.filter(item => item.index !== targetIngredient.index);
+      updateTotalPrice(newBurger);
+      setBurger(newBurger);
+    },
+    [burger, counters, getCurrentCount, updateTotalPrice]
+  );
 
   return (
     <div className={styles.app}>

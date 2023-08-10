@@ -210,7 +210,3 @@ export const ingredientsData = [
      "__v":0
   }
 ]
-
-export const bunData = ingredientsData.filter(item => {
-   return item.type === "bun"
-});

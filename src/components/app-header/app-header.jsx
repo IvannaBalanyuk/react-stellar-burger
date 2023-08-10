@@ -7,9 +7,11 @@ import NavPanel from '../nav-panel/nav-panel';
 import NavLink from '../nav-link/nav-link';
 
 const AppHeader = React.memo(() => {
+  const {header, content, wrapper} = styles;
+
     return (
-      <header className={`${styles.header} pt-4 pb-4`}>
-        <div className={styles.content}>
+      <header className={`${header} pt-4 pb-4`}>
+        <div className={content}>
           <NavPanel>
             <NavLink extraClass = '' url='#' text='Конструктор'>
               <BurgerIcon type='primary' />
@@ -19,7 +21,7 @@ const AppHeader = React.memo(() => {
               <ListIcon type='secondary' />
             </NavLink>
           </NavPanel>
-          <div className={styles.wrapper}>
+          <div className={wrapper}>
             <Logo />
           </div>
           <NavPanel>
@@ -31,6 +33,6 @@ const AppHeader = React.memo(() => {
       </header>
     );
   }
-)
+);
 
 export default AppHeader;
