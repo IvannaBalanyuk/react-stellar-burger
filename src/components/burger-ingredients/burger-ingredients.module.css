@@ -1,6 +1,8 @@
 .section {
   width: 600px;
-  max-height: calc(100vh - 88px);
+  height: calc(100vh - 88px);
+  min-height: 800px;
+  max-height: 912px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
