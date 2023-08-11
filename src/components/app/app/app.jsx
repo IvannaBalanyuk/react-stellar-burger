@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./app.module.css";
 import { ingredientsData } from "../../../utils/data";
+import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
 import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
@@ -64,15 +65,17 @@ const App = () => {
 
   return (
     <div className={styles.app}>
-      <AppHeader />
-      <main className={styles.content}>
-        <BurgerIngredients
-          ingredients={ingredientsData}
-          counters={counters}
-          onClick={handleIngredientClick}
-        />
-        <BurgerConstructor burger={burger} onClick={handleDeleteClick} />
-      </main>
+      <ErrorBoundary>
+        <AppHeader />
+        <main className={styles.content}>
+          <BurgerIngredients
+            ingredients={ingredientsData}
+            counters={counters}
+            onClick={handleIngredientClick}
+          />
+          <BurgerConstructor burger={burger} onClick={handleDeleteClick} />
+        </main>
+      </ErrorBoundary>
     </div>
   );
 };
