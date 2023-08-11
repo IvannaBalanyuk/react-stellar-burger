@@ -6,7 +6,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content:space-between;
+  justify-content: space-between;
   align-items: flex-end;
 }
 
@@ -23,8 +23,8 @@
   padding: 0;
   box-sizing: border-box;
   list-style-type: none;
-  overflow-y: auto; 
-  
+  overflow-y: auto;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -32,12 +32,12 @@
 }
 
 .list::-webkit-scrollbar {
-	width: calc(var(--offset-base-size) * 2);
+  width: calc(var(--offset-base-size) * 2);
 }
 
 .list::-webkit-scrollbar-thumb {
-	border: none;
-	border-radius: 0;
+  border: none;
+  border-radius: 0;
 }
 
 .item_type_content {

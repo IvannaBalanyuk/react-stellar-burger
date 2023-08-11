@@ -12,11 +12,11 @@ export const ingredientPropType = PropTypes.shape({
   image: PropTypes.string.isRequired,
   image_mobile: PropTypes.string.isRequired,
   image_large: PropTypes.string.isRequired,
-  __v: PropTypes.number.isRequired
-}).isRequired
+  __v: PropTypes.number.isRequired,
+}).isRequired;
 
-
-export const ingredientsPropType = PropTypes.arrayOf(ingredientPropType).isRequired
+export const ingredientsPropType =
+  PropTypes.arrayOf(ingredientPropType).isRequired;
 
 export const burgerIngredientPropType = PropTypes.shape({
   _id: PropTypes.string.isRequired,
@@ -31,7 +31,9 @@ export const burgerIngredientPropType = PropTypes.shape({
   image_mobile: PropTypes.string.isRequired,
   image_large: PropTypes.string.isRequired,
   __v: PropTypes.number.isRequired,
-  index: PropTypes.string.isRequired
-}).isRequired
+  index: PropTypes.string.isRequired,
+}).isRequired;
 
-export const burgerPropType = PropTypes.arrayOf(burgerIngredientPropType).isRequired
+export const burgerPropType = PropTypes.arrayOf(
+  burgerIngredientPropType
+).isRequired;
