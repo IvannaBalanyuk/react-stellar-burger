@@ -1,25 +1,25 @@
-import React, { createRef } from "react";
+import React, { createRef, useMemo } from "react";
 import styles from "./burger-ingredients.module.css";
 import TabsPanel from "../tabs-panel/tabs-panel";
 import Ingredient from "../ingredient/ingredient";
 import PropTypes from "prop-types";
 import { ingredientsPropType } from "../../utils/prop-types";
 
-const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
+const BurgerIngredients = React.memo(({ ingredients, counters, onClick, onDoubleClick }) => {
   const { section, list_type_categories, list_type_ingredients } = styles;
   const bunRef = createRef();
   const sauceRef = createRef();
   const mainRef = createRef();
 
-  const buns = React.useMemo(() => {
+  const buns = useMemo(() => {
     return ingredients.filter((item) => item.type === "bun");
   }, [ingredients]);
 
-  const sauces = React.useMemo(() => {
+  const sauces = useMemo(() => {
     return ingredients.filter((item) => item.type === "sauce");
   }, [ingredients]);
 
-  const main = React.useMemo(() => {
+  const main = useMemo(() => {
     return ingredients.filter((item) => item.type === "main");
   }, [ingredients]);
 
@@ -40,6 +40,7 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
                     ingredient={ingredient}
                     counters={counters}
                     onClick={onClick}
+                    onDoubleClick={onDoubleClick}
                     key={ingredient._id}
                   />
                 ))}
@@ -56,6 +57,7 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
                     ingredient={ingredient}
                     counters={counters}
                     onClick={onClick}
+                    onDoubleClick={onDoubleClick}
                     key={ingredient._id}
                   />
                 ))}
@@ -72,6 +74,7 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
                     ingredient={ingredient}
                     counters={counters}
                     onClick={onClick}
+                    onDoubleClick={onDoubleClick}
                     key={ingredient._id}
                   />
                 ))}
@@ -83,10 +86,11 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
   );
 });
 
-BurgerIngredients.propTypes = {
+BurgerIngredients.propTypes = {  
   ingredients: ingredientsPropType,
   counters: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
+  onDoubleClick: PropTypes.func.isRequired
 };
 
 export default BurgerIngredients;

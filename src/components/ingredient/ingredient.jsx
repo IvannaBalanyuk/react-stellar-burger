@@ -7,34 +7,33 @@ import {
 import PropTypes from "prop-types";
 import { ingredientPropType } from "../../utils/prop-types";
 
-const Ingredient = React.memo(({ ingredient, counters, onClick }) => {
-  const { card, image, text, price, button } = styles;
-
+const Ingredient = React.memo(({ ingredient, counters, onClick, onDoubleClick }) => {
+  const { card, image, text, gap_column_2 } = styles;
   const count = counters[`${ingredient._id}`];
 
   return (
-    <button
-      className={button}
+    <div className={card}
       onClick={() => {
         onClick(ingredient);
       }}
+      onDoubleClick={() => {
+        onDoubleClick('ingredient-details', ingredient);
+      }}
     >
-      <div className={card}>
-        {count > 0 ? <Counter count={count} size="default" /> : null}
-        <img
-          className={image}
-          src={ingredient.image_mobile}
-          alt={ingredient.name}
-        />
-        <span className={`${price} text text_type_digits-default`}>
-          {ingredient.price}
-          <CurrencyIcon type="primary" />
-        </span>
-        <span className={`${text} text text_type_main-default`}>
-          {ingredient.name}
-        </span>
-      </div>
-    </button>
+      {count > 0 ? <Counter count={count} size="default" /> : null}
+      <img
+        className={image}
+        src={ingredient.image_mobile}
+        alt={ingredient.name}
+      />
+      <span className={`${text} ${gap_column_2} text text_type_digits-default`}>
+        {ingredient.price}
+        <CurrencyIcon type="primary" />
+      </span>
+      <span className={`${text} text text_type_main-default`}>
+        {ingredient.name}
+      </span>
+    </div>
   );
 });
 
@@ -42,6 +41,7 @@ Ingredient.propTypes = {
   ingredient: ingredientPropType,
   counters: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
+  onDoubleClick: PropTypes.func.isRequired,
 };
 
 export default Ingredient;

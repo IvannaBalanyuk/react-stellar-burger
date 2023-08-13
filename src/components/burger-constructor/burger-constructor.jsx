@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
@@ -9,15 +9,15 @@ import {
 import PropTypes from "prop-types";
 import { burgerPropType } from "../../utils/prop-types";
 
-const BurgerConstructor = React.memo(({ burger, onClick }) => {
+const BurgerConstructor = React.memo(({ burger, onClick, onButtonClick }) => {
   const {
     section,
-    item_type_bun,
     list,
+    item_type_bun,
     item_type_content,
     order,
     total,
-    element,
+    element
   } = styles;
 
   const bun = burger.filter((item) => item.type === "bun")[0];
@@ -27,7 +27,7 @@ const BurgerConstructor = React.memo(({ burger, onClick }) => {
 
   const [totalPrice, setTotalPrice] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (burger.length > 0) {
       const pricesArr = burger.map((item) => item.price);
       const newTotalPrice = pricesArr.reduce((previousValue, item) => {
@@ -89,7 +89,7 @@ const BurgerConstructor = React.memo(({ burger, onClick }) => {
           <p className="text text_type_digits-medium">{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button htmlType="button" type="primary" size="large">
+        <Button htmlType="button" type="primary" size="large" onClick={onButtonClick}>
           Оформить заказ
         </Button>
       </div>
@@ -100,6 +100,7 @@ const BurgerConstructor = React.memo(({ burger, onClick }) => {
 BurgerConstructor.propTypes = {
   burger: burgerPropType,
   onClick: PropTypes.func.isRequired,
+  onButtonClick: PropTypes.func.isRequired
 };
 
 export default BurgerConstructor;

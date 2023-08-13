@@ -1,0 +1,35 @@
+.container {
+  width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image {
+  width: 480px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.text {
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  column-gap: calc(var(--offset-base-size) * 5);
+}
+
+.item {
+  min-width: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: calc(var(--offset-base-size) * 2);
+}

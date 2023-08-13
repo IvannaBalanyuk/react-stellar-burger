@@ -10,13 +10,6 @@
   align-items: flex-end;
 }
 
-.item_type_bun {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
 .list {
   width: 100%;
   max-height: 464px;
@@ -38,6 +31,13 @@
 .list::-webkit-scrollbar-thumb {
   border: none;
   border-radius: 0;
+}
+
+.item_type_bun {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .item_type_content {

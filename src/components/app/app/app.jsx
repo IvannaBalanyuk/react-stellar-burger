@@ -1,24 +1,43 @@
-import React, { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styles from "./app.module.css";
-import { ingredientsData } from "../../../utils/data";
+import { modalRoot, baseUrl } from "../../../utils/constants";
+import { getIngredientsData } from "../../../utils/api";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
 import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
+import Modal from "../../modal/modal";
+import IngredientDetails from "../../ingredient-details/ingredient-details";
+import OrderDetails from "../../order-details/order-details";
 
 const App = () => {
+  const [ingredients, setIngredients] = useState([]);
   const [counters, setCounters] = useState({});
   const [burger, setBurger] = useState([]);
+  const [modal, setModal] = useState({
+    isVisible: false,
+    ingredient: null,
+  });
 
-  const getCurrentBun = React.useCallback(() => {
+  useEffect(() => {
+    getIngredientsData(baseUrl)
+      .then ((ingredients) => {
+        setIngredients(ingredients.data);
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+      });
+  }, []);
+
+  const getCurrentBun = useCallback(() => {
     return burger.find((item) => item.type === "bun");
   }, [burger]);
 
-  const getCurrentCount = React.useCallback((ingredient) => {
+  const getCurrentCount = useCallback((ingredient) => {
     return burger.filter((item) => item._id === ingredient._id).length;
   }, [burger]);
 
-  const handleIngredientClick = React.useCallback((ingredient) => {
+  const handleIngredientClick = useCallback((ingredient) => {
     const currentBun = getCurrentBun();
     const currentCount = getCurrentCount(ingredient);
     const newBurgerIngredient = {
@@ -45,8 +64,8 @@ const App = () => {
 
     setCounters(newCounters);
   }, [burger, counters, getCurrentBun, getCurrentCount]);
-
-  const handleDeleteClick = React.useCallback((e) => {
+  
+  const handleDeleteClick = useCallback((e) => {
     const targetElement = e.target.closest(".ingredient");
     const targetIngredient = burger.find((item) => {
       return item._id === targetElement.id.split("#")[0];
@@ -63,18 +82,51 @@ const App = () => {
     setBurger(newBurger);
   }, [burger, counters, getCurrentCount]);
 
+  const handleOpenModal = useCallback((modalType, ingredient = null) => {
+    if(!ingredient) {
+      setModal({ ...modal, isVisible: true });
+    } else {
+      setModal({
+        ...modal,
+        isVisible: true,
+        ingredient: ingredient,
+      });
+    }
+  }, [modal]);
+
+  const handleCloseModal = useCallback(() => {
+    setModal({
+      ...modal,
+      isVisible: false,
+      ingredient: null,
+    });
+  }, [modal]);
+
   return (
     <div className={styles.app}>
       <ErrorBoundary>
         <AppHeader />
         <main className={styles.content}>
           <BurgerIngredients
-            ingredients={ingredientsData}
+            ingredients={ingredients}
             counters={counters}
             onClick={handleIngredientClick}
+            onDoubleClick={handleOpenModal}
           />
-          <BurgerConstructor burger={burger} onClick={handleDeleteClick} />
+          <BurgerConstructor burger={burger} onClick={handleDeleteClick} onButtonClick={handleOpenModal} />
         </main>
+        <div className={styles.container}>
+        {modal.isVisible && modal.ingredient && (
+          <Modal heading='Детали ингредиента' onClick={handleCloseModal} modalRoot={modalRoot}>
+              <IngredientDetails ingredient={modal.ingredient} />
+          </Modal>
+        )}
+        {modal.isVisible && !modal.ingredient && (
+          <Modal heading='' onClick={handleCloseModal} modalRoot={modalRoot}>
+              <OrderDetails />
+          </Modal>
+        )}
+        </div>
       </ErrorBoundary>
     </div>
   );
