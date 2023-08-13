@@ -14,8 +14,10 @@ const Ingredient = React.memo(({ ingredient, counters, onClick, onDoubleClick })
   return (
     <div className={card}
       onClick={() => {
+        // одинарный клик - добавление ингредиента в конструктор (временная реализация, т.к. потом, вероятно, будем реализовывать drag-and-drop)
         onClick(ingredient);
       }}
+      // двойной клик - открытие модального окна
       onDoubleClick={() => {
         onDoubleClick('ingredientDetails', ingredient);
       }}
