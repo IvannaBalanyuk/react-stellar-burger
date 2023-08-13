@@ -17,7 +17,7 @@ const Ingredient = React.memo(({ ingredient, counters, onClick, onDoubleClick })
         onClick(ingredient);
       }}
       onDoubleClick={() => {
-        onDoubleClick('ingredient-details', ingredient);
+        onDoubleClick('ingredientDetails', ingredient);
       }}
     >
       {count > 0 ? <Counter count={count} size="default" /> : null}

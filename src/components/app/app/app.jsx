@@ -11,21 +11,27 @@ import IngredientDetails from "../../ingredient-details/ingredient-details";
 import OrderDetails from "../../order-details/order-details";
 
 const App = () => {
-  const [ingredients, setIngredients] = useState([]);
+  const [appData, setAppData] = useState({
+    ingredients: [],
+    hasError: false,
+    error: null,
+  });
   const [counters, setCounters] = useState({});
   const [burger, setBurger] = useState([]);
   const [modal, setModal] = useState({
     isVisible: false,
+    modalType: '',
     ingredient: null,
   });
 
   useEffect(() => {
     getIngredientsData(baseUrl)
       .then ((ingredients) => {
-        setIngredients(ingredients.data);
+        setAppData({...appData, ingredients: ingredients.data});
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
+        setAppData({...appData, hasError: true, error: err});
       });
   }, []);
 
@@ -82,13 +88,19 @@ const App = () => {
     setBurger(newBurger);
   }, [burger, counters, getCurrentCount]);
 
-  const handleOpenModal = useCallback((modalType, ingredient = null) => {
-    if(!ingredient) {
-      setModal({ ...modal, isVisible: true });
+  const handleOpenModal = useCallback((type, ingredient = null) => {
+    if(type === 'orderDetails') {
+      setModal({
+        ...modal,
+        isVisible: true,
+        modalType: type,
+        ingredient: null,
+      });
     } else {
       setModal({
         ...modal,
         isVisible: true,
+        modalType: type,
         ingredient: ingredient,
       });
     }
@@ -107,13 +119,28 @@ const App = () => {
       <ErrorBoundary>
         <AppHeader />
         <main className={styles.content}>
-          <BurgerIngredients
-            ingredients={ingredients}
-            counters={counters}
-            onClick={handleIngredientClick}
-            onDoubleClick={handleOpenModal}
-          />
-          <BurgerConstructor burger={burger} onClick={handleDeleteClick} onButtonClick={handleOpenModal} />
+          {appData.hasError && (
+            <>
+              <section className={styles.error}>
+                <h1 className="text text_type_main-medium">Что-то пошло не так :(</h1>
+                <p className="text text_type_main-default">{appData.error}</p>
+                <p className="text text_type_main-default text_color_inactive">
+                  В приложении произошла ошибка. Пожалуйста, перезагрузите страницу.
+                </p>
+              </section>
+            </>
+          )}
+          {!appData.hasError && (
+            <>
+              <BurgerIngredients
+                ingredients={appData.ingredients}
+                counters={counters}
+                onClick={handleIngredientClick}
+                onDoubleClick={handleOpenModal}
+              />
+              <BurgerConstructor burger={burger} onClick={handleDeleteClick} onButtonClick={handleOpenModal} />
+            </>
+          )}
         </main>
         <div className={styles.container}>
         {modal.isVisible && modal.ingredient && (

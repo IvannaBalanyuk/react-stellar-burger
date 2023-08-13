@@ -17,7 +17,7 @@ const BurgerConstructor = React.memo(({ burger, onClick, onButtonClick }) => {
     item_type_content,
     order,
     total,
-    element
+    element,
   } = styles;
 
   const bun = burger.filter((item) => item.type === "bun")[0];
@@ -89,7 +89,14 @@ const BurgerConstructor = React.memo(({ burger, onClick, onButtonClick }) => {
           <p className="text text_type_digits-medium">{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button htmlType="button" type="primary" size="large" onClick={onButtonClick}>
+        <Button
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={() => {
+            onButtonClick('orderDetails');
+          }}
+        >
           Оформить заказ
         </Button>
       </div>
@@ -100,7 +107,7 @@ const BurgerConstructor = React.memo(({ burger, onClick, onButtonClick }) => {
 BurgerConstructor.propTypes = {
   burger: burgerPropType,
   onClick: PropTypes.func.isRequired,
-  onButtonClick: PropTypes.func.isRequired
+  onButtonClick: PropTypes.func.isRequired,
 };
 
 export default BurgerConstructor;

@@ -20,7 +20,7 @@ class ErrorBoundary extends React.Component {
       return (
         <section className={styles.error}>
           <h1 className="text text_type_main-medium">Что-то пошло не так :(</h1>
-          <p className="text text_type_main-default">
+          <p className="text text_type_main-default text_color_inactive">
             В приложении произошла ошибка. Пожалуйста, перезагрузите страницу.
           </p>
         </section>

@@ -1,4 +1,4 @@
-import React, { createRef, useCallback, useEffect } from "react";
+import { createRef, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from "../modal-overlay/modal-overlay";
@@ -11,7 +11,7 @@ const Modal = ({ heading, children, modalRoot, onClick }) => {
     container,
     wrapper,
     title,
-    close
+    close,
   } = styles;
 
   const modalRef = createRef();

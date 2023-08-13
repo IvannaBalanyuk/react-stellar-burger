@@ -10,7 +10,7 @@ const OrderDetails = React.memo(() => {
     gap_row_2,
     number,
     discription,
-    image
+    image,
   } = styles;
 
   return (

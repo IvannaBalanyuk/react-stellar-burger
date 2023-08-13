@@ -8,7 +8,7 @@ const IngredientDetails = React.memo(({ ingredient }) => {
     image,
     text,
     list,
-    item
+    item,
   } = styles;
 
   return (
@@ -76,7 +76,7 @@ const IngredientDetails = React.memo(({ ingredient }) => {
 });
 
 IngredientDetails.propTypes = {
-  ingredient: ingredientPropType
+  ingredient: ingredientPropType,
 };
 
 export default IngredientDetails;

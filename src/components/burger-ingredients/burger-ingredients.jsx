@@ -86,11 +86,11 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick, onDouble
   );
 });
 
-BurgerIngredients.propTypes = {  
+BurgerIngredients.propTypes = {
   ingredients: ingredientsPropType,
   counters: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
-  onDoubleClick: PropTypes.func.isRequired
+  onDoubleClick: PropTypes.func.isRequired,
 };
 
 export default BurgerIngredients;

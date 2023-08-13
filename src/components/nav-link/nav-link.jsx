@@ -22,7 +22,7 @@ const NavLink = ({ extraClass = '', url, text, children }) => {
 NavLink.propTypes = {
   extraClass: PropTypes.string,
   url: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired
+  text: PropTypes.string.isRequired,
 };
 
 export default NavLink;
