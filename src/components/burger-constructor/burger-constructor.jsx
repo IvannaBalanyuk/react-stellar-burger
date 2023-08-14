@@ -44,12 +44,12 @@ const BurgerConstructor = React.memo(({ burger, onClick }) => {
     isVisible: false,
   });
 
-  const handleOpenModal = useCallback(() => {
+  const handleOpenModal = () => {
     setModal({
       ...modal,
       isVisible: true,
     });
-  }, [modal]);
+  };
 
   const handleCloseModal = useCallback(() => {
     setModal({

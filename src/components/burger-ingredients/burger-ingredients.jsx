@@ -36,13 +36,13 @@ const BurgerIngredients = React.memo(({ ingredients, counters, onClick }) => {
     ingredient: null,
   });
 
-  const handleOpenModal = useCallback((ingredient) => {
+  const handleOpenModal = (ingredient) => {
     setModal({
       ...modal,
       isVisible: true,
       ingredient: ingredient,
     });
-  }, [modal]);
+  };
 
   const handleCloseModal = useCallback(() => {
     setModal({
