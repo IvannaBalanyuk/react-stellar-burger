@@ -1,24 +1,40 @@
-import React, { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styles from "./app.module.css";
-import { ingredientsData } from "../../../utils/data";
+import { getIngredientsData } from "../../../utils/api";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
 import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
 
 const App = () => {
+  const [appData, setAppData] = useState({
+    ingredients: [],
+    hasError: false,
+    error: null,
+  });
   const [counters, setCounters] = useState({});
   const [burger, setBurger] = useState([]);
 
-  const getCurrentBun = React.useCallback(() => {
+  useEffect(() => {
+    getIngredientsData()
+      .then ((ingredients) => {
+        setAppData({...appData, ingredients: ingredients.data});
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+        setAppData({...appData, hasError: true, error: err});
+      });
+  }, []);
+
+  const getCurrentBun = useCallback(() => {
     return burger.find((item) => item.type === "bun");
   }, [burger]);
 
-  const getCurrentCount = React.useCallback((ingredient) => {
+  const getCurrentCount = useCallback((ingredient) => {
     return burger.filter((item) => item._id === ingredient._id).length;
   }, [burger]);
 
-  const handleIngredientClick = React.useCallback((ingredient) => {
+  const handleIngredientClick = useCallback((ingredient) => {
     const currentBun = getCurrentBun();
     const currentCount = getCurrentCount(ingredient);
     const newBurgerIngredient = {
@@ -45,8 +61,8 @@ const App = () => {
 
     setCounters(newCounters);
   }, [burger, counters, getCurrentBun, getCurrentCount]);
-
-  const handleDeleteClick = React.useCallback((e) => {
+  
+  const handleDeleteClick = useCallback((e) => {
     const targetElement = e.target.closest(".ingredient");
     const targetIngredient = burger.find((item) => {
       return item._id === targetElement.id.split("#")[0];
@@ -68,12 +84,33 @@ const App = () => {
       <ErrorBoundary>
         <AppHeader />
         <main className={styles.content}>
-          <BurgerIngredients
-            ingredients={ingredientsData}
-            counters={counters}
-            onClick={handleIngredientClick}
-          />
-          <BurgerConstructor burger={burger} onClick={handleDeleteClick} />
+          {appData.hasError && (
+            <>
+              <section className={styles.error}>
+                <h1 className="text text_type_main-medium">
+                  Что-то пошло не так :(
+                </h1>
+                <p className="text text_type_main-default">{appData.error}</p>
+                <p className="text text_type_main-default text_color_inactive">
+                  В приложении произошла ошибка. Пожалуйста, перезагрузите
+                  страницу.
+                </p>
+              </section>
+            </>
+          )}
+          {!appData.hasError && (
+            <>
+              <BurgerIngredients
+                ingredients={appData.ingredients}
+                counters={counters}
+                onClick={handleIngredientClick}
+              />
+              <BurgerConstructor
+                burger={burger}
+                onClick={handleDeleteClick}
+              />
+            </>
+          )}
         </main>
       </ErrorBoundary>
     </div>

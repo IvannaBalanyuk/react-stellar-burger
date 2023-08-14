@@ -1,6 +1,8 @@
 .error {
-  width: 100%;
+  width: 900px;
+  height: 500px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }

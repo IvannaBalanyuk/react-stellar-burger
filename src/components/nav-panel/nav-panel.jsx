@@ -1,9 +1,9 @@
 import styles from "./nav-panel.module.css";
 
-const NavPanel = (props) => {
+const NavPanel = ({ children }) => {
   return (
     <nav>
-      <ul className={styles.list}>{props.children}</ul>
+      <ul className={styles.list}>{children}</ul>
     </nav>
   );
 };
