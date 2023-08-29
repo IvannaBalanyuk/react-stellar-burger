@@ -8,6 +8,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
+  overflow: hidden;
 }
 
 .list {
@@ -68,8 +69,4 @@
 
 .element {
   background-color: var(--background);
-}
-
-.container {
-  overflow: hidden;
 }

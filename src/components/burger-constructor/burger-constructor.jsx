@@ -20,7 +20,6 @@ const BurgerConstructor = React.memo(({ onClick }) => {
     order,
     total,
     element,
-    container,
   } = styles;
   
   const { burgerState } = useContext(BurgerContext);
@@ -129,13 +128,11 @@ const BurgerConstructor = React.memo(({ onClick }) => {
           </Button>
         </div>
       </section>
-      <div className={container}>
       {modal.isVisible && (
         <Modal heading='' onClick={handleCloseModal}>
             <OrderDetails />
         </Modal>
       )}
-      </div>
     </>
   );
 });

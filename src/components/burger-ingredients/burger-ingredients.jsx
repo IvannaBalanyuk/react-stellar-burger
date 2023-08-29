@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import { ingredientsPropType } from "../../utils/prop-types";
 
 const BurgerIngredients = React.memo(({ ingredients, onClick }) => {
-  const { section, list, container } = styles;
+  const { section, list } = styles;
 
   const bunRef = createRef();
   const sauceRef = createRef();
@@ -77,13 +77,11 @@ const BurgerIngredients = React.memo(({ ingredients, onClick }) => {
           </ul>
         )}
       </section>
-      <div className={container}>
-        {modal.isVisible && modal.ingredient && (
-          <Modal heading="Детали ингредиента" onClick={handleCloseModal}>
-            <IngredientDetails ingredient={modal.ingredient} />
-          </Modal>
-        )}
-      </div>
+      {modal.isVisible && modal.ingredient && (
+        <Modal heading="Детали ингредиента" onClick={handleCloseModal}>
+          <IngredientDetails ingredient={modal.ingredient} />
+        </Modal>
+      )}
     </>
   );
 });
