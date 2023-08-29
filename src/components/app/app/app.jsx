@@ -1,96 +1,131 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useReducer, useEffect, useCallback } from "react";
 import styles from "./app.module.css";
+import { CountersContext, BurgerContext } from "../../../services/app-context";
 import { getIngredientsData } from "../../../utils/api";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
 import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
 
+const burgerInitialState = {ingredients: []};
+
+const burgerReducer = (state, action) => {
+  if (action.type === 'add') {
+    const newIngredients = [...state.ingredients, action.ingredient];
+    return { ingredients: newIngredients };
+  } else if (action.type === 'remove') {
+    const newIngredients = state.ingredients.filter(ingredient => {
+      return ingredient.index !== action.ingredient.index;
+    });
+    return { ingredients: newIngredients };
+  } else {
+    throw new Error(`Wrong type of action: ${action.type}`);
+  }
+}
+
+const countersInitialState = {counters: {}};
+
+const countersReducer = (state, action) => {
+  const newCounters = state.counters;
+  if (action.type === 'set') {
+    newCounters[`${action.id}`] = action.currentCount + 1;
+    return { counters: newCounters };
+  } else if (action.type === 'reset') {
+    newCounters[`${action.id}`] = action.currentCount - 1;
+    return { counters: newCounters };
+  } else {
+    throw new Error(`Wrong type of action: ${action.type}`);
+  }
+}
+
 const App = () => {
-  const [appData, setAppData] = useState({
-    ingredients: [],
+  const [error, setError] = useState({
     hasError: false,
     error: null,
   });
-  const [counters, setCounters] = useState({});
-  const [burger, setBurger] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
+  const [countersState, countersDispatcher] = useReducer(countersReducer, countersInitialState, undefined);
+  const [burgerState, burgerDispatcher] = useReducer(burgerReducer, burgerInitialState, undefined);
 
   useEffect(() => {
     getIngredientsData()
-      .then ((ingredients) => {
-        setAppData({...appData, ingredients: ingredients.data});
+      .then((ingredients) => {
+        setError({ ...error, hasError: false });
+        setIngredients(ingredients.data);
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
-        setAppData({...appData, hasError: true, error: err});
+        setError({ ...error, hasError: true, error: err });
       });
   }, []);
 
   const getCurrentBun = useCallback(() => {
-    return burger.find((item) => item.type === "bun");
-  }, [burger]);
-
-  const getCurrentCount = useCallback((ingredient) => {
-    return burger.filter((item) => item._id === ingredient._id).length;
-  }, [burger]);
-
-  const handleIngredientClick = useCallback((ingredient) => {
-    const currentBun = getCurrentBun();
-    const currentCount = getCurrentCount(ingredient);
-    const newBurgerIngredient = {
-      ...ingredient,
-      index: `${ingredient._id}#${currentCount + 1}`,
-    };
-    const newCounters = counters;
-
-    setBurger([...burger, newBurgerIngredient]);
-
-    if (newBurgerIngredient.type === "bun" && currentBun) {
-      const burgerLessBun = burger.filter((item) => {
-        return item._id !== currentBun._id;
-      });
-      setBurger([...burgerLessBun, newBurgerIngredient]);
-
-      newCounters[`${currentBun._id}`] = 0;
-      newCounters[`${newBurgerIngredient._id}`] = 1;
-    } else if (newBurgerIngredient.type === "bun" && !currentBun) {
-      newCounters[`${newBurgerIngredient._id}`] = 1;
+    const burgerBuns = burgerState.ingredients.filter((item) => item.type === "bun");
+    if (burgerBuns.length > 0) {
+      return burgerBuns[0];
     } else {
-      newCounters[`${newBurgerIngredient._id}`] = currentCount + 1;
+      return;
     }
+  }, [burgerState]);
 
-    setCounters(newCounters);
-  }, [burger, counters, getCurrentBun, getCurrentCount]);
-  
-  const handleDeleteClick = useCallback((e) => {
-    const targetElement = e.target.closest(".ingredient");
-    const targetIngredient = burger.find((item) => {
-      return item._id === targetElement.id.split("#")[0];
-    });
+  const getCurrentCount = useCallback(
+    (ingredient) => {
+      return burgerState.ingredients.filter((item) => item._id === ingredient._id).length;
+    },
+    [burgerState]
+  );
 
-    const newCounters = counters;
-    const currentCount = getCurrentCount(targetIngredient);
-    newCounters[`${targetIngredient._id}`] = currentCount - 1;
-    setCounters(newCounters);
+  const handleIngredientClick = useCallback(
+    (ingredient) => {
+      const currentBun = getCurrentBun();
+      const currentCount = getCurrentCount(ingredient);
+      const newBurgerIngredient = {
+        ...ingredient,
+        index: `${ingredient._id}#${currentCount + 1}`,
+      };
 
-    const newBurger = burger.filter((item) => {
-      return item.index !== targetIngredient.index;
-    });
-    setBurger(newBurger);
-  }, [burger, counters, getCurrentCount]);
+      if (currentBun && newBurgerIngredient.type === "bun") {
+        if (currentBun._id !== ingredient._id) {
+          burgerDispatcher({type: 'remove', ingredient: currentBun});
+          burgerDispatcher({type: 'add', ingredient: newBurgerIngredient});
+          countersDispatcher({type: 'reset', id: currentBun._id, currentCount: currentCount});
+          countersDispatcher({type: 'set', id: newBurgerIngredient._id, currentCount: currentCount});
+        } else {
+          return;
+        }
+      } else {
+        burgerDispatcher({type: 'add', ingredient: newBurgerIngredient});
+        countersDispatcher({type: 'set', id: newBurgerIngredient._id, currentCount: currentCount});
+      }
+    },
+    [getCurrentBun, getCurrentCount]
+  );
+
+  const handleDeleteClick = useCallback(
+    (e) => {
+      const targetElement = e.target.closest(".ingredient");
+      const targetIngredient = burgerState.ingredients.find((item) => {
+        return item._id === targetElement.id.split("#")[0];
+      });
+      const currentCount = getCurrentCount(targetIngredient);
+      burgerDispatcher({type: 'remove', ingredient: targetIngredient});
+      countersDispatcher({type: 'reset', id: targetIngredient._id, currentCount: currentCount});
+    },
+    [burgerState, getCurrentCount]
+  );
 
   return (
     <div className={styles.app}>
       <ErrorBoundary>
         <AppHeader />
         <main className={styles.content}>
-          {appData.hasError && (
+          {error.hasError && (
             <>
               <section className={styles.error}>
                 <h1 className="text text_type_main-medium">
                   Что-то пошло не так :(
                 </h1>
-                <p className="text text_type_main-default">{appData.error}</p>
+                <p className="text text_type_main-default">{error.error}</p>
                 <p className="text text_type_main-default text_color_inactive">
                   В приложении произошла ошибка. Пожалуйста, перезагрузите
                   страницу.
@@ -98,18 +133,16 @@ const App = () => {
               </section>
             </>
           )}
-          {!appData.hasError && (
-            <>
-              <BurgerIngredients
-                ingredients={appData.ingredients}
-                counters={counters}
-                onClick={handleIngredientClick}
-              />
-              <BurgerConstructor
-                burger={burger}
-                onClick={handleDeleteClick}
-              />
-            </>
+          {!error.hasError && (
+            <BurgerContext.Provider value={{ burgerState, burgerDispatcher }} >
+              <CountersContext.Provider value={{ countersState, countersDispatcher }} >
+                <BurgerIngredients
+                  ingredients={ingredients}
+                  onClick={handleIngredientClick}
+                />
+                <BurgerConstructor onClick={handleDeleteClick} />
+              </CountersContext.Provider>
+            </BurgerContext.Provider>
           )}
         </main>
       </ErrorBoundary>

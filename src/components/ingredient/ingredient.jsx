@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./ingredient.module.css";
 import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { CountersContext } from "../../services/app-context";
 import PropTypes from "prop-types";
 import { ingredientPropType } from "../../utils/prop-types";
 
-const Ingredient = React.memo(({ ingredient, counters, onClick, onDoubleClick }) => {
+const Ingredient = ({ ingredient, onClick, onDoubleClick }) => {
   const { card, image, text, gap_column_2 } = styles;
-  const count = counters[`${ingredient._id}`];
+
+  const { countersState } = useContext(CountersContext);
+  const count = countersState.counters[`${ingredient._id}`];
 
   return (
-    <div className={card}
+    <div
+      className={card}
       // одинарный клик - добавление ингредиента в конструктор (временная реализация, т.к. потом, вероятно, будем реализовывать drag-and-drop)
       onClick={() => {
         onClick(ingredient);
@@ -37,13 +41,12 @@ const Ingredient = React.memo(({ ingredient, counters, onClick, onDoubleClick })
       </span>
     </div>
   );
-});
+};
 
 Ingredient.propTypes = {
   ingredient: ingredientPropType,
-  counters: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
   onDoubleClick: PropTypes.func.isRequired,
 };
 
-export default Ingredient;
+export default React.memo(Ingredient);
