@@ -1,10 +1,11 @@
 import { createRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { modalRoot } from "../../utils/constants";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import styles from "./modal.module.css";
 import PropTypes from "prop-types";
+
+const modalRoot = document.getElementById("modal-root");
 
 const Modal = ({ heading, children, onClick }) => {
   const {
