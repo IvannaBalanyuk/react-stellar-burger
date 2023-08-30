@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useMemo, useCallback } from "react";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
@@ -26,10 +26,13 @@ const BurgerConstructor = React.memo(() => {
   const { countersState, countersDispatcher } = useContext(CountersContext);
   const { totalPriceState, totalPriceDispatcher } = useContext(TotalPriceContext);
 
-  const bun = burgerState.ingredients.filter((item) => item.type === "bun")[0];
-  const contentArr = burgerState.ingredients.filter((item) => {
-    return item.type !== "bun";
-  });
+  const bun = useMemo(() => {
+    return burgerState.ingredients.find((item) => item.type === "bun");
+  }, [burgerState]);
+
+  const contentArr = useMemo(() => {
+    return burgerState.ingredients.filter((item) => item.type !== "bun");
+  }, [burgerState]);
 
   const handleDeleteClick = useCallback(
     (e) => {
