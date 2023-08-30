@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect } from "react";
+import { useState, useReducer, useMemo, useEffect } from "react";
 import styles from "./app.module.css";
 import { BurgerContext, CountersContext, TotalPriceContext } from "../../../services/app-context";
 import { getIngredientsData } from "../../../utils/api";
@@ -59,6 +59,18 @@ const App = () => {
   const [countersState, countersDispatcher] = useReducer(countersReducer, countersInitialState, undefined);
   const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
 
+  const burgerContextValue = useMemo(() => {
+    return { burgerState, burgerDispatcher };
+  }, [burgerState, burgerDispatcher]);
+
+  const countersContextValue = useMemo(() => {
+    return { countersState, countersDispatcher };
+  }, [countersState, countersDispatcher]);
+
+  const totalPriceContextValue = useMemo(() => {
+    return { totalPriceState, totalPriceDispatcher };
+  }, [totalPriceState, totalPriceDispatcher]);
+
   useEffect(() => {
     getIngredientsData()
       .then((ingredients) => {
@@ -84,9 +96,9 @@ const App = () => {
         <main className={styles.content}>
           {error.hasError && <AppError error={error.error} />}
           {!error.hasError && (
-            <BurgerContext.Provider value={{ burgerState, burgerDispatcher }}>
-              <CountersContext.Provider value={{ countersState, countersDispatcher }}>
-                <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }}>
+            <BurgerContext.Provider value={burgerContextValue}>
+              <CountersContext.Provider value={countersContextValue}>
+                <TotalPriceContext.Provider value={totalPriceContextValue}>
                   <BurgerIngredients ingredients={ingredients} />
                   <BurgerConstructor />
                 </TotalPriceContext.Provider>
