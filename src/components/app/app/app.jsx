@@ -68,7 +68,7 @@ const App = () => {
         if (initialBun) {
           burgerDispatcher({ type: 'add', ingredient: initialBun });
           countersDispatcher({ type: 'set', id: initialBun._id, currentCount: 0 });
-          totalPriceDispatcher({ type: 'plus', group: initialBun.type, price: initialBun.price * 2 });
+          totalPriceDispatcher({ type: 'plus', group: initialBun.type, price: initialBun.price });
         };
       })
       .catch((err) => {
