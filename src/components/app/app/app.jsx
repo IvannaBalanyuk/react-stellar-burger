@@ -1,115 +1,109 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useReducer, useMemo, useEffect } from "react";
 import styles from "./app.module.css";
+import { BurgerContext, CountersContext, TotalPriceContext } from "../../../services/app-context";
 import { getIngredientsData } from "../../../utils/api";
+import AppError from "../../app-error/app-error";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
 import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
 
+const burgerInitialState = {ingredients: []};
+const burgerReducer = (state, action) => {
+  if (action.type === 'add') {
+    const newIngredients = [...state.ingredients, action.ingredient];
+    return { ingredients: newIngredients };
+  } else if (action.type === 'remove') {
+    const newIngredients = state.ingredients.filter(ingredient => {
+      return ingredient.index !== action.ingredient.index;
+    });
+    return { ingredients: newIngredients };
+  } else {
+    throw new Error(`Wrong type of action: ${action.type}`);
+  }
+}
+
+const countersInitialState = {counters: {}};
+const countersReducer = (state, action) => {
+  const newCounters = state.counters;
+  if (action.type === 'set') {
+    newCounters[`${action.id}`] = action.currentCount + 1;
+    return { counters: newCounters };
+  } else if (action.type === 'reset') {
+    newCounters[`${action.id}`] = action.currentCount - 1;
+    return { counters: newCounters };
+  } else {
+    throw new Error(`Wrong type of action: ${action.type}`);
+  }
+}
+
+const totalPriceInitialState = 0;
+const totalPriceReducer = (state, action) => {
+  if (action.type === 'plus') {
+    const newState = action.group !== 'bun' ? state + action.price : state + (action.price * 2);
+    return newState;
+  } else if (action.type === 'minus') {
+    const newState = action.group !== 'bun' ? state - action.price : state - (action.price * 2);
+    return newState;
+  } else {
+    throw new Error(`Wrong type of action: ${action.type}`);
+  }
+}
+
 const App = () => {
-  const [appData, setAppData] = useState({
-    ingredients: [],
-    hasError: false,
-    error: null,
-  });
-  const [counters, setCounters] = useState({});
-  const [burger, setBurger] = useState([]);
+
+  const [error, setError] = useState({ hasError: false, error: null });
+  const [ingredients, setIngredients] = useState([]);
+
+  const [burgerState, burgerDispatcher] = useReducer(burgerReducer, burgerInitialState, undefined);
+  const [countersState, countersDispatcher] = useReducer(countersReducer, countersInitialState, undefined);
+  const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
+
+  const burgerContextValue = useMemo(() => {
+    return { burgerState, burgerDispatcher };
+  }, [burgerState, burgerDispatcher]);
+
+  const countersContextValue = useMemo(() => {
+    return { countersState, countersDispatcher };
+  }, [countersState, countersDispatcher]);
+
+  const totalPriceContextValue = useMemo(() => {
+    return { totalPriceState, totalPriceDispatcher };
+  }, [totalPriceState, totalPriceDispatcher]);
 
   useEffect(() => {
     getIngredientsData()
-      .then ((ingredients) => {
-        setAppData({...appData, ingredients: ingredients.data});
+      .then((ingredients) => {
+        setError({ ...error, hasError: false });
+        setIngredients(ingredients.data);
+        const initialBun = ingredients.data.find(item => item.type === 'bun');
+        if (initialBun) {
+          burgerDispatcher({ type: 'add', ingredient: initialBun });
+          countersDispatcher({ type: 'set', id: initialBun._id, currentCount: 0 });
+          totalPriceDispatcher({ type: 'plus', group: initialBun.type, price: initialBun.price });
+        };
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
-        setAppData({...appData, hasError: true, error: err});
+        setError({ ...error, hasError: true, error: err });
       });
   }, []);
-
-  const getCurrentBun = useCallback(() => {
-    return burger.find((item) => item.type === "bun");
-  }, [burger]);
-
-  const getCurrentCount = useCallback((ingredient) => {
-    return burger.filter((item) => item._id === ingredient._id).length;
-  }, [burger]);
-
-  const handleIngredientClick = useCallback((ingredient) => {
-    const currentBun = getCurrentBun();
-    const currentCount = getCurrentCount(ingredient);
-    const newBurgerIngredient = {
-      ...ingredient,
-      index: `${ingredient._id}#${currentCount + 1}`,
-    };
-    const newCounters = counters;
-
-    setBurger([...burger, newBurgerIngredient]);
-
-    if (newBurgerIngredient.type === "bun" && currentBun) {
-      const burgerLessBun = burger.filter((item) => {
-        return item._id !== currentBun._id;
-      });
-      setBurger([...burgerLessBun, newBurgerIngredient]);
-
-      newCounters[`${currentBun._id}`] = 0;
-      newCounters[`${newBurgerIngredient._id}`] = 1;
-    } else if (newBurgerIngredient.type === "bun" && !currentBun) {
-      newCounters[`${newBurgerIngredient._id}`] = 1;
-    } else {
-      newCounters[`${newBurgerIngredient._id}`] = currentCount + 1;
-    }
-
-    setCounters(newCounters);
-  }, [burger, counters, getCurrentBun, getCurrentCount]);
-  
-  const handleDeleteClick = useCallback((e) => {
-    const targetElement = e.target.closest(".ingredient");
-    const targetIngredient = burger.find((item) => {
-      return item._id === targetElement.id.split("#")[0];
-    });
-
-    const newCounters = counters;
-    const currentCount = getCurrentCount(targetIngredient);
-    newCounters[`${targetIngredient._id}`] = currentCount - 1;
-    setCounters(newCounters);
-
-    const newBurger = burger.filter((item) => {
-      return item.index !== targetIngredient.index;
-    });
-    setBurger(newBurger);
-  }, [burger, counters, getCurrentCount]);
 
   return (
     <div className={styles.app}>
       <ErrorBoundary>
         <AppHeader />
         <main className={styles.content}>
-          {appData.hasError && (
-            <>
-              <section className={styles.error}>
-                <h1 className="text text_type_main-medium">
-                  Что-то пошло не так :(
-                </h1>
-                <p className="text text_type_main-default">{appData.error}</p>
-                <p className="text text_type_main-default text_color_inactive">
-                  В приложении произошла ошибка. Пожалуйста, перезагрузите
-                  страницу.
-                </p>
-              </section>
-            </>
-          )}
-          {!appData.hasError && (
-            <>
-              <BurgerIngredients
-                ingredients={appData.ingredients}
-                counters={counters}
-                onClick={handleIngredientClick}
-              />
-              <BurgerConstructor
-                burger={burger}
-                onClick={handleDeleteClick}
-              />
-            </>
+          {error.hasError && <AppError error={error.error} />}
+          {!error.hasError && (
+            <BurgerContext.Provider value={burgerContextValue}>
+              <CountersContext.Provider value={countersContextValue}>
+                <TotalPriceContext.Provider value={totalPriceContextValue}>
+                  <BurgerIngredients ingredients={ingredients} />
+                  <BurgerConstructor />
+                </TotalPriceContext.Provider>
+              </CountersContext.Provider>
+            </BurgerContext.Provider>
           )}
         </main>
       </ErrorBoundary>

@@ -8,6 +8,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
+  overflow: hidden;
 }
 
 .list {
@@ -36,8 +37,13 @@
 .item_type_bun {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  flex-wrap: nowrap;
+  column-gap: calc(var(--offset-base-size) * 2);
+}
+
+.item_type_bun::before {
+  content: '';
+  width: 24px;
 }
 
 .item_type_content {
@@ -63,8 +69,4 @@
 
 .element {
   background-color: var(--background);
-}
-
-.container {
-  overflow: hidden;
 }

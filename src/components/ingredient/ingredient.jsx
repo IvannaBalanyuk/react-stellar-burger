@@ -1,25 +1,59 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./ingredient.module.css";
 import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { getCurrentBun, getCurrentCount } from "../../utils/utils";
+import {
+  BurgerContext,
+  CountersContext,
+  TotalPriceContext,
+} from "../../services/app-context";
 import PropTypes from "prop-types";
 import { ingredientPropType } from "../../utils/prop-types";
 
-const Ingredient = React.memo(({ ingredient, counters, onClick, onDoubleClick }) => {
+
+const Ingredient = ({ ingredient, onDoubleClick }) => {
   const { card, image, text, gap_column_2 } = styles;
-  const count = counters[`${ingredient._id}`];
+
+  const { burgerState, burgerDispatcher } = useContext(BurgerContext);
+  const { countersState, countersDispatcher } = useContext(CountersContext);
+  const { totalPriceDispatcher } = useContext(TotalPriceContext);
+
+  const count = countersState.counters[ingredient._id];
+
+  const handleIngredientClick = (ingredient) => {
+    const currentBun = getCurrentBun(burgerState.ingredients);
+    const currentCount = getCurrentCount(countersState.counters, ingredient._id);
+    const newBurgerIngredient = {
+      ...ingredient,
+      index: `${ingredient._id}#${currentCount + 1}`,
+    };
+
+    if (currentBun && currentBun._id === ingredient._id) {
+      return;
+    }
+
+    if (currentBun && newBurgerIngredient.type === "bun") {
+      burgerDispatcher({ type: "remove", ingredient: currentBun });
+      countersDispatcher({ type: "reset", id: currentBun._id, currentCount: 1 });
+      totalPriceDispatcher({ type: "minus", group: currentBun.type, price: currentBun.price });
+    }
+
+    burgerDispatcher({ type: "add", ingredient: newBurgerIngredient });
+    countersDispatcher({ type: "set", id: newBurgerIngredient._id, currentCount: currentCount });
+    totalPriceDispatcher({ type: "plus",  group: newBurgerIngredient.type, price: newBurgerIngredient.price });
+  };
 
   return (
-    <div className={card}
-      // одинарный клик - добавление ингредиента в конструктор (временная реализация, т.к. потом, вероятно, будем реализовывать drag-and-drop)
+    <div
+      className={card}
       onClick={() => {
-        onClick(ingredient);
+        handleIngredientClick(ingredient); // добавление ингредиента в конструктор (временная реализация)
       }}
-      // двойной клик - открытие модального окна
       onDoubleClick={() => {
-        onDoubleClick(ingredient);
+        onDoubleClick(ingredient); // двойной клик - открытие модального окна
       }}
     >
       {count > 0 ? <Counter count={count} size="default" /> : null}
@@ -37,13 +71,11 @@ const Ingredient = React.memo(({ ingredient, counters, onClick, onDoubleClick })
       </span>
     </div>
   );
-});
+};
 
 Ingredient.propTypes = {
   ingredient: ingredientPropType,
-  counters: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
   onDoubleClick: PropTypes.func.isRequired,
 };
 
-export default Ingredient;
+export default React.memo(Ingredient);

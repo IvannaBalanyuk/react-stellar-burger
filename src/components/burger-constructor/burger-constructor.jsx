@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useContext, useMemo, useCallback } from "react";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
@@ -6,12 +6,12 @@ import {
   ConstructorElement,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { getCurrentCount } from "../../utils/utils";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
-import PropTypes from "prop-types";
-import { burgerPropType } from "../../utils/prop-types";
+import { BurgerContext, CountersContext, TotalPriceContext } from "../../services/app-context";
 
-const BurgerConstructor = React.memo(({ burger, onClick }) => {
+const BurgerConstructor = React.memo(() => {
   const {
     section,
     list,
@@ -20,53 +20,52 @@ const BurgerConstructor = React.memo(({ burger, onClick }) => {
     order,
     total,
     element,
-    container,
   } = styles;
 
-  const bun = burger.filter((item) => item.type === "bun")[0];
-  const contentArr = burger.filter((item) => {
-    return item.type !== "bun";
-  });
+  const { burgerState, burgerDispatcher } = useContext(BurgerContext);
+  const { countersState, countersDispatcher } = useContext(CountersContext);
+  const { totalPriceState, totalPriceDispatcher } = useContext(TotalPriceContext);
 
-  const [totalPrice, setTotalPrice] = useState(0);
+  const bun = useMemo(() => {
+    return burgerState.ingredients.find((item) => item.type === "bun");
+  }, [burgerState]);
 
-  useEffect(() => {
-    if (burger.length > 0) {
-      const pricesArr = burger.map((item) => item.price);
-      const newTotalPrice = pricesArr.reduce((previousValue, item) => {
-        return previousValue + item;
-      });
-      setTotalPrice(newTotalPrice);
-    }
-  }, [burger]);
+  const contentArr = useMemo(() => {
+    return burgerState.ingredients.filter((item) => item.type !== "bun");
+  }, [burgerState]);
 
-  const [modal, setModal] = useState({
-    isVisible: false,
-  });
+  const handleDeleteClick = useCallback(
+    (e) => {
+      const targetElement = e.target.closest(".ingredient");
+      const targetIngredient = burgerState.ingredients.find((item) => item._id === targetElement.id.split("#")[0]);
+      const currentCount = getCurrentCount(countersState.counters, targetIngredient._id);
+      
+      countersDispatcher({type: 'reset', id: targetIngredient._id, currentCount: currentCount});
+      burgerDispatcher({type: 'remove', ingredient: targetIngredient});
+      totalPriceDispatcher({type: 'minus', group: targetIngredient.type, price: targetIngredient.price});
+    },
+    [burgerState, burgerDispatcher, countersState, countersDispatcher, totalPriceDispatcher]
+  );
+
+  const [modal, setModal] = useState({ isVisible: false });
 
   const handleOpenModal = () => {
-    setModal({
-      ...modal,
-      isVisible: true,
-    });
+    setModal({ ...modal, isVisible: true });
   };
 
   const handleCloseModal = useCallback(() => {
-    setModal({
-      ...modal,
-      isVisible: false,
-    });
+    setModal({ ...modal, isVisible: false });
   }, [modal]);
 
   return (
     <>
       <section className={`${section} pt-25 pb-10 pl-4`}>
         {bun && (
-          <div className={`${item_type_bun} pl-12 pr-4`}>
+          <div className={item_type_bun}>
             <ConstructorElement
               type="top"
               isLocked={true}
-              text={`${bun.name} + (верх)`}
+              text={`${bun.name} (верх)`}
               price={bun.price}
               thumbnail={bun.image}
               extraClass={`${element}`}
@@ -88,18 +87,18 @@ const BurgerConstructor = React.memo(({ burger, onClick }) => {
                     price={ingredient.price}
                     thumbnail={ingredient.image}
                     extraClass={`${element}`}
-                    handleClose={onClick}
+                    handleClose={handleDeleteClick}
                   />
                 </li>
               );
             })}
         </ul>
         {bun && (
-          <div className={`${item_type_bun} pl-12 pr-4`}>
+          <div className={item_type_bun}>
             <ConstructorElement
               type="bottom"
               isLocked={true}
-              text={`${bun.name} + (низ)`}
+              text={`${bun.name} (низ)`}
               price={bun.price}
               thumbnail={bun.image}
               extraClass={`${element}`}
@@ -108,7 +107,7 @@ const BurgerConstructor = React.memo(({ burger, onClick }) => {
         )}
         <div className={`${order} mt-10 pr-4`}>
           <div className={total}>
-            <p className="text text_type_digits-medium">{totalPrice}</p>
+            <p className="text text_type_digits-medium">{totalPriceState}</p>
             <CurrencyIcon type="primary" />
           </div>
           <Button
@@ -121,20 +120,13 @@ const BurgerConstructor = React.memo(({ burger, onClick }) => {
           </Button>
         </div>
       </section>
-      <div className={container}>
       {modal.isVisible && (
-        <Modal heading='' onClick={handleCloseModal}>
+        <Modal heading="" onClick={handleCloseModal}>
             <OrderDetails />
         </Modal>
       )}
-      </div>
     </>
   );
 });
-
-BurgerConstructor.propTypes = {
-  burger: burgerPropType,
-  onClick: PropTypes.func.isRequired,
-};
 
 export default BurgerConstructor;

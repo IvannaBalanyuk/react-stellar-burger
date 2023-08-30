@@ -1,0 +1,10 @@
+.list {
+  width: 100%;
+  box-sizing: border-box;
+  list-style-type: none;
+
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: calc(var(--offset-base-size) * 6);
+  row-gap: calc(var(--offset-base-size) * 8);
+}
