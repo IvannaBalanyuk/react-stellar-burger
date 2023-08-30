@@ -34,35 +34,24 @@ const BurgerConstructor = React.memo(() => {
   const handleDeleteClick = useCallback(
     (e) => {
       const targetElement = e.target.closest(".ingredient");
-      const targetIngredient = burgerState.ingredients.find((item) => {
-        return item._id === targetElement.id.split("#")[0];
-      });
-
+      const targetIngredient = burgerState.ingredients.find((item) => item._id === targetElement.id.split("#")[0]);
       const currentCount = getCurrentCount(countersState.counters, targetIngredient._id);
-
+      
       countersDispatcher({type: 'reset', id: targetIngredient._id, currentCount: currentCount});
       burgerDispatcher({type: 'remove', ingredient: targetIngredient});
-      totalPriceDispatcher({type: 'minus', price: targetIngredient.price});
+      totalPriceDispatcher({type: 'minus', group: targetIngredient.type, price: targetIngredient.price});
     },
     [burgerState, burgerDispatcher, countersState, countersDispatcher, totalPriceDispatcher]
   );
 
-  const [modal, setModal] = useState({
-    isVisible: false,
-  });
+  const [modal, setModal] = useState({ isVisible: false });
 
   const handleOpenModal = () => {
-    setModal({
-      ...modal,
-      isVisible: true,
-    });
+    setModal({ ...modal, isVisible: true });
   };
 
   const handleCloseModal = useCallback(() => {
-    setModal({
-      ...modal,
-      isVisible: false,
-    });
+    setModal({ ...modal, isVisible: false });
   }, [modal]);
 
   return (
@@ -129,7 +118,7 @@ const BurgerConstructor = React.memo(() => {
         </div>
       </section>
       {modal.isVisible && (
-        <Modal heading='' onClick={handleCloseModal}>
+        <Modal heading="" onClick={handleCloseModal}>
             <OrderDetails />
         </Modal>
       )}

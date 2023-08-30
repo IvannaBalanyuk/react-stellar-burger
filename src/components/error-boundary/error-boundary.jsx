@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./error-boundary.module.css";
+import AppError from "../app-error/app-error";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -17,14 +17,7 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <section className={styles.error}>
-          <h1 className="text text_type_main-medium">Что-то пошло не так :(</h1>
-          <p className="text text_type_main-default text_color_inactive">
-            В приложении произошла ошибка. Пожалуйста, перезагрузите страницу.
-          </p>
-        </section>
-      );
+      return <AppError error="" />;
     }
     return this.props.children;
   }

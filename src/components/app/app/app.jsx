@@ -2,6 +2,7 @@ import { useState, useReducer, useEffect } from "react";
 import styles from "./app.module.css";
 import { BurgerContext, CountersContext, TotalPriceContext } from "../../../services/app-context";
 import { getIngredientsData } from "../../../utils/api";
+import AppError from "../../app-error/app-error";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
 import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
@@ -39,10 +40,10 @@ const countersReducer = (state, action) => {
 const totalPriceInitialState = 0;
 const totalPriceReducer = (state, action) => {
   if (action.type === 'plus') {
-    const newState = state + action.price;
+    const newState = action.group !== 'bun' ? state + action.price : state + (action.price * 2);
     return newState;
   } else if (action.type === 'minus') {
-    const newState = state - action.price;
+    const newState = action.group !== 'bun' ? state - action.price : state - (action.price * 2);
     return newState;
   } else {
     throw new Error(`Wrong type of action: ${action.type}`);
@@ -50,11 +51,10 @@ const totalPriceReducer = (state, action) => {
 }
 
 const App = () => {
-  const [error, setError] = useState({
-    hasError: false,
-    error: null,
-  });
+
+  const [error, setError] = useState({ hasError: false, error: null });
   const [ingredients, setIngredients] = useState([]);
+
   const [burgerState, burgerDispatcher] = useReducer(burgerReducer, burgerInitialState, undefined);
   const [countersState, countersDispatcher] = useReducer(countersReducer, countersInitialState, undefined);
   const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
@@ -66,9 +66,9 @@ const App = () => {
         setIngredients(ingredients.data);
         const initialBun = ingredients.data.find(item => item.type === 'bun');
         if (initialBun) {
-          burgerDispatcher({type: 'add', ingredient: initialBun});
-          countersDispatcher({type: 'set', id: initialBun._id, currentCount: 0});
-          totalPriceDispatcher({type: 'plus', price: initialBun.price * 2});
+          burgerDispatcher({ type: 'add', ingredient: initialBun });
+          countersDispatcher({ type: 'set', id: initialBun._id, currentCount: 0 });
+          totalPriceDispatcher({ type: 'plus', group: initialBun.type, price: initialBun.price * 2 });
         };
       })
       .catch((err) => {
@@ -82,27 +82,12 @@ const App = () => {
       <ErrorBoundary>
         <AppHeader />
         <main className={styles.content}>
-          {error.hasError && (
-            <>
-              <section className={styles.error}>
-                <h1 className="text text_type_main-medium">
-                  Что-то пошло не так :(
-                </h1>
-                <p className="text text_type_main-default">{error.error}</p>
-                <p className="text text_type_main-default text_color_inactive">
-                  В приложении произошла ошибка. Пожалуйста, перезагрузите
-                  страницу.
-                </p>
-              </section>
-            </>
-          )}
+          {error.hasError && <AppError error={error.error} />}
           {!error.hasError && (
-            <BurgerContext.Provider value={{ burgerState, burgerDispatcher }} >
-              <CountersContext.Provider value={{ countersState, countersDispatcher }} >
-                <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }} >
-                  <BurgerIngredients
-                    ingredients={ingredients}
-                  />
+            <BurgerContext.Provider value={{ burgerState, burgerDispatcher }}>
+              <CountersContext.Provider value={{ countersState, countersDispatcher }}>
+                <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }}>
+                  <BurgerIngredients ingredients={ingredients} />
                   <BurgerConstructor />
                 </TotalPriceContext.Provider>
               </CountersContext.Provider>
