@@ -1,6 +1,6 @@
-import { useState, useReducer, useEffect, useCallback } from "react";
+import { useState, useReducer, useEffect } from "react";
 import styles from "./app.module.css";
-import { CountersContext, BurgerContext } from "../../../services/app-context";
+import { BurgerContext, CountersContext, TotalPriceContext } from "../../../services/app-context";
 import { getIngredientsData } from "../../../utils/api";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
@@ -8,7 +8,6 @@ import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
 
 const burgerInitialState = {ingredients: []};
-
 const burgerReducer = (state, action) => {
   if (action.type === 'add') {
     const newIngredients = [...state.ingredients, action.ingredient];
@@ -24,7 +23,6 @@ const burgerReducer = (state, action) => {
 }
 
 const countersInitialState = {counters: {}};
-
 const countersReducer = (state, action) => {
   const newCounters = state.counters;
   if (action.type === 'set') {
@@ -38,81 +36,46 @@ const countersReducer = (state, action) => {
   }
 }
 
+const totalPriceInitialState = 0;
+const totalPriceReducer = (state, action) => {
+  if (action.type === 'plus') {
+    const newState = state + action.price;
+    return newState;
+  } else if (action.type === 'minus') {
+    const newState = state - action.price;
+    return newState;
+  } else {
+    throw new Error(`Wrong type of action: ${action.type}`);
+  }
+}
+
 const App = () => {
   const [error, setError] = useState({
     hasError: false,
     error: null,
   });
   const [ingredients, setIngredients] = useState([]);
-  const [countersState, countersDispatcher] = useReducer(countersReducer, countersInitialState, undefined);
   const [burgerState, burgerDispatcher] = useReducer(burgerReducer, burgerInitialState, undefined);
+  const [countersState, countersDispatcher] = useReducer(countersReducer, countersInitialState, undefined);
+  const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
 
   useEffect(() => {
     getIngredientsData()
       .then((ingredients) => {
         setError({ ...error, hasError: false });
         setIngredients(ingredients.data);
+        const initialBun = ingredients.data.find(item => item.type === 'bun');
+        if (initialBun) {
+          burgerDispatcher({type: 'add', ingredient: initialBun});
+          countersDispatcher({type: 'set', id: initialBun._id, currentCount: 0});
+          totalPriceDispatcher({type: 'plus', price: initialBun.price * 2});
+        };
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
         setError({ ...error, hasError: true, error: err });
       });
   }, []);
-
-  const getCurrentBun = useCallback(() => {
-    const burgerBuns = burgerState.ingredients.filter((item) => item.type === "bun");
-    if (burgerBuns.length > 0) {
-      return burgerBuns[0];
-    } else {
-      return;
-    }
-  }, [burgerState]);
-
-  const getCurrentCount = useCallback(
-    (ingredient) => {
-      return burgerState.ingredients.filter((item) => item._id === ingredient._id).length;
-    },
-    [burgerState]
-  );
-
-  const handleIngredientClick = useCallback(
-    (ingredient) => {
-      const currentBun = getCurrentBun();
-      const currentCount = getCurrentCount(ingredient);
-      const newBurgerIngredient = {
-        ...ingredient,
-        index: `${ingredient._id}#${currentCount + 1}`,
-      };
-
-      if (currentBun && newBurgerIngredient.type === "bun") {
-        if (currentBun._id !== ingredient._id) {
-          burgerDispatcher({type: 'remove', ingredient: currentBun});
-          burgerDispatcher({type: 'add', ingredient: newBurgerIngredient});
-          countersDispatcher({type: 'reset', id: currentBun._id, currentCount: currentCount});
-          countersDispatcher({type: 'set', id: newBurgerIngredient._id, currentCount: currentCount});
-        } else {
-          return;
-        }
-      } else {
-        burgerDispatcher({type: 'add', ingredient: newBurgerIngredient});
-        countersDispatcher({type: 'set', id: newBurgerIngredient._id, currentCount: currentCount});
-      }
-    },
-    [getCurrentBun, getCurrentCount]
-  );
-
-  const handleDeleteClick = useCallback(
-    (e) => {
-      const targetElement = e.target.closest(".ingredient");
-      const targetIngredient = burgerState.ingredients.find((item) => {
-        return item._id === targetElement.id.split("#")[0];
-      });
-      const currentCount = getCurrentCount(targetIngredient);
-      burgerDispatcher({type: 'remove', ingredient: targetIngredient});
-      countersDispatcher({type: 'reset', id: targetIngredient._id, currentCount: currentCount});
-    },
-    [burgerState, getCurrentCount]
-  );
 
   return (
     <div className={styles.app}>
@@ -136,11 +99,12 @@ const App = () => {
           {!error.hasError && (
             <BurgerContext.Provider value={{ burgerState, burgerDispatcher }} >
               <CountersContext.Provider value={{ countersState, countersDispatcher }} >
-                <BurgerIngredients
-                  ingredients={ingredients}
-                  onClick={handleIngredientClick}
-                />
-                <BurgerConstructor onClick={handleDeleteClick} />
+                <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }} >
+                  <BurgerIngredients
+                    ingredients={ingredients}
+                  />
+                  <BurgerConstructor />
+                </TotalPriceContext.Provider>
               </CountersContext.Provider>
             </BurgerContext.Provider>
           )}

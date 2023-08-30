@@ -4,10 +4,9 @@ import TabsPanel from "../tabs-panel/tabs-panel";
 import IngredientsCategory from "../ingredients-category/ingredients-category";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import PropTypes from "prop-types";
 import { ingredientsPropType } from "../../utils/prop-types";
 
-const BurgerIngredients = React.memo(({ ingredients, onClick }) => {
+const BurgerIngredients = React.memo(({ ingredients }) => {
   const { section, list } = styles;
 
   const bunRef = createRef();
@@ -57,21 +56,18 @@ const BurgerIngredients = React.memo(({ ingredients, onClick }) => {
               categoryName="Булки"
               categoryRef={bunRef}
               ingredients={buns}
-              onClick={onClick}
               onDoubleClick={handleOpenModal}
             />
             <IngredientsCategory
               categoryName="Соусы"
               categoryRef={sauceRef}
               ingredients={sauces}
-              onClick={onClick}
               onDoubleClick={handleOpenModal}
             />
             <IngredientsCategory
               categoryName="Начинки"
               categoryRef={mainRef}
               ingredients={main}
-              onClick={onClick}
               onDoubleClick={handleOpenModal}
             />
           </ul>
@@ -88,7 +84,6 @@ const BurgerIngredients = React.memo(({ ingredients, onClick }) => {
 
 BurgerIngredients.propTypes = {
   ingredients: ingredientsPropType,
-  onClick: PropTypes.func.isRequired,
 };
 
 export default BurgerIngredients;

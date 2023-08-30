@@ -4,7 +4,7 @@ import Ingredient from "../ingredient/ingredient";
 import PropTypes from "prop-types";
 import { ingredientsPropType } from "../../utils/prop-types";
 
-const IngredientsCategory = ({ categoryName, categoryRef, ingredients, onClick, onDoubleClick }) => {
+const IngredientsCategory = ({ categoryName, categoryRef, ingredients, onDoubleClick }) => {
 
   return (
     <li>
@@ -16,7 +16,6 @@ const IngredientsCategory = ({ categoryName, categoryRef, ingredients, onClick, 
           ingredients.map((ingredient) => (
             <Ingredient
               ingredient={ingredient}
-              onClick={onClick}
               onDoubleClick={onDoubleClick}
               key={ingredient._id}
             />
@@ -31,7 +30,6 @@ IngredientsCategory.propTypes = {
   categoryName: PropTypes.string.isRequired,
   categoryRef: PropTypes.object.isRequired,
   ingredients: ingredientsPropType,
-  onClick: PropTypes.func.isRequired,
   onDoubleClick: PropTypes.func.isRequired,
 };
 

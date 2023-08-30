@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
@@ -6,12 +6,12 @@ import {
   ConstructorElement,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { getCurrentCount } from "../../utils/utils";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
-import { BurgerContext } from "../../services/app-context";
-import PropTypes from "prop-types";
+import { BurgerContext, CountersContext, TotalPriceContext } from "../../services/app-context";
 
-const BurgerConstructor = React.memo(({ onClick }) => {
+const BurgerConstructor = React.memo(() => {
   const {
     section,
     list,
@@ -21,31 +21,31 @@ const BurgerConstructor = React.memo(({ onClick }) => {
     total,
     element,
   } = styles;
-  
-  const { burgerState } = useContext(BurgerContext);
+
+  const { burgerState, burgerDispatcher } = useContext(BurgerContext);
+  const { countersState, countersDispatcher } = useContext(CountersContext);
+  const { totalPriceState, totalPriceDispatcher } = useContext(TotalPriceContext);
 
   const bun = burgerState.ingredients.filter((item) => item.type === "bun")[0];
   const contentArr = burgerState.ingredients.filter((item) => {
     return item.type !== "bun";
   });
 
-  const [totalPrice, setTotalPrice] = useState(0);
+  const handleDeleteClick = useCallback(
+    (e) => {
+      const targetElement = e.target.closest(".ingredient");
+      const targetIngredient = burgerState.ingredients.find((item) => {
+        return item._id === targetElement.id.split("#")[0];
+      });
 
-  useEffect(() => {
-    if (burgerState.ingredients.length > 0) {
-      const pricesArr = burgerState.ingredients.map((item) => {
-        if(item.type === 'bun') {
-          return item.price * 2;
-        } else {
-          return item.price;
-        }
-      });
-      const newTotalPrice = pricesArr.reduce((previousValue, item) => {
-        return previousValue + item;
-      });
-      setTotalPrice(newTotalPrice);
-    }
-  }, [burgerState]);
+      const currentCount = getCurrentCount(countersState.counters, targetIngredient._id);
+
+      countersDispatcher({type: 'reset', id: targetIngredient._id, currentCount: currentCount});
+      burgerDispatcher({type: 'remove', ingredient: targetIngredient});
+      totalPriceDispatcher({type: 'minus', price: targetIngredient.price});
+    },
+    [burgerState, burgerDispatcher, countersState, countersDispatcher, totalPriceDispatcher]
+  );
 
   const [modal, setModal] = useState({
     isVisible: false,
@@ -95,7 +95,7 @@ const BurgerConstructor = React.memo(({ onClick }) => {
                     price={ingredient.price}
                     thumbnail={ingredient.image}
                     extraClass={`${element}`}
-                    handleClose={onClick}
+                    handleClose={handleDeleteClick}
                   />
                 </li>
               );
@@ -115,7 +115,7 @@ const BurgerConstructor = React.memo(({ onClick }) => {
         )}
         <div className={`${order} mt-10 pr-4`}>
           <div className={total}>
-            <p className="text text_type_digits-medium">{totalPrice}</p>
+            <p className="text text_type_digits-medium">{totalPriceState}</p>
             <CurrencyIcon type="primary" />
           </div>
           <Button
@@ -136,9 +136,5 @@ const BurgerConstructor = React.memo(({ onClick }) => {
     </>
   );
 });
-
-BurgerConstructor.propTypes = {
-  onClick: PropTypes.func.isRequired,
-};
 
 export default BurgerConstructor;
