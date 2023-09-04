@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useLayoutEffect } from "react";
 import styles from "./order-details.module.css";
 import doneImagePath from "../../images/order-accpeted-popup-done.png";
 import { BurgerContext } from "../../services/app-context";
@@ -20,7 +20,7 @@ const OrderDetails = () => {
   const [orderNumber, setOrderNumber] = useState("");
   const { burgerState } = useContext(BurgerContext);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ingredients = burgerState.ingredients.map((item) => item._id);
     postOrderData({ ingredients })
       .then((data) => {
@@ -29,7 +29,7 @@ const OrderDetails = () => {
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
-        setError({ ...error, hasError: true, error: err });
+        setError({ ...error, hasError: true, error: `${err}` });
       });
   }, []);
 
