@@ -85,7 +85,7 @@ const App = () => {
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
-        setError({ ...error, hasError: true, error: err });
+        setError({ ...error, hasError: true, error: `${err}` });
       });
   }, []);
 
@@ -94,7 +94,7 @@ const App = () => {
       <ErrorBoundary>
         <AppHeader />
         <main className={styles.content}>
-          {error.hasError && <AppError error={error.error} />}
+          {error.hasError && <AppError error={toString(error.error)} />}
           {!error.hasError && (
             <BurgerContext.Provider value={burgerContextValue}>
               <CountersContext.Provider value={countersContextValue}>
