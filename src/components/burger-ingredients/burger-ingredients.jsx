@@ -1,17 +1,21 @@
-import React, { createRef, useMemo, useState, useCallback } from "react";
+import React, { createRef, useMemo } from "react";
+import { useSelector } from "react-redux";
 import styles from "./burger-ingredients.module.css";
-import TabsPanel from "../tabs-panel/tabs-panel";
-import IngredientsCategory from "../ingredients-category/ingredients-category";
+import TabsPanel from "./components/tabs-panel/tabs-panel";
+import IngredientsCategory from "./components/ingredients-category/ingredients-category";
 import Modal from "../modal/modal";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import { ingredientsPropType } from "../../utils/prop-types";
+import IngredientDetails from "./components/ingredient-details/ingredient-details";
 
-const BurgerIngredients = React.memo(({ ingredients }) => {
+const BurgerIngredients = React.memo(() => {
   const { section, list } = styles;
 
-  const bunRef = createRef();
-  const sauceRef = createRef();
-  const mainRef = createRef();
+  const { ingredients } = useSelector((store) => ({
+    ...store.ingredients,
+  }));
+
+  const { isVisible, content } = useSelector((store) => ({
+    ...store.modal,
+  }));
 
   const buns = useMemo(() => {
     return ingredients.filter((item) => item.type === "bun");
@@ -25,25 +29,9 @@ const BurgerIngredients = React.memo(({ ingredients }) => {
     return ingredients.filter((item) => item.type === "main");
   }, [ingredients]);
 
-  const [modal, setModal] = useState({
-    isVisible: false,
-    ingredient: null,
-  });
-
-  const handleOpenModal = useCallback((ingredient) => {
-    setModal({
-      ...modal,
-      isVisible: true,
-      ingredient: ingredient,
-    });
-  }, [modal]);
-
-  const handleCloseModal = useCallback(() => {
-    setModal({
-      ...modal,
-      isVisible: false,
-    });
-  }, [modal]);
+  const bunRef = createRef();
+  const sauceRef = createRef();
+  const mainRef = createRef();
 
   return (
     <>
@@ -56,34 +44,27 @@ const BurgerIngredients = React.memo(({ ingredients }) => {
               categoryName="Булки"
               categoryRef={bunRef}
               ingredients={buns}
-              onDoubleClick={handleOpenModal}
             />
             <IngredientsCategory
               categoryName="Соусы"
               categoryRef={sauceRef}
               ingredients={sauces}
-              onDoubleClick={handleOpenModal}
             />
             <IngredientsCategory
               categoryName="Начинки"
               categoryRef={mainRef}
               ingredients={main}
-              onDoubleClick={handleOpenModal}
             />
           </ul>
         )}
       </section>
-      {modal.isVisible && modal.ingredient && (
-        <Modal heading="Детали ингредиента" onClick={handleCloseModal}>
-          <IngredientDetails ingredient={modal.ingredient} />
+      {isVisible && content === 'ingredient-details' && (
+        <Modal heading="Детали ингредиента">
+          <IngredientDetails />
         </Modal>
       )}
     </>
   );
 });
-
-BurgerIngredients.propTypes = {
-  ingredients: ingredientsPropType,
-};
 
 export default BurgerIngredients;

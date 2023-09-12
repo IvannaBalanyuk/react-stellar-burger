@@ -7,8 +7,8 @@ import {
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import NavPanel from "../nav-panel/nav-panel";
-import NavLink from "../nav-link/nav-link";
+import NavPanel from "./components/nav-panel/nav-panel";
+import NavLink from "./components/nav-link/nav-link";
 
 const AppHeader = React.memo(() => {
   const { header, content, wrapper } = styles;

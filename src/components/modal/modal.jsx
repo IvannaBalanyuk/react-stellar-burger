@@ -1,13 +1,15 @@
 import { createRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useDispatch } from "react-redux";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import ModalOverlay from "../modal-overlay/modal-overlay";
+import ModalOverlay from "./components/modal-overlay/modal-overlay";
 import styles from "./modal.module.css";
+import { SET_MODAL_HIDDEN } from "../../services/actions/app";
 import PropTypes from "prop-types";
 
 const modalRoot = document.getElementById("modal-root");
 
-const Modal = ({ heading, children, onClick }) => {
+const Modal = ({ heading, children }) => {
   const {
     modal,
     container,
@@ -15,13 +17,13 @@ const Modal = ({ heading, children, onClick }) => {
     title,
     close,
   } = styles;
-
-  const modalRef = createRef();
+  
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleEscapeClose = (e) => {
       if (e.key.toLowerCase() === "escape") {
-        onClick();
+        dispatch({ type: SET_MODAL_HIDDEN });
       }
     };
 
@@ -30,17 +32,23 @@ const Modal = ({ heading, children, onClick }) => {
     return () => {
       document.removeEventListener('keydown', handleEscapeClose);
     }
-  }, []);
+  }, [dispatch]);
+
+  const handleCloseModal = () => {
+    dispatch({ type: SET_MODAL_HIDDEN });
+  };
+
+  const modalRef = createRef();
 
   return createPortal(
     <>
-      <ModalOverlay onClick={onClick} modalRef={modalRef}/>
-      <div className={container}>
-        <div className={`${modal} pt-10 pr-10 pb-15 pl-10`} ref={modalRef}>
+      <ModalOverlay modalRef={modalRef} />
+      <div className={container} ref={modalRef}>
+        <div className={`${modal} pt-10 pr-10 pb-15 pl-10`}>
           <div className={wrapper}>
             <h2 className={`${title} text text_type_main-large`}>{heading}</h2>
             <span className={close}>
-              <CloseIcon type="primary" onClick={onClick} />
+              <CloseIcon type="primary" onClick={handleCloseModal} />
             </span>
           </div>
           {children}
@@ -54,7 +62,6 @@ const Modal = ({ heading, children, onClick }) => {
 Modal.propTypes = {
   heading: PropTypes.string,
   children: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
 };
 
 export default Modal;

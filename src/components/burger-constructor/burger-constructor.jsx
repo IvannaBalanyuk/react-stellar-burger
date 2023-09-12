@@ -1,4 +1,5 @@
-import React, { useState, useContext, useMemo, useCallback } from "react";
+import React, { useMemo, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
@@ -8,8 +9,15 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { getCurrentCount } from "../../utils/utils";
 import Modal from "../modal/modal";
-import OrderDetails from "../order-details/order-details";
-import { BurgerContext, CountersContext, TotalPriceContext } from "../../services/app-context";
+import OrderDetails from "./components/order-details/order-details";
+import {
+  DECREASE_COUNTER,
+  DELETE_COUNTER,
+  DELETE_FILLING,
+  SET_ORDER_INGREDIENTS,
+  SET_MODAL_VISIBLE,
+  SET_MODAL_CONTENT,
+} from "../../services/actions/app";
 
 const BurgerConstructor = React.memo(() => {
   const {
@@ -22,45 +30,56 @@ const BurgerConstructor = React.memo(() => {
     element,
   } = styles;
 
-  const { burgerState, burgerDispatcher } = useContext(BurgerContext);
-  const { countersState, countersDispatcher } = useContext(CountersContext);
-  const { totalPriceState, totalPriceDispatcher } = useContext(TotalPriceContext);
+  const { fillings, bun } = useSelector((store) => ({ ...store.burgerConstructor }));
 
-  const bun = useMemo(() => {
-    return burgerState.ingredients.find((item) => item.type === "bun");
-  }, [burgerState]);
+  const { ingredients, counters } = useSelector((store) => ({
+    ...store.ingredients,
+  }));
 
-  const contentArr = useMemo(() => {
-    return burgerState.ingredients.filter((item) => item.type !== "bun");
-  }, [burgerState]);
+  const { isVisible, content } = useSelector((store) => ({ ...store.modal }));
+
+  const dispatch = useDispatch();
+
+  const totalPrice = useMemo(() => {
+    if (fillings.length > 0) {
+      const fillingsTotalPrice = fillings.reduce((acc, item) => {
+        return acc + item.price;
+      }, 0);
+      return fillingsTotalPrice + bun.price;
+    } else {
+      return bun.price;
+    }
+  }, [fillings, bun]);
 
   const handleDeleteClick = useCallback(
     (e) => {
       const targetElement = e.target.closest(".ingredient");
-      const targetIngredient = burgerState.ingredients.find((item) => item._id === targetElement.id.split("#")[0]);
-      const currentCount = getCurrentCount(countersState.counters, targetIngredient._id);
-      
-      countersDispatcher({type: 'reset', id: targetIngredient._id, currentCount: currentCount});
-      burgerDispatcher({type: 'remove', ingredient: targetIngredient});
-      totalPriceDispatcher({type: 'minus', group: targetIngredient.type, price: targetIngredient.price});
+      const targetIngredient = ingredients.find(
+        (item) => item._id === targetElement.id.split("#")[0]
+      );
+      const currentCount = getCurrentCount(counters, targetIngredient._id);
+
+      if (currentCount > 1) {
+        dispatch({ type: DECREASE_COUNTER, id: targetIngredient._id });
+      } else {
+        dispatch({ type: DELETE_COUNTER, id: targetIngredient._id });
+      }
+
+      dispatch({ type: DELETE_FILLING, index: targetElement.id });
     },
-    [burgerState, burgerDispatcher, countersState, countersDispatcher, totalPriceDispatcher]
+    [dispatch, ingredients, counters]
   );
 
-  const [modal, setModal] = useState({ isVisible: false });
-
   const handleOpenModal = () => {
-    setModal({ ...modal, isVisible: true });
+    dispatch({ type: SET_ORDER_INGREDIENTS, ingredients: [...fillings, bun] });
+    dispatch({ type: SET_MODAL_VISIBLE });
+    dispatch({ type: SET_MODAL_CONTENT, content: "order-details" });
   };
-
-  const handleCloseModal = useCallback(() => {
-    setModal({ ...modal, isVisible: false });
-  }, [modal]);
 
   return (
     <>
       <section className={`${section} pt-25 pb-10 pl-4`}>
-        {bun && (
+        {bun.name && (
           <div className={item_type_bun}>
             <ConstructorElement
               type="top"
@@ -73,8 +92,8 @@ const BurgerConstructor = React.memo(() => {
           </div>
         )}
         <ul className={`${list} pr-2 pt-4 pb-4 custom-scroll`}>
-          {contentArr.length > 0 &&
-            contentArr.map((ingredient) => {
+          {fillings.length > 0 &&
+            fillings.map((ingredient) => {
               return (
                 <li
                   className={`ingredient ${item_type_content}`}
@@ -93,7 +112,7 @@ const BurgerConstructor = React.memo(() => {
               );
             })}
         </ul>
-        {bun && (
+        {bun.name && (
           <div className={item_type_bun}>
             <ConstructorElement
               type="bottom"
@@ -107,7 +126,7 @@ const BurgerConstructor = React.memo(() => {
         )}
         <div className={`${order} mt-10 pr-4`}>
           <div className={total}>
-            <p className="text text_type_digits-medium">{totalPriceState}</p>
+            <p className="text text_type_digits-medium">{totalPrice}</p>
             <CurrencyIcon type="primary" />
           </div>
           <Button
@@ -120,9 +139,9 @@ const BurgerConstructor = React.memo(() => {
           </Button>
         </div>
       </section>
-      {modal.isVisible && (
-        <Modal heading="" onClick={handleCloseModal}>
-            <OrderDetails />
+      {isVisible && content === "order-details" && (
+        <Modal heading="">
+          <OrderDetails />
         </Modal>
       )}
     </>

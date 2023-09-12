@@ -1,21 +1,11 @@
-const getCurrentBun = (arr) => {
-  const currentBun = arr.find(item => {
-    return item.type === 'bun';
-  });
-  if (currentBun) {
-    return currentBun;
-  } else {
-    return false;
-  }
-}
-
 const getCurrentCount = (counters, ingredientId) => {
-  const currentCount = counters[ingredientId];
-  if (currentCount) {
-    return currentCount;
+  const counter = counters.find(item => {
+    return item.id === ingredientId});
+  if (counter) {
+    return counter.count;
   } else {
     return 0;
   }
 }
 
-export { getCurrentBun, getCurrentCount };
+export { getCurrentCount };
