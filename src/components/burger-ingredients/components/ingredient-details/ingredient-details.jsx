@@ -11,7 +11,7 @@ const IngredientDetails = React.memo(() => {
     item,
   } = styles;
 
-  const { ingredientForModal } = useSelector((store) => ({
+  const { currentIngredient } = useSelector((store) => ({
     ...store.ingredients,
   }));
 
@@ -19,11 +19,11 @@ const IngredientDetails = React.memo(() => {
     <div className={container}>
       <img
         className={image}
-        src={ingredientForModal.image_large}
-        alt={ingredientForModal.name}
+        src={currentIngredient.image_large}
+        alt={currentIngredient.name}
       />
       <span className={`${text} text text_type_main-medium mt-4 mb-8`}>
-        {ingredientForModal.name}
+        {currentIngredient.name}
       </span>
       <ul className={list}>
         <li className={item}>
@@ -35,7 +35,7 @@ const IngredientDetails = React.memo(() => {
           <span
             className={`${text} text text_type_digits-default text_color_inactive`}
           >
-            {ingredientForModal.calories}
+            {currentIngredient.calories}
           </span>
         </li>
         <li className={item}>
@@ -47,7 +47,7 @@ const IngredientDetails = React.memo(() => {
           <span
             className={`${text} text text_type_digits-default text_color_inactive`}
           >
-            {ingredientForModal.proteins}
+            {currentIngredient.proteins}
           </span>
         </li>
         <li className={item}>
@@ -59,7 +59,7 @@ const IngredientDetails = React.memo(() => {
           <span
             className={`${text} text text_type_digits-default text_color_inactive`}
           >
-            {ingredientForModal.fat}
+            {currentIngredient.fat}
           </span>
         </li>
         <li className={item}>
@@ -71,7 +71,7 @@ const IngredientDetails = React.memo(() => {
           <span
             className={`${text} text text_type_digits-default text_color_inactive`}
           >
-            {ingredientForModal.carbohydrates}
+            {currentIngredient.carbohydrates}
           </span>
         </li>
       </ul>

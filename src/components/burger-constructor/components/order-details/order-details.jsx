@@ -28,7 +28,6 @@ const OrderDetails = () => {
   } = useSelector((store) => ({ ...store.order }));
   
   useEffect(() => {
-    console.log(orderIngredients);
     const idArr = orderIngredients.map((item) => item._id);
     dispatch(applyOrder(idArr));
   }, [dispatch, orderIngredients]);

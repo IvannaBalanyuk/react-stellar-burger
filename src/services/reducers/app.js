@@ -25,7 +25,7 @@ const ingredientsInitialState = {
   ingredientsFailed: false,
   ingredientsRequestError: '',
   counters: [],
-  ingredientForModal: {},
+  currentIngredient: {},
 };
 
 const burgerConstructorInitialState = {
@@ -108,7 +108,7 @@ export const ingredientsReducer = (state = ingredientsInitialState, action) => {
     case SET_CURRENT_INGREDIENT: {
       return {
         ...state,
-        ingredientForModal: action.ingredient,
+        currentIngredient: action.ingredient,
       };
     }
     default: {
