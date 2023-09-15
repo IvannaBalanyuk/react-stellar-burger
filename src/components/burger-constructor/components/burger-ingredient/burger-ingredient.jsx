@@ -59,7 +59,7 @@ const BurgerIngredient = ({ ingredient }) => {
     }),
   });
 
-  const [, dropTarget] = useDrop({
+  const [, dropTarget] = useDrop(() => ({
     accept: "burger-ingredient",
     hover: (item) => {
       const dragIndex = fillings.findIndex(
@@ -81,7 +81,7 @@ const BurgerIngredient = ({ ingredient }) => {
         dropIndex: dropIndex,
       });
     },
-  });
+  }), [fillings]);
 
   return (
     <li

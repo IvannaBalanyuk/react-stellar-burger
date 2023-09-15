@@ -55,7 +55,7 @@ TabsPanel.propTypes = {
   bunRef: PropTypes.object.isRequired,
   sauceRef: PropTypes.object.isRequired,
   mainRef: PropTypes.object.isRequired,
-  current: PropTypes.object.isRequired,
+  current: PropTypes.string.isRequired,
   setCurrent: PropTypes.func.isRequired,
 };
 
