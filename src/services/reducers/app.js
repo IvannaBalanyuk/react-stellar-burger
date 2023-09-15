@@ -7,9 +7,10 @@ import {
   DECREASE_COUNTER,
   DELETE_COUNTER,
   SET_CURRENT_INGREDIENT,
+  SET_BUN,
   ADD_FILLING,
   DELETE_FILLING,
-  SET_BUN,
+  SORT_FILLINGS,
   SET_ORDER_INGREDIENTS,
   APPLY_ORDER_REQUEST,
   APPLY_ORDER_SUCCESS,
@@ -119,6 +120,12 @@ export const ingredientsReducer = (state = ingredientsInitialState, action) => {
 
 export const burgerConstructorReducer = (state = burgerConstructorInitialState, action) => {
   switch (action.type) {
+    case SET_BUN: {
+      return {
+        ...state,
+        bun: action.bun,
+      };
+    }
     case ADD_FILLING: {
       return {
         ...state,
@@ -131,11 +138,17 @@ export const burgerConstructorReducer = (state = burgerConstructorInitialState, 
         fillings: [...state.fillings].filter((item) => item.index !== action.index),
       };
     }
-    case SET_BUN: {
+    case SORT_FILLINGS: {
+      const fillings = [...state.fillings];
+      fillings.splice(
+        action.dropIndex,
+        0,
+        fillings.splice(action.dragIndex, 1)[0] 
+      )
       return {
         ...state,
-        bun: action.bun,
-      };
+        fillings: fillings,
+      }
     }
     default: {
       return state;

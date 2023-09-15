@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import styles from "./app.module.css";
 import Loader from '../../loader/loader';
 import AppError from "../../app-error/app-error";
@@ -30,10 +32,10 @@ const App = () => {
           {ingredientsRequest && <Loader size="large" />}
           {ingredientsFailed && <AppError error={ingredientsRequestError} />}
           {!ingredientsFailed && (
-            <>
+            <DndProvider backend={HTML5Backend}>
               <BurgerIngredients />
               <BurgerConstructor />
-            </>
+            </DndProvider>
           )}
         </main>
       </ErrorBoundary>

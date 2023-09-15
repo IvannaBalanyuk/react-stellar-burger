@@ -1,19 +1,22 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useDrop } from "react-dnd";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
-  DragIcon,
   ConstructorElement,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { getCurrentCount } from "../../utils/utils";
+import BurgerIngredient from "./components/burger-ingredient/burger-ingredient";
 import Modal from "../modal/modal";
 import OrderDetails from "./components/order-details/order-details";
 import {
-  DECREASE_COUNTER,
+  SET_COUNTER,
+  INCREASE_COUNTER,
   DELETE_COUNTER,
-  DELETE_FILLING,
+  SET_BUN,
+  ADD_FILLING,
   SET_ORDER_INGREDIENTS,
   SET_MODAL_VISIBLE,
   SET_MODAL_CONTENT,
@@ -24,15 +27,16 @@ const BurgerConstructor = React.memo(() => {
     section,
     list,
     item_type_bun,
-    item_type_content,
     order,
     total,
     element,
   } = styles;
 
-  const { fillings, bun } = useSelector((store) => ({ ...store.burgerConstructor }));
+  const { fillings, bun } = useSelector((store) => ({
+    ...store.burgerConstructor,
+  }));
 
-  const { ingredients, counters } = useSelector((store) => ({
+  const { counters } = useSelector((store) => ({
     ...store.ingredients,
   }));
 
@@ -51,34 +55,55 @@ const BurgerConstructor = React.memo(() => {
     }
   }, [fillings, bun]);
 
-  const handleDeleteClick = useCallback(
-    (e) => {
-      const targetElement = e.target.closest(".ingredient");
-      const targetIngredient = ingredients.find(
-        (item) => item._id === targetElement.id.split("#")[0]
-      );
-      const currentCount = getCurrentCount(counters, targetIngredient._id);
-
-      if (currentCount > 1) {
-        dispatch({ type: DECREASE_COUNTER, id: targetIngredient._id });
-      } else {
-        dispatch({ type: DELETE_COUNTER, id: targetIngredient._id });
-      }
-
-      dispatch({ type: DELETE_FILLING, index: targetElement.id });
-    },
-    [dispatch, ingredients, counters]
-  );
-
   const handleOpenModal = () => {
     dispatch({ type: SET_ORDER_INGREDIENTS, ingredients: [...fillings, bun] });
     dispatch({ type: SET_MODAL_VISIBLE });
     dispatch({ type: SET_MODAL_CONTENT, content: "order-details" });
   };
 
+  const onDropHandler = (ingredient) => {
+    if (bun._id === ingredient._id) return;
+
+    const currentCount = getCurrentCount(counters, ingredient._id);
+    const newBurgerIngredient = {
+      ...ingredient,
+      index: `${ingredient._id}#${currentCount + 1}`,
+    };
+
+    if (newBurgerIngredient.type === "bun") {
+      dispatch({ type: DELETE_COUNTER, id: bun._id });
+      dispatch({
+        type: SET_COUNTER,
+        id: newBurgerIngredient._id,
+        name: newBurgerIngredient.name,
+      });
+      dispatch({ type: SET_BUN, bun: newBurgerIngredient });
+      return;
+    }
+
+    if (currentCount === 0) {
+      dispatch({
+        type: SET_COUNTER,
+        id: newBurgerIngredient._id,
+        name: newBurgerIngredient.name,
+      });
+    } else {
+      dispatch({ type: INCREASE_COUNTER, id: newBurgerIngredient._id });
+    }
+
+    dispatch({ type: ADD_FILLING, ingredient: newBurgerIngredient });
+  };
+
+  const [, dropTarget] = useDrop({
+    accept: "ingredient",
+    drop(item) {
+      onDropHandler(item);
+    },
+  });
+
   return (
     <>
-      <section className={`${section} pt-25 pb-10 pl-4`}>
+      <section className={`${section} pt-25 pb-10 pl-4`} ref={dropTarget}>
         {bun.name && (
           <div className={item_type_bun}>
             <ConstructorElement
@@ -95,20 +120,10 @@ const BurgerConstructor = React.memo(() => {
           {fillings.length > 0 &&
             fillings.map((ingredient) => {
               return (
-                <li
-                  className={`ingredient ${item_type_content}`}
+                <BurgerIngredient 
                   key={ingredient.index}
-                  id={ingredient.index}
-                >
-                  <DragIcon type="primary" />
-                  <ConstructorElement
-                    text={ingredient.name}
-                    price={ingredient.price}
-                    thumbnail={ingredient.image}
-                    extraClass={`${element}`}
-                    handleClose={handleDeleteClick}
-                  />
-                </li>
+                  ingredient={ingredient}
+                />
               );
             })}
         </ul>

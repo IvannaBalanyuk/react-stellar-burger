@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./tabs-panel.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 
-const TabsPanel = React.memo(({ bunRef, sauceRef, mainRef }) => {
-  const [current, setCurrent] = useState("bun");
+const TabsPanel = React.memo(({ bunRef, sauceRef, mainRef, current, setCurrent }) => {
 
   return (
     <div className={`${styles.wrapper} mb-10`}>

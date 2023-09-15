@@ -46,13 +46,6 @@
   width: 24px;
 }
 
-.item_type_content {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  column-gap: calc(var(--offset-base-size) * 2);
-}
-
 .order {
   display: flex;
   align-items: center;
