@@ -9,30 +9,6 @@ import IngredientDetails from "./components/ingredient-details/ingredient-detail
 const BurgerIngredients = React.memo(() => {
   const { section, list } = styles;
 
-  const [current, setCurrent] = useState('bun');
-
-  const bunRef = useRef();
-  const sauceRef = useRef();
-  const mainRef = useRef();
-  const containerRef = useRef();  
-
-  const handleScroll = () => {
-    const containerScroll = containerRef.current.getBoundingClientRect().top;
-    const bunScroll = bunRef.current.getBoundingClientRect().top - containerScroll;
-    const sauceScroll = sauceRef.current.getBoundingClientRect().top - containerScroll;
-    const mainScroll = mainRef.current.getBoundingClientRect().top - containerScroll;
-
-    const maxOffset = -30;
-
-    if (bunScroll <= 0 && bunScroll > maxOffset) {
-      setCurrent('bun')
-    } else if (sauceScroll <= 0 && sauceScroll > maxOffset) {
-      setCurrent('sauce')
-    } else if (mainScroll <= 0 && mainScroll > maxOffset) {
-      setCurrent('main')
-    }
-  };
-
   const { ingredients } = useSelector((store) => ({
     ...store.ingredients,
   }));
@@ -53,13 +29,50 @@ const BurgerIngredients = React.memo(() => {
     return ingredients.filter((item) => item.type === "main");
   }, [ingredients]);
 
+  const [current, setCurrent] = useState("bun");
+
+  const bunRef = useRef();
+  const sauceRef = useRef();
+  const mainRef = useRef();
+  const containerRef = useRef();
+
+  const handleScroll = () => {
+    const containerScroll = containerRef.current.getBoundingClientRect().top;
+    const bunScroll =
+      bunRef.current.getBoundingClientRect().top - containerScroll;
+    const sauceScroll =
+      sauceRef.current.getBoundingClientRect().top - containerScroll;
+    const mainScroll =
+      mainRef.current.getBoundingClientRect().top - containerScroll;
+
+    const maxOffset = -30;
+
+    if (bunScroll <= 0 && bunScroll > maxOffset) {
+      setCurrent("bun");
+    } else if (sauceScroll <= 0 && sauceScroll > maxOffset) {
+      setCurrent("sauce");
+    } else if (mainScroll <= 0 && mainScroll > maxOffset) {
+      setCurrent("main");
+    }
+  };
+
   return (
     <>
       <section className={`${section} pt-10 pb-10`}>
         <h2 className="text text_type_main-large mb-5">Соберите бургер</h2>
-        <TabsPanel bunRef={bunRef} sauceRef={sauceRef} mainRef={mainRef} current={current} setCurrent={setCurrent} />
+        <TabsPanel
+          bunRef={bunRef}
+          sauceRef={sauceRef}
+          mainRef={mainRef}
+          current={current}
+          setCurrent={setCurrent}
+        />
         {ingredients.length > 0 && (
-          <ul className={`${list} custom-scroll`} onScroll={handleScroll} ref={containerRef}>
+          <ul
+            className={`${list} custom-scroll`}
+            onScroll={handleScroll}
+            ref={containerRef}
+          >
             <IngredientsCategory
               categoryName="Булки"
               categoryRef={bunRef}
@@ -78,7 +91,7 @@ const BurgerIngredients = React.memo(() => {
           </ul>
         )}
       </section>
-      {isVisible && content === 'ingredient-details' && (
+      {isVisible && content === "ingredient-details" && (
         <Modal heading="Детали ингредиента">
           <IngredientDetails />
         </Modal>

@@ -24,6 +24,14 @@ const BurgerIngredient = ({ ingredient }) => {
     ...store.ingredients,
   }));
 
+  const { fillings } = useSelector((store) => ({
+    ...store.burgerConstructor,
+  }));
+
+  const dropIndex = fillings.findIndex(
+    (item) => item.index === ingredient.index
+  );
+
   const handleDeleteClick = useCallback(
     (e) => {
       const targetElement = e.target.closest(".ingredient");
@@ -50,14 +58,6 @@ const BurgerIngredient = ({ ingredient }) => {
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
-
-  const { fillings } = useSelector((store) => ({
-    ...store.burgerConstructor,
-  }));
-
-  const dropIndex = fillings.findIndex(
-    (item) => item.index === ingredient.index
-  );
 
   const [, dropTarget] = useDrop({
     accept: "burger-ingredient",

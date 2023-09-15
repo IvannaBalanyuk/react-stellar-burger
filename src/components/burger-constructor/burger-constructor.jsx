@@ -32,6 +32,8 @@ const BurgerConstructor = React.memo(() => {
     element,
   } = styles;
 
+  const dispatch = useDispatch();
+
   const { fillings, bun } = useSelector((store) => ({
     ...store.burgerConstructor,
   }));
@@ -41,8 +43,6 @@ const BurgerConstructor = React.memo(() => {
   }));
 
   const { isVisible, content } = useSelector((store) => ({ ...store.modal }));
-
-  const dispatch = useDispatch();
 
   const totalPrice = useMemo(() => {
     if (fillings.length > 0) {
