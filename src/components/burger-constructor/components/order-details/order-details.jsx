@@ -24,8 +24,14 @@ const OrderDetails = () => {
     orderNumber,
     orderRequest,
     orderFailed,
-    orderRequestError
-  } = useSelector((store) => ({ ...store.order }));
+    orderRequestError,
+  } = useSelector((store) => ({
+    orderIngredients: store.order.orderIngredients,
+    orderNumber: store.order.orderNumber,
+    orderRequest: store.order.orderRequest,
+    orderFailed: store.order.orderFailed,
+    orderRequestError: store.order.orderRequestError,
+  }));
   
   useEffect(() => {
     const idArr = orderIngredients.map((item) => item._id);

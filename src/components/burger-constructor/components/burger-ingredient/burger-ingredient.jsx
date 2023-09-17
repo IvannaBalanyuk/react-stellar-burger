@@ -23,11 +23,12 @@ const BurgerIngredient = ({ ingredient }) => {
   const dispatch = useDispatch();
 
   const { ingredients, counters } = useSelector((store) => ({
-    ...store.burgerIngredients,
+    ingredients: store.burgerIngredients.ingredients,
+    counters: store.burgerIngredients.counters,
   }));
-
+  
   const { fillings } = useSelector((store) => ({
-    ...store.burgerConstructor,
+    fillings: store.burgerConstructor.fillings,
   }));
 
   const dropIndex = fillings.findIndex(

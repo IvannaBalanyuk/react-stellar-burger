@@ -3,16 +3,10 @@ import { useSelector } from "react-redux";
 import styles from "./ingredient-details.module.css";
 
 const IngredientDetails = React.memo(() => {
-  const {
-    container,
-    image,
-    text,
-    list,
-    item,
-  } = styles;
+  const { container, image, text, list, item } = styles;
 
   const { currentIngredient } = useSelector((store) => ({
-    ...store.burgerIngredients,
+    currentIngredient: store.burgerIngredients.currentIngredient,
   }));
 
   return (
