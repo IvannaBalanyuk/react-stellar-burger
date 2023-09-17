@@ -10,40 +10,55 @@ const BurgerIngredients = React.memo(() => {
   const { section, list } = styles;
 
   const { ingredients } = useSelector((store) => ({
-    ...store.burgerIngredients,
+    ingredients: store.burgerIngredients.ingredients,
   }));
 
   const { isVisible, content } = useSelector((store) => ({
-    ...store.modal,
+    isVisible: store.modal.isVisible,
+    content: store.modal.content,
   }));
 
-  const buns = useMemo(() => {
-    return ingredients.filter((item) => item.type === "bun");
+  const categories = useMemo(() => {
+    return {
+      buns: ingredients.filter((item) => item.type === "bun"),
+      sauces: ingredients.filter((item) => item.type === "sauce"),
+      main: ingredients.filter((item) => item.type === "main"),
+    }
   }, [ingredients]);
 
-  const sauces = useMemo(() => {
-    return ingredients.filter((item) => item.type === "sauce");
-  }, [ingredients]);
+  // const buns = useMemo(() => {
+  //   return ingredients.filter((item) => item.type === "bun");
+  // }, [ingredients]);
 
-  const main = useMemo(() => {
-    return ingredients.filter((item) => item.type === "main");
-  }, [ingredients]);
+  // const sauces = useMemo(() => {
+  //   return ingredients.filter((item) => item.type === "sauce");
+  // }, [ingredients]);
+
+  // const main = useMemo(() => {
+  //   return ingredients.filter((item) => item.type === "main");
+  // }, [ingredients]);
 
   const [current, setCurrent] = useState("bun");
 
+  const containerRef = useRef();
   const bunRef = useRef();
   const sauceRef = useRef();
   const mainRef = useRef();
-  const containerRef = useRef();
+
+  const refs = {
+    bun: bunRef,
+    sauce: sauceRef,
+    main: mainRef,
+  };
 
   const handleScroll = () => {
     const containerScroll = containerRef.current.getBoundingClientRect().top;
     const bunScroll =
-      bunRef.current.getBoundingClientRect().top - containerScroll;
+      refs.bun.current.getBoundingClientRect().top - containerScroll;
     const sauceScroll =
-      sauceRef.current.getBoundingClientRect().top - containerScroll;
+      refs.sauce.current.getBoundingClientRect().top - containerScroll;
     const mainScroll =
-      mainRef.current.getBoundingClientRect().top - containerScroll;
+      refs.main.current.getBoundingClientRect().top - containerScroll;
 
     const maxOffset = -30;
 
@@ -61,9 +76,7 @@ const BurgerIngredients = React.memo(() => {
       <section className={`${section} pt-10 pb-10`}>
         <h2 className="text text_type_main-large mb-5">Соберите бургер</h2>
         <TabsPanel
-          bunRef={bunRef}
-          sauceRef={sauceRef}
-          mainRef={mainRef}
+          refs={refs}
           current={current}
           setCurrent={setCurrent}
         />
@@ -75,18 +88,18 @@ const BurgerIngredients = React.memo(() => {
           >
             <IngredientsCategory
               categoryName="Булки"
-              categoryRef={bunRef}
-              ingredients={buns}
+              categoryRef={refs.bun}
+              ingredients={categories.buns}
             />
             <IngredientsCategory
               categoryName="Соусы"
-              categoryRef={sauceRef}
-              ingredients={sauces}
+              categoryRef={refs.sauce}
+              ingredients={categories.sauces}
             />
             <IngredientsCategory
               categoryName="Начинки"
-              categoryRef={mainRef}
-              ingredients={main}
+              categoryRef={refs.main}
+              ingredients={categories.main}
             />
           </ul>
         )}

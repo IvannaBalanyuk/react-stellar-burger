@@ -27,26 +27,23 @@ import {
 } from "../../services/actions/modal";
 
 const BurgerConstructor = React.memo(() => {
-  const {
-    section,
-    list,
-    item_type_bun,
-    order,
-    total,
-    element,
-  } = styles;
+  const { section, list, item_type_bun, order, total, element } = styles;
 
   const dispatch = useDispatch();
 
   const { fillings, bun } = useSelector((store) => ({
-    ...store.burgerConstructor,
+    fillings: store.burgerConstructor.fillings,
+    bun: store.burgerConstructor.bun,
   }));
 
   const { counters } = useSelector((store) => ({
-    ...store.burgerIngredients,
+    counters: store.burgerIngredients.counters,
   }));
 
-  const { isVisible, content } = useSelector((store) => ({ ...store.modal }));
+  const { isVisible, content } = useSelector((store) => ({
+    isVisible: store.modal.isVisible,
+    content: store.modal.content,
+  }));
 
   const totalPrice = useMemo(() => {
     if (fillings.length > 0) {
@@ -124,7 +121,7 @@ const BurgerConstructor = React.memo(() => {
           {fillings.length > 0 &&
             fillings.map((ingredient) => {
               return (
-                <BurgerIngredient 
+                <BurgerIngredient
                   key={ingredient.index}
                   ingredient={ingredient}
                 />

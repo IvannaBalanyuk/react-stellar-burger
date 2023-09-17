@@ -12,11 +12,12 @@ import BurgerConstructor from "../../burger-constructor/burger-constructor";
 import { getIngredients } from "../../../services/actions/burger-ingredients";
 
 const App = () => {
-  const {
-    ingredientsRequest,
-    ingredientsFailed,
-    ingredientsRequestError
-  } = useSelector((store) => ({ ...store.burgerConstructor }));
+  const { ingredientsRequest, ingredientsFailed, ingredientsRequestError } =
+    useSelector((store) => ({
+      ingredientsRequest: store.burgerConstructor.ingredientsRequest,
+      ingredientsFailed: store.burgerConstructor.ingredientsFailed,
+      ingredientsRequestError: store.burgerConstructor.ingredientsRequestError,
+    }));
   
   const dispatch = useDispatch();
   

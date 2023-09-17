@@ -2,7 +2,10 @@ import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDrag } from "react-dnd";
 import styles from "./ingredient.module.css";
-import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Counter,
+  CurrencyIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 import { getCurrentCount } from "../../../../utils/utils";
 import { SET_CURRENT_INGREDIENT } from "../../../../services/actions/burger-ingredients";
 import {
@@ -11,34 +14,37 @@ import {
 } from "../../../../services/actions/modal";
 import { ingredientPropType } from "../../../../utils/prop-types";
 
-
 const Ingredient = ({ ingredient }) => {
   const { card, image, text, gap_column_2 } = styles;
-  
+
   const dispatch = useDispatch();
 
-  const { counters } = useSelector((store) => ({ ...store.burgerIngredients }));
-  
+  const { counters } = useSelector((store) => ({
+    counters: store.burgerIngredients.counters,
+  }));
+
   const count = useMemo(() => {
     return getCurrentCount(counters, ingredient._id);
   }, [counters, ingredient._id]);
 
   const handleOpenModal = (ingredient) => {
     dispatch({ type: SET_MODAL_VISIBLE });
-    dispatch({ type: SET_MODAL_CONTENT, content: 'ingredient-details' });
+    dispatch({ type: SET_MODAL_CONTENT, content: "ingredient-details" });
     dispatch({ type: SET_CURRENT_INGREDIENT, ingredient: ingredient });
   };
 
   const [, dragRef] = useDrag({
-    type: 'ingredient',
-    item: ingredient
+    type: "ingredient",
+    item: ingredient,
   });
 
   return (
     <div
       className={card}
       ref={dragRef}
-      onClick={() => {handleOpenModal(ingredient)}}
+      onClick={() => {
+        handleOpenModal(ingredient);
+      }}
     >
       {count > 0 ? <Counter count={count} size="default" /> : null}
       <img

@@ -4,7 +4,7 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 
 const TabsPanel = React.memo(
-  ({ bunRef, sauceRef, mainRef, current, setCurrent }) => {
+  ({ refs, current, setCurrent }) => {
     return (
       <div className={`${styles.wrapper} mb-10`}>
         <Tab
@@ -12,7 +12,7 @@ const TabsPanel = React.memo(
           active={current === "bun"}
           onClick={() => {
             setCurrent("bun");
-            bunRef.current.scrollIntoView({
+            refs.bun.current.scrollIntoView({
               behavior: "smooth",
               block: "start",
             });
@@ -25,7 +25,7 @@ const TabsPanel = React.memo(
           active={current === "sauce"}
           onClick={() => {
             setCurrent("sauce");
-            sauceRef.current.scrollIntoView({
+            refs.sauce.current.scrollIntoView({
               behavior: "smooth",
               block: "start",
             });
@@ -38,7 +38,7 @@ const TabsPanel = React.memo(
           active={current === "main"}
           onClick={() => {
             setCurrent("main");
-            mainRef.current.scrollIntoView({
+            refs.main.current.scrollIntoView({
               behavior: "smooth",
               block: "start",
             });
@@ -52,9 +52,7 @@ const TabsPanel = React.memo(
 );
 
 TabsPanel.propTypes = {
-  bunRef: PropTypes.object.isRequired,
-  sauceRef: PropTypes.object.isRequired,
-  mainRef: PropTypes.object.isRequired,
+  refs: PropTypes.object.isRequired,
   current: PropTypes.string.isRequired,
   setCurrent: PropTypes.func.isRequired,
 };
