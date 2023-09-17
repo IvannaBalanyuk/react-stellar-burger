@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from "./components/modal-overlay/modal-overlay";
 import styles from "./modal.module.css";
-import { SET_MODAL_HIDDEN, SET_CURRENT_INGREDIENT } from "../../services/actions/app";
+import { SET_CURRENT_INGREDIENT } from "../../services/actions/burger-ingredients";
+import { SET_MODAL_HIDDEN } from "../../services/actions/modal";
 import PropTypes from "prop-types";
 
 const modalRoot = document.getElementById("modal-root");

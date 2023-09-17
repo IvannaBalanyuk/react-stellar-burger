@@ -9,7 +9,7 @@ import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
 import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../burger-constructor/burger-constructor";
-import { getIngredients } from "../../../services/actions/app";
+import { getIngredients } from "../../../services/actions/burger-ingredients";
 
 const App = () => {
   const {

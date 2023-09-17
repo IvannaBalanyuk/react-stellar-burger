@@ -15,12 +15,16 @@ import {
   SET_COUNTER,
   INCREASE_COUNTER,
   DELETE_COUNTER,
+} from "../../services/actions/burger-ingredients";
+import {
   SET_BUN,
   ADD_FILLING,
-  SET_ORDER_INGREDIENTS,
+} from "../../services/actions/burger-constructor";
+import { SET_ORDER_INGREDIENTS } from "../../services/actions/order";
+import {
   SET_MODAL_VISIBLE,
   SET_MODAL_CONTENT,
-} from "../../services/actions/app";
+} from "../../services/actions/modal";
 
 const BurgerConstructor = React.memo(() => {
   const {
@@ -39,7 +43,7 @@ const BurgerConstructor = React.memo(() => {
   }));
 
   const { counters } = useSelector((store) => ({
-    ...store.ingredients,
+    ...store.burgerIngredients,
   }));
 
   const { isVisible, content } = useSelector((store) => ({ ...store.modal }));

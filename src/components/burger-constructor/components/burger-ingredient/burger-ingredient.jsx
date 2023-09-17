@@ -10,9 +10,11 @@ import {
 import {
   DECREASE_COUNTER,
   DELETE_COUNTER,
+} from "../../../../services/actions/burger-ingredients";
+import {
   DELETE_FILLING,
   SORT_FILLINGS,
-} from "../../../../services/actions/app";
+} from "../../../../services/actions/burger-constructor";
 import { ingredientPropType } from "../../../../utils/prop-types";
 
 const BurgerIngredient = ({ ingredient }) => {
@@ -21,7 +23,7 @@ const BurgerIngredient = ({ ingredient }) => {
   const dispatch = useDispatch();
 
   const { ingredients, counters } = useSelector((store) => ({
-    ...store.ingredients,
+    ...store.burgerIngredients,
   }));
 
   const { fillings } = useSelector((store) => ({

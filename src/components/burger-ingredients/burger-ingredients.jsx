@@ -10,7 +10,7 @@ const BurgerIngredients = React.memo(() => {
   const { section, list } = styles;
 
   const { ingredients } = useSelector((store) => ({
-    ...store.ingredients,
+    ...store.burgerIngredients,
   }));
 
   const { isVisible, content } = useSelector((store) => ({

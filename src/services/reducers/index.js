@@ -1,13 +1,11 @@
-import { combineReducers } from 'redux';
-import {
-  ingredientsReducer,
-  burgerConstructorReducer,
-  orderReducer,
-  modalReducer,
-} from './app';
+import { combineReducers } from "redux";
+import { burgerIngredientsReducer } from "./burger-ingredients";
+import { burgerConstructorReducer } from "./burger-constructor";
+import { orderReducer } from "./order";
+import { modalReducer } from "./modal";
 
 export const rootReducer = combineReducers({
-  ingredients: ingredientsReducer,
+  burgerIngredients: burgerIngredientsReducer,
   burgerConstructor: burgerConstructorReducer,
   order: orderReducer,
   modal: modalReducer,

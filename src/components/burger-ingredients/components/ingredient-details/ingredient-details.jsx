@@ -12,7 +12,7 @@ const IngredientDetails = React.memo(() => {
   } = styles;
 
   const { currentIngredient } = useSelector((store) => ({
-    ...store.ingredients,
+    ...store.burgerIngredients,
   }));
 
   return (

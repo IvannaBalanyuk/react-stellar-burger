@@ -4,7 +4,7 @@ import styles from "./order-details.module.css";
 import doneImagePath from "../../../../images/order-accpeted-popup-done.png";
 import Loader from '../../../loader/loader';
 import AppError from "../../../app-error/app-error";
-import { applyOrder } from "../../../../services/actions/app";
+import { applyOrder } from "../../../../services/actions/order";
 
 const OrderDetails = () => {
   const {

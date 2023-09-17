@@ -1,7 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styles from "./modal-overlay.module.css";
-import { SET_MODAL_HIDDEN, SET_CURRENT_INGREDIENT } from "../../../../services/actions/app";
+import { SET_CURRENT_INGREDIENT } from "../../../../services/actions/burger-ingredients";
+import { SET_MODAL_HIDDEN } from "../../../../services/actions/modal";
 
 const ModalOverlay = () => {
   

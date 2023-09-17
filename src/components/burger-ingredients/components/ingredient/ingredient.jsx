@@ -4,11 +4,11 @@ import { useDrag } from "react-dnd";
 import styles from "./ingredient.module.css";
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { getCurrentCount } from "../../../../utils/utils";
+import { SET_CURRENT_INGREDIENT } from "../../../../services/actions/burger-ingredients";
 import {
-  SET_CURRENT_INGREDIENT,
   SET_MODAL_VISIBLE,
   SET_MODAL_CONTENT,
-} from '../../../../services/actions/app';
+} from "../../../../services/actions/modal";
 import { ingredientPropType } from "../../../../utils/prop-types";
 
 
@@ -17,7 +17,7 @@ const Ingredient = ({ ingredient }) => {
   
   const dispatch = useDispatch();
 
-  const { counters } = useSelector((store) => ({ ...store.ingredients }));
+  const { counters } = useSelector((store) => ({ ...store.burgerIngredients }));
   
   const count = useMemo(() => {
     return getCurrentCount(counters, ingredient._id);
