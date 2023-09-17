@@ -26,18 +26,6 @@ const BurgerIngredients = React.memo(() => {
     }
   }, [ingredients]);
 
-  // const buns = useMemo(() => {
-  //   return ingredients.filter((item) => item.type === "bun");
-  // }, [ingredients]);
-
-  // const sauces = useMemo(() => {
-  //   return ingredients.filter((item) => item.type === "sauce");
-  // }, [ingredients]);
-
-  // const main = useMemo(() => {
-  //   return ingredients.filter((item) => item.type === "main");
-  // }, [ingredients]);
-
   const [current, setCurrent] = useState("bun");
 
   const containerRef = useRef();
