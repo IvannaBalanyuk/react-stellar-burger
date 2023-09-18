@@ -1,89 +1,102 @@
-import React, { createRef, useMemo, useState, useCallback } from "react";
+import React, { useState, useRef, useMemo } from "react";
+import { useSelector, shallowEqual } from "react-redux";
 import styles from "./burger-ingredients.module.css";
-import TabsPanel from "../tabs-panel/tabs-panel";
-import IngredientsCategory from "../ingredients-category/ingredients-category";
+import TabsPanel from "./components/tabs-panel/tabs-panel";
+import IngredientsCategory from "./components/ingredients-category/ingredients-category";
 import Modal from "../modal/modal";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import { ingredientsPropType } from "../../utils/prop-types";
+import IngredientDetails from "./components/ingredient-details/ingredient-details";
 
-const BurgerIngredients = React.memo(({ ingredients }) => {
+const BurgerIngredients = React.memo(() => {
   const { section, list } = styles;
 
-  const bunRef = createRef();
-  const sauceRef = createRef();
-  const mainRef = createRef();
+  const ingredients = useSelector((store) => store.burgerIngredients.ingredients);
 
-  const buns = useMemo(() => {
-    return ingredients.filter((item) => item.type === "bun");
+  const { isVisible, content } = useSelector((store) => ({
+    isVisible: store.modal.isVisible,
+    content: store.modal.content,
+  }), shallowEqual);
+
+  const categories = useMemo(() => {
+    return {
+      buns: ingredients.filter((item) => item.type === "bun"),
+      sauces: ingredients.filter((item) => item.type === "sauce"),
+      main: ingredients.filter((item) => item.type === "main"),
+    }
   }, [ingredients]);
 
-  const sauces = useMemo(() => {
-    return ingredients.filter((item) => item.type === "sauce");
-  }, [ingredients]);
+  const [current, setCurrent] = useState("bun");
 
-  const main = useMemo(() => {
-    return ingredients.filter((item) => item.type === "main");
-  }, [ingredients]);
+  const containerRef = useRef();
+  const bunRef = useRef();
+  const sauceRef = useRef();
+  const mainRef = useRef();
 
-  const [modal, setModal] = useState({
-    isVisible: false,
-    ingredient: null,
-  });
+  const refs = {
+    bun: bunRef,
+    sauce: sauceRef,
+    main: mainRef,
+  };
 
-  const handleOpenModal = useCallback((ingredient) => {
-    setModal({
-      ...modal,
-      isVisible: true,
-      ingredient: ingredient,
-    });
-  }, [modal]);
+  const handleScroll = () => {
+    const containerScroll = containerRef.current.getBoundingClientRect().top;
+    const bunScroll =
+      refs.bun.current.getBoundingClientRect().top - containerScroll;
+    const sauceScroll =
+      refs.sauce.current.getBoundingClientRect().top - containerScroll;
+    const mainScroll =
+      refs.main.current.getBoundingClientRect().top - containerScroll;
 
-  const handleCloseModal = useCallback(() => {
-    setModal({
-      ...modal,
-      isVisible: false,
-    });
-  }, [modal]);
+    const maxOffset = -30;
+
+    if (bunScroll <= 0 && bunScroll > maxOffset) {
+      setCurrent("bun");
+    } else if (sauceScroll <= 0 && sauceScroll > maxOffset) {
+      setCurrent("sauce");
+    } else if (mainScroll <= 0 && mainScroll > maxOffset) {
+      setCurrent("main");
+    }
+  };
 
   return (
     <>
       <section className={`${section} pt-10 pb-10`}>
         <h2 className="text text_type_main-large mb-5">Соберите бургер</h2>
-        <TabsPanel bunRef={bunRef} sauceRef={sauceRef} mainRef={mainRef} />
+        <TabsPanel
+          refs={refs}
+          current={current}
+          setCurrent={setCurrent}
+        />
         {ingredients.length > 0 && (
-          <ul className={`${list} custom-scroll`}>
+          <ul
+            className={`${list} custom-scroll`}
+            onScroll={handleScroll}
+            ref={containerRef}
+          >
             <IngredientsCategory
               categoryName="Булки"
-              categoryRef={bunRef}
-              ingredients={buns}
-              onDoubleClick={handleOpenModal}
+              categoryRef={refs.bun}
+              ingredients={categories.buns}
             />
             <IngredientsCategory
               categoryName="Соусы"
-              categoryRef={sauceRef}
-              ingredients={sauces}
-              onDoubleClick={handleOpenModal}
+              categoryRef={refs.sauce}
+              ingredients={categories.sauces}
             />
             <IngredientsCategory
               categoryName="Начинки"
-              categoryRef={mainRef}
-              ingredients={main}
-              onDoubleClick={handleOpenModal}
+              categoryRef={refs.main}
+              ingredients={categories.main}
             />
           </ul>
         )}
       </section>
-      {modal.isVisible && modal.ingredient && (
-        <Modal heading="Детали ингредиента" onClick={handleCloseModal}>
-          <IngredientDetails ingredient={modal.ingredient} />
+      {isVisible && content === "ingredient-details" && (
+        <Modal heading="Детали ингредиента">
+          <IngredientDetails />
         </Modal>
       )}
     </>
   );
 });
-
-BurgerIngredients.propTypes = {
-  ingredients: ingredientsPropType,
-};
 
 export default BurgerIngredients;

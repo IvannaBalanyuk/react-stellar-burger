@@ -1,9 +1,10 @@
-import { useState, useContext, useLayoutEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import styles from "./order-details.module.css";
-import doneImagePath from "../../images/order-accpeted-popup-done.png";
-import { BurgerContext } from "../../services/app-context";
-import { postOrderData } from "../../utils/api";
-import AppError from "../app-error/app-error";
+import doneImagePath from "../../../../images/order-accpeted-popup-done.png";
+import Loader from '../../../loader/loader';
+import AppError from "../../../app-error/app-error";
+import { applyOrder } from "../../../../services/actions/order";
 
 const OrderDetails = () => {
   const {
@@ -15,28 +16,33 @@ const OrderDetails = () => {
     discription,
     image
   } = styles;
+  
+  const dispatch = useDispatch();
 
-  const [error, setError] = useState({ hasError: false, error: null });
-  const [orderNumber, setOrderNumber] = useState("");
-  const { burgerState } = useContext(BurgerContext);
-
-  useLayoutEffect(() => {
-    const ingredients = burgerState.ingredients.map((item) => item._id);
-    postOrderData({ ingredients })
-      .then((data) => {
-        setError({ ...error, hasError: false });
-        setOrderNumber(data.order.number);
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-        setError({ ...error, hasError: true, error: `${err}` });
-      });
-  }, []);
+  const {
+    orderIngredients,
+    orderNumber,
+    orderRequest,
+    orderFailed,
+    orderRequestError,
+  } = useSelector((store) => ({
+    orderIngredients: store.order.orderIngredients,
+    orderNumber: store.order.orderNumber,
+    orderRequest: store.order.orderRequest,
+    orderFailed: store.order.orderFailed,
+    orderRequestError: store.order.orderRequestError,
+  }), shallowEqual);
+  
+  useEffect(() => {
+    const idArr = orderIngredients.map((item) => item._id);
+    dispatch(applyOrder(idArr));
+  }, [dispatch, orderIngredients]);
 
   return (
     <div className={`${order} pt-4 pb-15`}>
-      {error.hasError && <AppError error={error.error} />}
-      {!error.hasError && (
+      {orderRequest && <Loader size="medium" />}
+      {orderFailed && <AppError error={orderRequestError} />}
+      {!orderFailed && (
         <>
           <div className={`${wrapper} ${gap_row_8}`}>
             <span className={`${number} text text_type_digits-large`}>

@@ -2,9 +2,9 @@ import React from "react";
 import styles from "./ingredients-category.module.css";
 import Ingredient from "../ingredient/ingredient";
 import PropTypes from "prop-types";
-import { ingredientsPropType } from "../../utils/prop-types";
+import { ingredientsPropType } from "../../../../utils/prop-types";
 
-const IngredientsCategory = ({ categoryName, categoryRef, ingredients, onDoubleClick }) => {
+const IngredientsCategory = ({ categoryName, categoryRef, ingredients }) => {
 
   return (
     <li>
@@ -16,7 +16,6 @@ const IngredientsCategory = ({ categoryName, categoryRef, ingredients, onDoubleC
           ingredients.map((ingredient) => (
             <Ingredient
               ingredient={ingredient}
-              onDoubleClick={onDoubleClick}
               key={ingredient._id}
             />
           ))}
@@ -30,7 +29,6 @@ IngredientsCategory.propTypes = {
   categoryName: PropTypes.string.isRequired,
   categoryRef: PropTypes.object.isRequired,
   ingredients: ingredientsPropType,
-  onDoubleClick: PropTypes.func.isRequired,
 };
 
 export default React.memo(IngredientsCategory);

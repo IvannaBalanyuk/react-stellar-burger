@@ -1,25 +1,21 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styles from "./ingredient-details.module.css";
-import { ingredientPropType } from "../../utils/prop-types";
 
-const IngredientDetails = React.memo(({ ingredient }) => {
-  const {
-    container,
-    image,
-    text,
-    list,
-    item,
-  } = styles;
+const IngredientDetails = React.memo(() => {
+  const { container, image, text, list, item } = styles;
+
+  const currentIngredient = useSelector((store) => store.burgerIngredients.currentIngredient);
 
   return (
     <div className={container}>
       <img
         className={image}
-        src={ingredient.image_large}
-        alt={ingredient.name}
+        src={currentIngredient.image_large}
+        alt={currentIngredient.name}
       />
       <span className={`${text} text text_type_main-medium mt-4 mb-8`}>
-        {ingredient.name}
+        {currentIngredient.name}
       </span>
       <ul className={list}>
         <li className={item}>
@@ -31,7 +27,7 @@ const IngredientDetails = React.memo(({ ingredient }) => {
           <span
             className={`${text} text text_type_digits-default text_color_inactive`}
           >
-            {ingredient.calories}
+            {currentIngredient.calories}
           </span>
         </li>
         <li className={item}>
@@ -43,7 +39,7 @@ const IngredientDetails = React.memo(({ ingredient }) => {
           <span
             className={`${text} text text_type_digits-default text_color_inactive`}
           >
-            {ingredient.proteins}
+            {currentIngredient.proteins}
           </span>
         </li>
         <li className={item}>
@@ -55,7 +51,7 @@ const IngredientDetails = React.memo(({ ingredient }) => {
           <span
             className={`${text} text text_type_digits-default text_color_inactive`}
           >
-            {ingredient.fat}
+            {currentIngredient.fat}
           </span>
         </li>
         <li className={item}>
@@ -67,16 +63,12 @@ const IngredientDetails = React.memo(({ ingredient }) => {
           <span
             className={`${text} text text_type_digits-default text_color_inactive`}
           >
-            {ingredient.carbohydrates}
+            {currentIngredient.carbohydrates}
           </span>
         </li>
       </ul>
     </div>
   );
 });
-
-IngredientDetails.propTypes = {
-  ingredient: ingredientPropType,
-};
 
 export default IngredientDetails;

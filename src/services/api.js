@@ -4,7 +4,7 @@ function checkResult(res) {
   return res.ok ? res.json() : Promise.reject(res.status);
 }
 
-function getIngredientsData() {
+function getIngredientsRequest() {
   return fetch(`${baseUrl}/ingredients`, {
     method: "GET",
   }).then((res) => {
@@ -12,7 +12,7 @@ function getIngredientsData() {
   });
 }
 
-function postOrderData({ ingredients }) {
+function postOrderRequest(ingredients) {
   return fetch(`${baseUrl}/orders`, {
     method: "POST",
     body: JSON.stringify({
@@ -26,4 +26,4 @@ function postOrderData({ ingredients }) {
   });
 }
 
-export { getIngredientsData, postOrderData };
+export { getIngredientsRequest, postOrderRequest };
