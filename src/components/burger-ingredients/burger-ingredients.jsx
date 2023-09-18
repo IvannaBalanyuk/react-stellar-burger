@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import styles from "./burger-ingredients.module.css";
 import TabsPanel from "./components/tabs-panel/tabs-panel";
 import IngredientsCategory from "./components/ingredients-category/ingredients-category";
@@ -9,14 +9,12 @@ import IngredientDetails from "./components/ingredient-details/ingredient-detail
 const BurgerIngredients = React.memo(() => {
   const { section, list } = styles;
 
-  const { ingredients } = useSelector((store) => ({
-    ingredients: store.burgerIngredients.ingredients,
-  }));
+  const ingredients = useSelector((store) => store.burgerIngredients.ingredients);
 
   const { isVisible, content } = useSelector((store) => ({
     isVisible: store.modal.isVisible,
     content: store.modal.content,
-  }));
+  }), shallowEqual);
 
   const categories = useMemo(() => {
     return {

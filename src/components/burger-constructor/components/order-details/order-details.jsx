@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import styles from "./order-details.module.css";
 import doneImagePath from "../../../../images/order-accpeted-popup-done.png";
 import Loader from '../../../loader/loader';
@@ -31,7 +31,7 @@ const OrderDetails = () => {
     orderRequest: store.order.orderRequest,
     orderFailed: store.order.orderFailed,
     orderRequestError: store.order.orderRequestError,
-  }));
+  }), shallowEqual);
   
   useEffect(() => {
     const idArr = orderIngredients.map((item) => item._id);

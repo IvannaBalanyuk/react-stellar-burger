@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useDrop } from "react-dnd";
 import styles from "./burger-constructor.module.css";
 import {
@@ -34,16 +34,14 @@ const BurgerConstructor = React.memo(() => {
   const { fillings, bun } = useSelector((store) => ({
     fillings: store.burgerConstructor.fillings,
     bun: store.burgerConstructor.bun,
-  }));
+  }), shallowEqual);
 
-  const { counters } = useSelector((store) => ({
-    counters: store.burgerIngredients.counters,
-  }));
+  const counters = useSelector((store) => store.burgerIngredients.counters);
 
   const { isVisible, content } = useSelector((store) => ({
     isVisible: store.modal.isVisible,
     content: store.modal.content,
-  }));
+  }), shallowEqual);
 
   const totalPrice = useMemo(() => {
     if (fillings.length > 0) {

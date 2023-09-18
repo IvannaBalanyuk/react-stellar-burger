@@ -5,9 +5,7 @@ import styles from "./ingredient-details.module.css";
 const IngredientDetails = React.memo(() => {
   const { container, image, text, list, item } = styles;
 
-  const { currentIngredient } = useSelector((store) => ({
-    currentIngredient: store.burgerIngredients.currentIngredient,
-  }));
+  const currentIngredient = useSelector((store) => store.burgerIngredients.currentIngredient);
 
   return (
     <div className={container}>

@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import styles from "./burger-ingredient.module.css";
 import { getCurrentCount } from "../../../../utils/utils";
@@ -25,11 +25,9 @@ const BurgerIngredient = ({ ingredient }) => {
   const { ingredients, counters } = useSelector((store) => ({
     ingredients: store.burgerIngredients.ingredients,
     counters: store.burgerIngredients.counters,
-  }));
+  }), shallowEqual);
   
-  const { fillings } = useSelector((store) => ({
-    fillings: store.burgerConstructor.fillings,
-  }));
+  const fillings = useSelector((store) => store.burgerConstructor.fillings);
 
   const dropIndex = fillings.findIndex(
     (item) => item.index === ingredient.index

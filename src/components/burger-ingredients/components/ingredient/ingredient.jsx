@@ -19,9 +19,7 @@ const Ingredient = ({ ingredient }) => {
 
   const dispatch = useDispatch();
 
-  const { counters } = useSelector((store) => ({
-    counters: store.burgerIngredients.counters,
-  }));
+  const counters = useSelector((store) => store.burgerIngredients.counters);
 
   const count = useMemo(() => {
     return getCurrentCount(counters, ingredient._id);

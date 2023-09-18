@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import styles from "./app.module.css";
@@ -17,7 +17,7 @@ const App = () => {
       ingredientsRequest: store.burgerConstructor.ingredientsRequest,
       ingredientsFailed: store.burgerConstructor.ingredientsFailed,
       ingredientsRequestError: store.burgerConstructor.ingredientsRequestError,
-    }));
+    }), shallowEqual);
   
   const dispatch = useDispatch();
   
