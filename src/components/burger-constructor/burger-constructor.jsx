@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useDrop } from "react-dnd";
+import { v4 as uuidv4 } from 'uuid';
 import styles from "./burger-constructor.module.css";
 import {
   Button,
@@ -66,7 +67,7 @@ const BurgerConstructor = React.memo(() => {
     const currentCount = getCurrentCount(counters, ingredient._id);
     const newBurgerIngredient = {
       ...ingredient,
-      index: `${ingredient._id}#${currentCount + 1}`,
+      index: `${uuidv4()}`,
     };
 
     if (newBurgerIngredient.type === "bun") {

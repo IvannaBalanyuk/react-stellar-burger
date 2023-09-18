@@ -36,9 +36,7 @@ const BurgerIngredient = ({ ingredient }) => {
   const handleDeleteClick = useCallback(
     (e) => {
       const targetElement = e.target.closest(".ingredient");
-      const targetIngredient = ingredients.find(
-        (item) => item._id === targetElement.id.split("#")[0]
-      );
+      const targetIngredient = ingredients.find((item) => item._id === targetElement.id);
       const currentCount = getCurrentCount(counters, targetIngredient._id);
 
       if (currentCount > 1) {
@@ -47,7 +45,7 @@ const BurgerIngredient = ({ ingredient }) => {
         dispatch({ type: DELETE_COUNTER, id: targetIngredient._id });
       }
 
-      dispatch({ type: DELETE_FILLING, index: targetElement.id });
+      dispatch({ type: DELETE_FILLING, index: targetElement.dataset.index });
     },
     [dispatch, ingredients, counters]
   );
@@ -87,7 +85,8 @@ const BurgerIngredient = ({ ingredient }) => {
   return (
     <li
       key={ingredient.index}
-      id={ingredient.index}
+      data-index={ingredient.index}
+      id={ingredient._id}
       ref={dropTarget}
       className={`ingredient ${item_type_content}`}
       style={{ opacity }}
