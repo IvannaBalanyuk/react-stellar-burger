@@ -7,7 +7,7 @@ import {
 
 const burgerConstructorInitialState = {
   fillings: [],
-  bun: {},
+  bun: null,
 };
 
 export const burgerConstructorReducer = (state = burgerConstructorInitialState, action) => {
