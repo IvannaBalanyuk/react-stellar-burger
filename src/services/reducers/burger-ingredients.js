@@ -15,7 +15,7 @@ const burgerIngredientsInitialState = {
   ingredientsFailed: false,
   ingredientsRequestError: '',
   counters: [],
-  currentIngredient: {},
+  currentIngredient: null,
 };
 
 export const burgerIngredientsReducer = (state = burgerIngredientsInitialState, action) => {

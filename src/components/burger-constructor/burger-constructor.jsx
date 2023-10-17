@@ -50,8 +50,10 @@ const BurgerConstructor = React.memo(() => {
         return acc + item.price;
       }, 0);
       return fillingsTotalPrice + bun.price;
-    } else {
+    } else if (bun !== null) {
       return bun.price;
+    } else {
+      return 0;
     }
   }, [fillings, bun]);
 
@@ -104,7 +106,7 @@ const BurgerConstructor = React.memo(() => {
   return (
     <>
       <section className={`${section} pt-25 pb-10 pl-4`} ref={dropTarget}>
-        {bun.name && (
+        {bun && (
           <div className={item_type_bun}>
             <ConstructorElement
               type="top"
@@ -127,7 +129,7 @@ const BurgerConstructor = React.memo(() => {
               );
             })}
         </ul>
-        {bun.name && (
+        {bun && (
           <div className={item_type_bun}>
             <ConstructorElement
               type="bottom"
