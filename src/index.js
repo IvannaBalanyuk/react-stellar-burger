@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 import "./index.css";
 import App from "./components/app/app/app";
 import { compose, createStore, applyMiddleware } from 'redux';
@@ -19,9 +20,11 @@ const store = createStore(rootReducer, enhancer);
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <Router>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

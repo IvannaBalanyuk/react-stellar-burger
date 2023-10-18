@@ -1,11 +1,13 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import styles from "./ingredient-details.module.css";
 
 const IngredientDetails = React.memo(() => {
   const { container, image, text, list, item } = styles;
 
-  const currentIngredient = useSelector((store) => store.burgerIngredients.currentIngredient);
+  const location = useLocation();
+
+  const currentIngredient = location.state && location.state.currentIngredient;
 
   return (
     <div className={container}>

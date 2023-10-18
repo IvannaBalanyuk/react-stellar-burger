@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useDrop } from "react-dnd";
+import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import styles from "./burger-constructor.module.css";
 import {
@@ -10,8 +11,6 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { getCurrentCount } from "../../utils/utils";
 import BurgerIngredient from "./components/burger-ingredient/burger-ingredient";
-import Modal from "../modal/modal";
-import OrderDetails from "./components/order-details/order-details";
 import {
   SET_COUNTER,
   INCREASE_COUNTER,
@@ -21,27 +20,26 @@ import {
   SET_BUN,
   ADD_FILLING,
 } from "../../services/actions/burger-constructor";
-import { SET_ORDER_INGREDIENTS } from "../../services/actions/order";
-import {
-  SET_MODAL_VISIBLE,
-  SET_MODAL_CONTENT,
-} from "../../services/actions/modal";
+import { applyOrder } from "../../services/actions/order";
 
 const BurgerConstructor = React.memo(() => {
   const { section, list, item_type_bun, order, total, element } = styles;
 
   const dispatch = useDispatch();
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const { fillings, bun } = useSelector((store) => ({
     fillings: store.burgerConstructor.fillings,
     bun: store.burgerConstructor.bun,
   }), shallowEqual);
 
-  const counters = useSelector((store) => store.burgerIngredients.counters);
+  const counters = useSelector((store) => store.burgerIngredients.counters);  
 
-  const { isVisible, content } = useSelector((store) => ({
-    isVisible: store.modal.isVisible,
-    content: store.modal.content,
+  const {
+    orderNumber,
+  } = useSelector((store) => ({
+    orderNumber: store.order.orderNumber,
   }), shallowEqual);
 
   const totalPrice = useMemo(() => {
@@ -57,11 +55,16 @@ const BurgerConstructor = React.memo(() => {
     }
   }, [fillings, bun]);
 
-  const handleOpenModal = () => {
-    dispatch({ type: SET_ORDER_INGREDIENTS, ingredients: [...fillings, bun] });
-    dispatch({ type: SET_MODAL_VISIBLE });
-    dispatch({ type: SET_MODAL_CONTENT, content: "order-details" });
-  };
+  const handleOpenModal = useCallback(() => {
+    const idArr = [...fillings, bun].map((item) => item._id);
+    if (idArr.length >= 1) {
+      dispatch(applyOrder(idArr));
+    };
+
+    setTimeout(() => {
+      navigate('/order', {state: { background: location } });
+    }, 200);
+  }, [dispatch, fillings, bun, location, navigate]);
 
   const onDropHandler = (ingredient) => {
     if (bun._id === ingredient._id) return;
@@ -156,11 +159,6 @@ const BurgerConstructor = React.memo(() => {
           </Button>
         </div>
       </section>
-      {isVisible && content === "order-details" && (
-        <Modal heading="">
-          <OrderDetails />
-        </Modal>
-      )}
     </>
   );
 });

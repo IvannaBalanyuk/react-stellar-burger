@@ -20,3 +20,12 @@
   top: calc((100% / 2) - 25px);
   left: calc((100% / 2) - 144px);
 }
+
+.item {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: calc(var(--offset-base-size) * 2);
+}

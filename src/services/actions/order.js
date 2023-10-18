@@ -16,6 +16,7 @@ export function applyOrder(idArr) {
           type: APPLY_ORDER_SUCCESS,
           number: res.order.number,
         });
+        localStorage.setItem('number', res.order.number);
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);

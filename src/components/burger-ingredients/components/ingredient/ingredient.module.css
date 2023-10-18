@@ -25,3 +25,18 @@
 .gap_column_2 {
   column-gap: calc(var(--offset-base-size) * 2);
 }
+
+.link {
+  all: unset;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: opacity .3s;
+}
+
+.link:hover {
+  opacity: .6;
+}

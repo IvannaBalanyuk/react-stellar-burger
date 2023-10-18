@@ -1,42 +1,54 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import styles from "./app.module.css";
-import Loader from '../../loader/loader';
-import AppError from "../../app-error/app-error";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
-import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
-import BurgerConstructor from "../../burger-constructor/burger-constructor";
-import { getIngredients } from "../../../services/actions/burger-ingredients";
+import { Home } from "../../../pages/index";
+import Modal from "../../modal/modal";
+import IngredientDetails from "../../burger-ingredients/components/ingredient-details/ingredient-details";
+import OrderDetails from "../../burger-constructor/components/order-details/order-details";
 
 const App = () => {
-  const { ingredientsRequest, ingredientsFailed, ingredientsRequestError } =
-    useSelector((store) => ({
-      ingredientsRequest: store.burgerConstructor.ingredientsRequest,
-      ingredientsFailed: store.burgerConstructor.ingredientsFailed,
-      ingredientsRequestError: store.burgerConstructor.ingredientsRequestError,
-    }), shallowEqual);
-  
-  const dispatch = useDispatch();
-  
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const background = location.state && location.state.background;
+
+  const handleModalClose = () => {
+    navigate(-1);
+  };
 
   return (
     <div className={styles.app}>
       <ErrorBoundary>
         <AppHeader />
         <main className={styles.content}>
-          {ingredientsRequest && <Loader size="large" />}
-          {ingredientsFailed && <AppError error={ingredientsRequestError} />}
-          {!ingredientsFailed && (
-            <DndProvider backend={HTML5Backend}>
-              <BurgerIngredients />
-              <BurgerConstructor />
-            </DndProvider>
+          <Routes location={background || location}>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/ingredients/:ingredientId"
+              element={<IngredientDetails fullScrin={true} />}
+            />
+          </Routes>
+          {background && (
+            <Routes>
+              <Route
+                path="/ingredients/:ingredientId"
+                element={
+                  <Modal heading="Детали ингредиента" onClose={handleModalClose}>
+                    <IngredientDetails />
+                  </Modal>
+                }
+              />
+              <Route
+                path="/order"
+                element={
+                  <Modal onClose={handleModalClose}>
+                    <OrderDetails />
+                  </Modal>
+                }
+              />
+              <Route path="*" element={<></>} />
+            </Routes>
           )}
         </main>
       </ErrorBoundary>
