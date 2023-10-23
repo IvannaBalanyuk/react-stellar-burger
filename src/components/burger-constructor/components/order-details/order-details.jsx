@@ -1,6 +1,6 @@
 import { useSelector, shallowEqual } from "react-redux";
 import styles from "./order-details.module.css";
-import doneImagePath from "../../../../images/order-accpeted-popup-done.png";
+import doneImage from "../../../../images/order-accpeted-popup-done.png";
 import Loader from '../../../loader/loader';
 import AppError from "../../../app-error/app-error";
 
@@ -43,7 +43,7 @@ const OrderDetails = () => {
               идентификатор&nbsp;заказа
             </span>
           </div>
-          <img className={image} src={doneImagePath} alt="Done/Заказ принят" />
+          <img className={image} src={doneImage} alt="Done/Заказ принят" />
           <div className={`${wrapper} ${gap_row_2}`}>
             <span className={`${discription} text text_type_main-default`}>
               Ваш&nbsp;заказ начали&nbsp;готовить
