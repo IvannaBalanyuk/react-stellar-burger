@@ -7,6 +7,7 @@ import {
 import styles from "./forgot-password.module.css";
 import useForm from "../../hooks/useForm";
 import { forgotPasswordRequest } from "../../services/api";
+import { routes } from "../../utils/constants";
 
 const ForgotPassword = () => {
   const [error, setError] = useState({ error: false, message: "" });
@@ -25,7 +26,7 @@ const ForgotPassword = () => {
     try {
       const res = await forgotPasswordRequest({ ...values });
       setSuccess({ success: res.success, message: res.message });
-      navigate("/reset-password", { state: { from: location } });
+      navigate(routes.resetPassword, { state: { from: location } });
     } catch (err) {
       setError({ error: true, message: err });
     }
@@ -73,7 +74,7 @@ const ForgotPassword = () => {
           <p className="text text_type_main-default text_color_inactive">
             Вспомнили пароль?
           </p>
-          <Link to="/login" className={styles.link}>
+          <Link to={routes.login} className={styles.link}>
             <p className="text text_type_main-default">Войти</p>
           </Link>
         </div>

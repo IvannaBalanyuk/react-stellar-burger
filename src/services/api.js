@@ -176,7 +176,7 @@ const forgotPasswordRequest = (data) => {
   return fetch(`${baseUrl}/password-reset`, {
     method: "POST",
     body: JSON.stringify({
-      email: data,
+      email: data.email,
     }),
     headers: {
       "Content-Type": "application/json",

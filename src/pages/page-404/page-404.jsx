@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./page-404.module.css";
+import { routes } from "../../utils/constants";
 
 const Page404 = () => {
   return (
@@ -16,7 +17,7 @@ const Page404 = () => {
           <p className="text text_type_main-default text_color_inactive mb-4">
             Вы можете вернуться назад, либо перейти
           </p>
-          <Link to="/" className={styles.link}>
+          <Link to={routes.home} className={styles.link}>
             <p className="text text_type_main-default"> на главную страницу</p>
           </Link>
         </div>

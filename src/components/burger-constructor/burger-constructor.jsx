@@ -21,6 +21,7 @@ import {
   ADD_FILLING,
 } from "../../services/actions/burger-constructor";
 import { applyOrder } from "../../services/actions/order";
+import { routes } from "../../utils/constants";
 
 const BurgerConstructor = React.memo(() => {
   const { section, list, item_type_bun, order, total, element } = styles;
@@ -57,7 +58,7 @@ const BurgerConstructor = React.memo(() => {
     if (idArr.length >= 1) {
       await dispatch(applyOrder(idArr));
       setTimeout(() => {
-        navigate("/order", { state: { background: location } });
+        navigate(routes.order, { state: { background: location } });
       }, 200);
     }
   };

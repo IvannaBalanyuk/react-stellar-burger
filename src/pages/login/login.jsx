@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   EmailInput,
   PasswordInput,
@@ -8,9 +8,12 @@ import {
 import styles from "./login.module.css";
 import useForm from "../../hooks/useForm";
 import { login } from "../../services/actions/auth";
+import { routes } from "../../utils/constants";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { values, handleChange } = useForm({
     email: "",
@@ -19,7 +22,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(login({ ...values }));
+    await dispatch(login({ ...values }));
+    navigate(location?.state?.from || routes.home);
   };
 
   return (
@@ -54,7 +58,7 @@ const Login = () => {
           <p className="text text_type_main-default text_color_inactive">
             Вы - новый пользователь?
           </p>
-          <Link to="/register" className={styles.link}>
+          <Link to={routes.register} className={styles.link}>
             <p className="text text_type_main-default">Зарегистрироваться</p>
           </Link>
         </div>
@@ -62,7 +66,7 @@ const Login = () => {
           <p className="text text_type_main-default text_color_inactive">
             Забыли пароль?
           </p>
-          <Link to="/forgot-password" className={styles.link}>
+          <Link to={routes.forgotPassword} className={styles.link}>
             <p className="text text_type_main-default">Восстановить пароль</p>
           </Link>
         </div>

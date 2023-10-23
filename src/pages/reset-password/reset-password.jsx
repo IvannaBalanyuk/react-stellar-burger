@@ -8,6 +8,7 @@ import {
 import styles from "./reset-password.module.css";
 import useForm from "../../hooks/useForm";
 import { resetPasswordRequest } from "../../services/api";
+import { routes } from "../../utils/constants";
 
 const ResetPassword = () => {
   const [error, setError] = useState({ error: false, message: "" });
@@ -33,8 +34,8 @@ const ResetPassword = () => {
 
   return (
     <>
-      {location.state?.from?.pathname !== "/forgot-password" && (
-        <Navigate to="/forgot-password" />
+      {location.state?.from?.pathname !== routes.forgotPassword && (
+        <Navigate to={routes.forgotPassword} />
       )}
       <main className={styles.content}>
         <form
@@ -87,7 +88,7 @@ const ResetPassword = () => {
             <p className="text text_type_main-default text_color_inactive">
               Вспомнили пароль?
             </p>
-            <Link to="/login" className={styles.link}>
+            <Link to={routes.login} className={styles.link}>
               <p className="text text_type_main-default">Войти</p>
             </Link>
           </div>

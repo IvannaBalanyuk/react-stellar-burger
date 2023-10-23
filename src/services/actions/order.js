@@ -16,6 +16,7 @@ export const applyOrder = (idArr) => {
           number: res.order.number,
         });
         localStorage.setItem('number', res.order.number);
+        console.log(localStorage.getItem('number'));
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);

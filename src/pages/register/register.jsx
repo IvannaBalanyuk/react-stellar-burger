@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   Input,
@@ -7,23 +8,29 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./register.module.css";
 import useForm from "../../hooks/useForm";
-import { registerRequest } from "../../services/api";
+import { register } from "../../services/actions/auth";
+import { routes } from "../../utils/constants";
 
 const Register = () => {
+  const dispatch = useDispatch();
   const { values, handleChange } = useForm({
-    name: "",
     email: "",
+    name: "",
     password: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerRequest({ ...values });
+    dispatch(register({ ...values }));
   };
 
   return (
     <main className={styles.content}>
-      <form className={styles.container} action="register" onSubmit={handleSubmit}>
+      <form
+        className={styles.container}
+        action="register"
+        onSubmit={handleSubmit}
+      >
         <h2 className="text text_type_main-medium">Регистрация</h2>
         <Input
           type={"text"}
@@ -61,7 +68,7 @@ const Register = () => {
           <p className="text text_type_main-default text_color_inactive">
             Уже зарегистрированы?
           </p>
-          <Link to="/login" className={styles.link}>
+          <Link to={routes.login} className={styles.link}>
             <p className="text text_type_main-default">Войти</p>
           </Link>
         </div>

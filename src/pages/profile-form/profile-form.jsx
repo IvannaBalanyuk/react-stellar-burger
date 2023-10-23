@@ -45,10 +45,10 @@ const ProfileForm = () => {
     setIsChanged(false);
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsChanged(false);
-    dispatch(changeUser({ ...values }));
+    await dispatch(changeUser({ ...values }));
     setValues({
       ...values,
       password: currentPassword,

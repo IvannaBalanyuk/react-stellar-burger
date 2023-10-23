@@ -3,6 +3,7 @@ import {
   changeUserWithRefreshRequest,
   loginRequest,
   logoutRequest,
+  registerRequest,
 } from "../api";
 
 export const GET_USER_SUCCESS = "GET_USER_SUCCESS";
@@ -67,6 +68,17 @@ export const logout = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       dispatch(setUser(null));
+    });
+  };
+};
+
+export const register = (data) => {
+  return (dispatch) => {
+    return registerRequest(data).then((res) => {
+      localStorage.setItem("accessToken", res.accessToken);
+      localStorage.setItem("refreshToken", res.refreshToken);
+      dispatch(setUser(res.user));
+      dispatch(setAuthChecked(true));
     });
   };
 };

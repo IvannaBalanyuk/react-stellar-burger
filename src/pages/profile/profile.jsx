@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 import styles from "./profile.module.css";
 import { logout } from "../../services/actions/auth";
+import { routes } from "../../utils/constants";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -15,12 +16,12 @@ const Profile = () => {
   return (
     <main className={styles.content}>
       <section className={styles.section}>
-        {(location === "/profile" || location === "/profile/orders") && (
+        {(location === routes.profile.index || location === routes.profile.orders) && (
           <div className={styles.sidebar}>
             <nav>
               <ul className={styles.list}>
                 <li className={styles.item}>
-                  <NavLink to="/profile" className={styles.link} end>
+                  <NavLink to={routes.profile.index} className={styles.link} end>
                     {({ isActive }) => (
                       <span
                         className={
@@ -35,7 +36,7 @@ const Profile = () => {
                   </NavLink>
                 </li>
                 <li className={styles.item}>
-                  <NavLink to="/profile/orders" className={styles.link}>
+                  <NavLink to={routes.profile.orders} className={styles.link}>
                     {({ isActive }) => (
                       <span
                         className={
@@ -50,7 +51,7 @@ const Profile = () => {
                   </NavLink>
                 </li>
                 <li className={styles.item}>
-                  <NavLink to="/" className={styles.link} onClick={onLogout}>
+                  <NavLink to={routes.home} className={styles.link} onClick={onLogout}>
                     {({ isActive }) => (
                       <span
                         className={
@@ -67,9 +68,9 @@ const Profile = () => {
               </ul>
             </nav>
             <p className="text text_type_main-default text_color_inactive mt-20">
-              {location === "/profile"
+              {location === routes.profile.index
                 ? "В этом разделе вы можете изменить свои персональные данные"
-                : location === "/profile/orders"
+                : location === routes.profile.orders
                 ? "В этом разделе вы можете просмотреть свою историю заказов"
                 : ""}
             </p>

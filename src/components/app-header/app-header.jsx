@@ -8,6 +8,7 @@ import {
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import NavPanel from "./components/nav-panel/nav-panel";
+import { routes } from "../../utils/constants";
 
 const AppHeader = React.memo(() => {
   const { header, content, wrapper, link } = styles;
@@ -18,7 +19,7 @@ const AppHeader = React.memo(() => {
         <NavPanel>
           <li className="pt-4 pr-5 pb-4 pl-5">
             <NavLink
-              to="/"
+              to={routes.home}
               className={link}
               end
             >
@@ -32,7 +33,7 @@ const AppHeader = React.memo(() => {
           </li>
           <li className="pt-4 pr-5 pb-4 pl-5">
             <NavLink
-              to="/feed"
+              to={routes.feed}
               className={link}
               end
             >
@@ -51,7 +52,7 @@ const AppHeader = React.memo(() => {
         <NavPanel>
           <li className="pt-4 pr-5 pb-4 pl-5">
               <NavLink
-                to="/profile"
+                to={routes.profile.index}
                 className={link}
               >
                 {({ isActive }) => (

@@ -21,6 +21,7 @@ import OrderDetails from "../../burger-constructor/components/order-details/orde
 import { checkUserAuth } from "../../../services/actions/auth";
 import { OnlyAuth, OnlyUnAuth } from "../../protected-route";
 import { getIngredients } from "../../../services/actions/burger-ingredients";
+import { routes } from "../../../utils/constants";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -45,30 +46,30 @@ const App = () => {
       <ErrorBoundary>
         <AppHeader />
         <Routes location={background || location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/ingredients/:ingredientId" element={<Ingredient />} />
-          <Route path="/login" element={<OnlyUnAuth component={<Login />} />} />
+          <Route path={routes.home} element={<Home />} />
+          <Route path={routes.ingredientId} element={<Ingredient />} />
+          <Route path={routes.login} element={<OnlyUnAuth component={<Login />} />} />
           <Route
-            path="/register"
+            path={routes.register}
             element={<OnlyUnAuth component={<Register />} />}
           />
           <Route
-            path="/forgot-password"
+            path={routes.forgotPassword}
             element={<OnlyUnAuth component={<ForgotPassword />} />}
           />
           <Route
-            path="/reset-password"
+            path={routes.resetPassword}
             element={<OnlyUnAuth component={<ResetPassword />} />}
           />
-          <Route path="/profile" element={<OnlyAuth component={<Profile />} />}>
+          <Route path={routes.profile.index} element={<OnlyAuth component={<Profile />} />}>
             <Route index element={<ProfileForm />} />
           </Route>
-          <Route path="*" element={<Page404 />} />
+          <Route path={routes.page404} element={<Page404 />} />
         </Routes>
         {background && (
           <Routes>
             <Route
-              path="/ingredients/:ingredientId"
+              path={routes.ingredientId}
               element={
                 <Modal heading="Детали ингредиента" onClose={handleModalClose}>
                   <IngredientDetails />
@@ -76,7 +77,7 @@ const App = () => {
               }
             />
             <Route
-              path="/order"
+              path={routes.order}
               element={
                 <OnlyAuth
                   component={
