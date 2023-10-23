@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useDrag } from "react-dnd";
 import { Link, useLocation } from "react-router-dom";
-import styles from "./ingredient.module.css";
+import styles from "./ingredient-card.module.css";
 import {
   Counter,
   CurrencyIcon,
@@ -11,7 +11,7 @@ import { getCurrentCount } from "../../../../utils/utils";
 
 import { ingredientPropType } from "../../../../utils/prop-types";
 
-const Ingredient = ({ ingredient }) => {
+const IngredientCard = ({ ingredient }) => {
   const location = useLocation();
   const ingredientId = ingredient['_id'];
 
@@ -31,7 +31,7 @@ const Ingredient = ({ ingredient }) => {
       <Link
         key={ingredientId}
         to={`/ingredients/${ingredientId}`}
-        state={{ background: location, currentIngredient: ingredient }}
+        state={{ background: location }}
         className={styles.link}
       >
         {count > 0 ? <Counter count={count} size="default" /> : null}
@@ -54,8 +54,8 @@ const Ingredient = ({ ingredient }) => {
   );
 };
 
-Ingredient.propTypes = {
+IngredientCard.propTypes = {
   ingredient: ingredientPropType,
 };
 
-export default React.memo(Ingredient);
+export default React.memo(IngredientCard);

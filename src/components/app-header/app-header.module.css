@@ -21,7 +21,7 @@
   left: calc((100% / 2) - 144px);
 }
 
-.item {
+.link {
   text-decoration: none;
   color: inherit;
   display: flex;

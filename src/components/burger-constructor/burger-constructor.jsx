@@ -1,8 +1,8 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useDrop } from "react-dnd";
 import { useLocation, useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
@@ -26,21 +26,18 @@ const BurgerConstructor = React.memo(() => {
   const { section, list, item_type_bun, order, total, element } = styles;
 
   const dispatch = useDispatch();
-  const location = useLocation()
-  const navigate = useNavigate()
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const { fillings, bun } = useSelector((store) => ({
-    fillings: store.burgerConstructor.fillings,
-    bun: store.burgerConstructor.bun,
-  }), shallowEqual);
+  const { fillings, bun } = useSelector(
+    (store) => ({
+      fillings: store.burgerConstructor.fillings,
+      bun: store.burgerConstructor.bun,
+    }),
+    shallowEqual
+  );
 
-  const counters = useSelector((store) => store.burgerIngredients.counters);  
-
-  const {
-    orderNumber,
-  } = useSelector((store) => ({
-    orderNumber: store.order.orderNumber,
-  }), shallowEqual);
+  const counters = useSelector((store) => store.burgerIngredients.counters);
 
   const totalPrice = useMemo(() => {
     if (fillings.length > 0) {
@@ -55,16 +52,15 @@ const BurgerConstructor = React.memo(() => {
     }
   }, [fillings, bun]);
 
-  const handleOpenModal = useCallback(() => {
+  const handleOpenModal = async () => {
     const idArr = [...fillings, bun].map((item) => item._id);
     if (idArr.length >= 1) {
-      dispatch(applyOrder(idArr));
-    };
-
-    setTimeout(() => {
-      navigate('/order', {state: { background: location } });
-    }, 200);
-  }, [dispatch, fillings, bun, location, navigate]);
+      await dispatch(applyOrder(idArr));
+      setTimeout(() => {
+        navigate("/order", { state: { background: location } });
+      }, 200);
+    }
+  };
 
   const onDropHandler = (ingredient) => {
     if (bun._id === ingredient._id) return;

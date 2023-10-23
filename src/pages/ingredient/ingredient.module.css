@@ -1,0 +1,17 @@
+.content {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  min-width: 640px;
+  min-height: 575px;
+  padding-top: 120px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

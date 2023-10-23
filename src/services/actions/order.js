@@ -1,11 +1,10 @@
 import { postOrderRequest } from "../api";
 
-export const SET_ORDER_INGREDIENTS = "SET_ORDER_INGREDIENTS";
 export const APPLY_ORDER_REQUEST = "APPLY_ORDER_REQUEST";
 export const APPLY_ORDER_SUCCESS = "APPLY_ORDER_SUCCESS";
 export const APPLY_ORDER_FAILED = "APPLY_ORDER_FAILED";
 
-export function applyOrder(idArr) {
+export const applyOrder = (idArr) => {
   return function (dispatch) {
     dispatch({
       type: APPLY_ORDER_REQUEST,

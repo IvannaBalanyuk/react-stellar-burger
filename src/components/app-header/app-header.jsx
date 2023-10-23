@@ -10,7 +10,7 @@ import {
 import NavPanel from "./components/nav-panel/nav-panel";
 
 const AppHeader = React.memo(() => {
-  const { header, content, wrapper, item } = styles;
+  const { header, content, wrapper, link } = styles;
 
   return (
     <header className={`${header} pt-4 pb-4`}>
@@ -19,7 +19,7 @@ const AppHeader = React.memo(() => {
           <li className="pt-4 pr-5 pb-4 pl-5">
             <NavLink
               to="/"
-              className={`${item}`}
+              className={link}
               end
             >
               {({ isActive }) => (
@@ -33,7 +33,7 @@ const AppHeader = React.memo(() => {
           <li className="pt-4 pr-5 pb-4 pl-5">
             <NavLink
               to="/feed"
-              className={`${item}`}
+              className={link}
               end
             >
               {({ isActive }) => (
@@ -52,8 +52,7 @@ const AppHeader = React.memo(() => {
           <li className="pt-4 pr-5 pb-4 pl-5">
               <NavLink
                 to="/profile"
-                className={`${item}`}
-                end
+                className={link}
               >
                 {({ isActive }) => (
                   <>

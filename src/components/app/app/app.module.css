@@ -5,10 +5,3 @@
   flex-direction: column;
   align-items: center;
 }
-
-.content {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  column-gap: calc(var(--offset-base-size) * 10);
-}

@@ -1,5 +1,4 @@
 import {
-  SET_ORDER_INGREDIENTS,
   APPLY_ORDER_REQUEST,
   APPLY_ORDER_SUCCESS,
   APPLY_ORDER_FAILED,
@@ -15,12 +14,6 @@ const orderInitialState = {
 
 export const orderReducer = (state = orderInitialState, action) => {
   switch (action.type) {
-    case SET_ORDER_INGREDIENTS: {
-      return {
-        ...state,
-        orderIngredients: action.ingredients,
-      };
-    }
     case APPLY_ORDER_REQUEST: {
       return {
         ...state,

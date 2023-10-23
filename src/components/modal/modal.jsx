@@ -38,7 +38,7 @@ const Modal = ({ heading, onClose, children }) => {
   });
 
   return (
-    <div className={container} id='modal-container'>
+    <div className={container}>
       <ModalOverlay />
       <div className={`${modal} pt-10 pr-10 pb-15 pl-10`} ref={modalRef}>
         <div className={wrapper}>

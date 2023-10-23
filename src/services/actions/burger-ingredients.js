@@ -8,9 +8,8 @@ export const SET_COUNTER = "SET_COUNTER";
 export const INCREASE_COUNTER = "INCREASE_COUNTER";
 export const DECREASE_COUNTER = "DECREASE_COUNTER";
 export const DELETE_COUNTER = "DELETE_COUNTER";
-export const SET_CURRENT_INGREDIENT = "SET_CURRENT_INGREDIENT";
 
-export function getIngredients() {
+export const getIngredients = () => {
   return function (dispatch) {
     dispatch({
       type: GET_INGREDIENTS_REQUEST,

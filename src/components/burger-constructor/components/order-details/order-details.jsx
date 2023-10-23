@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 import styles from "./order-details.module.css";
 import doneImagePath from "../../../../images/order-accpeted-popup-done.png";
@@ -29,7 +28,6 @@ const OrderDetails = () => {
   }), shallowEqual);
   
   const currentNumber = localStorage.getItem('number');
-  console.log(currentNumber);
 
   return (
     <div className={`${order} pt-4 pb-15`}>
