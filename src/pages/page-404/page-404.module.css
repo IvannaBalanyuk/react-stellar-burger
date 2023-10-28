@@ -1,0 +1,38 @@
+.content {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 600px;
+  padding-top: 120px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.digits {
+  background-image: linear-gradient(63.18deg, #801ab3 0%, #4c4cff 100%);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.text {
+  text-align: center;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  column-gap: calc(var(--offset-base-size) * 2);
+}
+
+.link {
+  text-decoration: none;
+  color: #4C4CFF;
+}

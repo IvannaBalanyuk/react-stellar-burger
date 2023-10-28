@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ingredients-category.module.css";
-import Ingredient from "../ingredient/ingredient";
+import IngredientCard from "../ingredient-card/ingredient-card";
 import PropTypes from "prop-types";
 import { ingredientsPropType } from "../../../../utils/prop-types";
 
@@ -14,7 +14,7 @@ const IngredientsCategory = ({ categoryName, categoryRef, ingredients }) => {
       <ul className={`${styles.list} pl-4`}>
         {ingredients.length > 0 &&
           ingredients.map((ingredient) => (
-            <Ingredient
+            <IngredientCard
               ingredient={ingredient}
               key={ingredient._id}
             />

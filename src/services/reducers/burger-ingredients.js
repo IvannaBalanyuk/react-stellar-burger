@@ -6,7 +6,6 @@ import {
   INCREASE_COUNTER,
   DECREASE_COUNTER,
   DELETE_COUNTER,
-  SET_CURRENT_INGREDIENT,
 } from '../actions/burger-ingredients';
 
 const burgerIngredientsInitialState = {
@@ -75,12 +74,6 @@ export const burgerIngredientsReducer = (state = burgerIngredientsInitialState, 
       return {
         ...state,
         counters: [...state.counters].filter((item) => item.id !== action.id),
-      };
-    }
-    case SET_CURRENT_INGREDIENT: {
-      return {
-        ...state,
-        currentIngredient: action.ingredient,
       };
     }
     default: {

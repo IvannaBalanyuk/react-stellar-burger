@@ -1,0 +1,21 @@
+.container {
+  min-width: 480px;
+  min-height: 430px;
+  padding-top: 120px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  column-gap: calc(var(--offset-base-size) * 5);
+}
+
+.input:focus {
+  border: 2px solid var(--colors-interface-accent);
+  border-radius: var(--common-border-radius-s);
+}

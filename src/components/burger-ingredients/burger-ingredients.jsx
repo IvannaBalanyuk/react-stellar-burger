@@ -1,20 +1,14 @@
 import React, { useState, useRef, useMemo } from "react";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector } from "react-redux";
 import styles from "./burger-ingredients.module.css";
 import TabsPanel from "./components/tabs-panel/tabs-panel";
 import IngredientsCategory from "./components/ingredients-category/ingredients-category";
-import Modal from "../modal/modal";
-import IngredientDetails from "./components/ingredient-details/ingredient-details";
+
 
 const BurgerIngredients = React.memo(() => {
   const { section, list } = styles;
 
   const ingredients = useSelector((store) => store.burgerIngredients.ingredients);
-
-  const { isVisible, content } = useSelector((store) => ({
-    isVisible: store.modal.isVisible,
-    content: store.modal.content,
-  }), shallowEqual);
 
   const categories = useMemo(() => {
     return {
@@ -90,11 +84,6 @@ const BurgerIngredients = React.memo(() => {
           </ul>
         )}
       </section>
-      {isVisible && content === "ingredient-details" && (
-        <Modal heading="Детали ингредиента">
-          <IngredientDetails />
-        </Modal>
-      )}
     </>
   );
 });

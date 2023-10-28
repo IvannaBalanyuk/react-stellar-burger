@@ -1,44 +1,95 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useDispatch } from "react-redux";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import styles from "./app.module.css";
-import Loader from '../../loader/loader';
-import AppError from "../../app-error/app-error";
+import {
+  Home,
+  Ingredient,
+  Login,
+  Register,
+  ForgotPassword,
+  ResetPassword,
+  Profile,
+  ProfileForm,
+  Page404,
+} from "../../../pages/index";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
-import BurgerIngredients from "../../burger-ingredients/burger-ingredients";
-import BurgerConstructor from "../../burger-constructor/burger-constructor";
+import Modal from "../../modal/modal";
+import IngredientDetails from "../../burger-ingredients/components/ingredient-details/ingredient-details";
+import OrderDetails from "../../burger-constructor/components/order-details/order-details";
+import { checkUserAuth } from "../../../services/actions/auth";
+import { OnlyAuth, OnlyUnAuth } from "../../protected-route";
 import { getIngredients } from "../../../services/actions/burger-ingredients";
+import { routes } from "../../../utils/constants";
 
 const App = () => {
-  const { ingredientsRequest, ingredientsFailed, ingredientsRequestError } =
-    useSelector((store) => ({
-      ingredientsRequest: store.burgerConstructor.ingredientsRequest,
-      ingredientsFailed: store.burgerConstructor.ingredientsFailed,
-      ingredientsRequestError: store.burgerConstructor.ingredientsRequestError,
-    }), shallowEqual);
-  
   const dispatch = useDispatch();
-  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const background = location.state && location.state.background;
+
   useEffect(() => {
     dispatch(getIngredients());
-  }, [dispatch]);
+  }, []);
+
+  useEffect(() => {
+    dispatch(checkUserAuth());
+  }, []);
+
+  const handleModalClose = () => {
+    navigate(-1);
+  };
 
   return (
     <div className={styles.app}>
       <ErrorBoundary>
         <AppHeader />
-        <main className={styles.content}>
-          {ingredientsRequest && <Loader size="large" />}
-          {ingredientsFailed && <AppError error={ingredientsRequestError} />}
-          {!ingredientsFailed && (
-            <DndProvider backend={HTML5Backend}>
-              <BurgerIngredients />
-              <BurgerConstructor />
-            </DndProvider>
-          )}
-        </main>
+        <Routes location={background || location}>
+          <Route path={routes.home} element={<Home />} />
+          <Route path={routes.ingredientId} element={<Ingredient />} />
+          <Route path={routes.login} element={<OnlyUnAuth component={<Login />} />} />
+          <Route
+            path={routes.register}
+            element={<OnlyUnAuth component={<Register />} />}
+          />
+          <Route
+            path={routes.forgotPassword}
+            element={<OnlyUnAuth component={<ForgotPassword />} />}
+          />
+          <Route
+            path={routes.resetPassword}
+            element={<OnlyUnAuth component={<ResetPassword />} />}
+          />
+          <Route path={routes.profile.index} element={<OnlyAuth component={<Profile />} />}>
+            <Route index element={<ProfileForm />} />
+          </Route>
+          <Route path={routes.page404} element={<Page404 />} />
+        </Routes>
+        {background && (
+          <Routes>
+            <Route
+              path={routes.ingredientId}
+              element={
+                <Modal heading="Детали ингредиента" onClose={handleModalClose}>
+                  <IngredientDetails />
+                </Modal>
+              }
+            />
+            <Route
+              path={routes.order}
+              element={
+                <OnlyAuth
+                  component={
+                    <Modal onClose={handleModalClose}>
+                      <OrderDetails />
+                    </Modal>
+                  }
+                />
+              }
+            />
+          </Routes>
+        )}
       </ErrorBoundary>
     </div>
   );
