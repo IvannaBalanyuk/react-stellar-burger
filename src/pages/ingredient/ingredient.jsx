@@ -5,10 +5,10 @@ const Ingredient = () => {
 
   return (
     <main className={styles.content}>
-      <div className={styles.container}>
+      <section className={styles.section}>
         <h2 className="text text_type_main-large">Детали ингредиента</h2>
         <IngredientDetails />
-      </div>
+      </section>
     </main>
   );
 };

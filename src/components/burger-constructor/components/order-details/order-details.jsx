@@ -26,8 +26,6 @@ const OrderDetails = () => {
     orderFailed: store.order.orderFailed,
     orderRequestError: store.order.orderRequestError,
   }), shallowEqual);
-  
-  const currentNumber = localStorage.getItem('number');
 
   return (
     <div className={`${order} pt-4 pb-15`}>
@@ -37,7 +35,7 @@ const OrderDetails = () => {
         <>
           <div className={`${wrapper} ${gap_row_8}`}>
             <span className={`${number} text text_type_digits-large`}>
-              {orderNumber || currentNumber}
+              {orderNumber}
             </span>
             <span className={`${discription} text text_type_main-medium`}>
               идентификатор&nbsp;заказа

@@ -53,13 +53,11 @@ const BurgerConstructor = React.memo(() => {
     }
   }, [fillings, bun]);
 
-  const handleOpenModal = async () => {
+  const handleOpenModal = () => {
     const idArr = [...fillings, bun].map((item) => item._id);
     if (idArr.length >= 1) {
-      await dispatch(applyOrder(idArr));
-      setTimeout(() => {
-        navigate(routes.order, { state: { background: location } });
-      }, 200);
+      navigate(routes.order, { state: { background: location } });
+      dispatch(applyOrder(idArr));
     }
   };
 

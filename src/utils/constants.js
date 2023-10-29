@@ -9,9 +9,14 @@ export const routes = {
   profile: {
     index: "/profile",
     orders: "/profile/orders",
-    orderNumber: "/profile/orders/:orderNumber",
+    orderNumber: "/profile/orders/:number",
   },
   feed: "/feed",
-  feedOrderDetails: "/feed/:orderNumber",
+  feedOrderNumber: "/feed/:number",
   page404: "*",
+};
+
+export const wsUrl = {
+  feedOrders: "wss://norma.nomoreparties.space/orders/all",
+  userOrders: "wss://norma.nomoreparties.space/orders",
 };
