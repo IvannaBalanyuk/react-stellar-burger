@@ -4,7 +4,7 @@ import { useLocation, Outlet } from "react-router-dom";
 import styles from "./feed.module.css";
 import OrderCard from "../../components/order-card/order-card";
 import OrderStatistics from "../../components/order-statistics/order-statistics";
-import { FEED_WS_CONNECTION_START } from "../../services/actions/feed-orders";
+import { FEED_WS_CONNECTION_START, FEED_WS_CONNECTION_STOP } from "../../services/actions/feed-orders";
 import { routes, wsUrl } from "../../utils/constants";
 
 const Feed = () => {
@@ -17,6 +17,10 @@ const Feed = () => {
       type: FEED_WS_CONNECTION_START,
       payload: wsUrl.feedOrders,
     });
+
+    return () => {
+      dispatch({ type: FEED_WS_CONNECTION_STOP });
+    }
   }, []);
 
   return (

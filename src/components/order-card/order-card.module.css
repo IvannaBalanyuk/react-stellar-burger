@@ -65,6 +65,10 @@
   margin-left: -20px;
 }
 
+.icon_with_counter {
+  z-index: 1,
+}
+
 .icon_with_counter::after {
   content: "";
   display: block;
@@ -74,13 +78,13 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 20;
+  z-index: 2;
   background-color: #1C1C21;
   opacity: .6;
 }
 
-.count {  
-  z-index: 21;
+.count {
+  z-index: 10;
 }
 
 .total {

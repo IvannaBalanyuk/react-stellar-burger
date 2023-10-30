@@ -3,13 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Outlet } from "react-router-dom";
 import styles from "./profile-orders.module.css";
 import OrderCard from "../../components/order-card/order-card";
-import { USER_ORDERS_WS_CONNECTION_START } from "../../services/actions/user-orders";
+import {
+  USER_ORDERS_WS_CONNECTION_START,
+  USER_ORDERS_WS_CONNECTION_STOP,
+} from "../../services/actions/user-orders";
 import { routes, wsUrl } from "../../utils/constants";
 
 const ProfileOrders = () => {
-  const orders = useSelector((store) => store.userOrders.orders);
   const dispatch = useDispatch();
   const location = useLocation();
+  const orders = useSelector((store) => store.userOrders.orders);
+
+  const reversedOrdersArr = orders.slice().reverse();
 
   useEffect(() => {
     dispatch({
@@ -18,6 +23,10 @@ const ProfileOrders = () => {
         localStorage.getItem("accessToken").split("Bearer ")[1]
       }`,
     });
+
+    return () => {
+      dispatch({ type: USER_ORDERS_WS_CONNECTION_STOP });
+    };
   }, []);
 
   return (
@@ -25,12 +34,12 @@ const ProfileOrders = () => {
       {location.pathname === routes.profile.orders && (
         <ul className={`${styles.list} custom-scroll`}>
           {orders.length > 0 &&
-            orders.map((order) => <OrderCard key={order._id} order={order} />)}
+            reversedOrdersArr.map((order) => <OrderCard key={order._id} order={order} />)}
         </ul>
       )}
       <Outlet />
     </>
   );
-}
+};
 
 export default ProfileOrders;

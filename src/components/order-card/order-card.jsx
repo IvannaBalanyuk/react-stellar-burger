@@ -10,15 +10,24 @@ import { orderPropType } from "../../utils/prop-types";
 import { getIngredientById } from "../../utils/utils";
 import { routes } from "../../utils/constants";
 
-
 const OrderCard = ({ order }) => {
   const location = useLocation();
+
   const ingredients = useSelector(
     (store) => store.burgerIngredients.ingredients
   );
+
   const orderIngredients = order.ingredients.map((item) =>
     getIngredientById(ingredients, item)
   );
+
+  const firstFiveIngredients = orderIngredients.slice(0, 4);
+
+  let sixthIngredient = null;
+  if (orderIngredients.length > 5) {
+    sixthIngredient = orderIngredients[5];
+  }
+
   const orderPrice = orderIngredients.reduce((sum, item) => {
     return sum + item.price;
   }, 0);
@@ -54,27 +63,22 @@ const OrderCard = ({ order }) => {
         </div>
         <div className={styles.wrapperRowDirection}>
           <ul className={styles.list}>
-            {orderIngredients.map((item, index) => {
-              if (index <= 4) {
-                const zIndex = 6 - index;
-                return (
-                  <li
-                    className={styles.icon}
-                    key={index}
-                    style={{
-                      zIndex: zIndex,
-                      backgroundImage: `url(${item.image_mobile})`,
-                    }}
-                  ></li>
-                );
-              }
-              return null;
+            {firstFiveIngredients.map((item, index) => {
+              return (
+                <li
+                  className={styles.icon}
+                  key={index}
+                  style={{
+                    zIndex: `${7 - index}`,
+                    backgroundImage: `url(${item.image_mobile})`,
+                  }}
+                ></li>
+              );
             })}
-            {orderIngredients.length > 5 && (
+            {sixthIngredient && (
               <li
                 className={`${styles.icon} ${styles.icon_with_counter}`}
                 style={{
-                  zIndex: 1,
                   backgroundImage: `url(${orderIngredients[5].image_mobile})`,
                 }}
               >
