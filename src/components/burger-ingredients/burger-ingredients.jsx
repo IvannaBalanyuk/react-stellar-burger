@@ -6,8 +6,6 @@ import IngredientsCategory from "./components/ingredients-category/ingredients-c
 
 
 const BurgerIngredients = React.memo(() => {
-  const { section, list } = styles;
-
   const ingredients = useSelector((store) => store.burgerIngredients.ingredients);
 
   const categories = useMemo(() => {
@@ -52,9 +50,7 @@ const BurgerIngredients = React.memo(() => {
   };
 
   return (
-    <>
-      <section className={`${section} pt-10 pb-10`}>
-        <h2 className="text text_type_main-large mb-5">Соберите бургер</h2>
+    <div className={styles.container}>
         <TabsPanel
           refs={refs}
           current={current}
@@ -62,7 +58,7 @@ const BurgerIngredients = React.memo(() => {
         />
         {ingredients.length > 0 && (
           <ul
-            className={`${list} custom-scroll`}
+            className={`${styles.list} custom-scroll`}
             onScroll={handleScroll}
             ref={containerRef}
           >
@@ -83,8 +79,7 @@ const BurgerIngredients = React.memo(() => {
             />
           </ul>
         )}
-      </section>
-    </>
+    </div>
   );
 });
 

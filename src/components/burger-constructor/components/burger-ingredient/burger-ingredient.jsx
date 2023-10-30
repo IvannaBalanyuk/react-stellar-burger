@@ -18,8 +18,6 @@ import {
 import { ingredientPropType } from "../../../../utils/prop-types";
 
 const BurgerIngredient = ({ ingredient }) => {
-  const { item_type_content, element } = styles;
-
   const dispatch = useDispatch();
 
   const { ingredients, counters } = useSelector((store) => ({
@@ -88,7 +86,7 @@ const BurgerIngredient = ({ ingredient }) => {
       data-index={ingredient.index}
       id={ingredient._id}
       ref={dropTarget}
-      className={`ingredient ${item_type_content}`}
+      className={`ingredient ${styles.item_type_content}`}
       style={{ opacity }}
     >
       <div ref={dragRef}>
@@ -98,7 +96,7 @@ const BurgerIngredient = ({ ingredient }) => {
         text={ingredient.name}
         price={ingredient.price}
         thumbnail={ingredient.image}
-        extraClass={`${element}`}
+        extraClass={`${styles.element}`}
         handleClose={handleDeleteClick}
       />
     </li>

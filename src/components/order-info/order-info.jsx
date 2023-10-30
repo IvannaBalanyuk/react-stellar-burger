@@ -8,20 +8,18 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import {
   getIngredientById,
-  getCountOfIngredientWithIndexes,
+  getTotalCountOfIngredient,
   isEmptyObj,
 } from "../../utils/utils";
 import { getOrderRequest } from "../../services/api";
 
-export default function OrderInfo() {
-  const ingredients = useSelector(
-    (store) => store.burgerIngredients.ingredients
-  );
-
+const OrderInfo = () => {
+  const ingredients = useSelector((store) => store.burgerIngredients.ingredients);
   const [order, setOrder] = useState({
     data: {},
     error: false,
   });
+  const { number } = useParams();
 
   let orderIngredients;
   let orderPrice;
@@ -35,8 +33,6 @@ export default function OrderInfo() {
     }, 0);
   }
 
-  const { number } = useParams();
-
   useEffect(() => {
     getOrderRequest(number).then((res) => {
       setOrder({ ...order, data: res.orders[0] });
@@ -47,12 +43,12 @@ export default function OrderInfo() {
 
   return (
     <div className={styles.container}>
-      <p className={`${styles.text} text text_type_digits-default`}>
+      <h2 className={`${styles.text} text text_type_digits-default`}>
         {`#${order.data.number}`}
-      </p>
+      </h2>
       <div className={`${styles.title} mb-5`}>
-        <p className="text text_type_main-medium">{order.data.name}</p>
-        <p className="text text_type_main-default text_color_inactive">
+        <h3 className="text text_type_main-medium">{order.data.name}</h3>
+        <p className="text text_type_main-default text_color_success">
           {order.data.status === "done" ? "Выполнен" : "Готовится"}
         </p>
       </div>
@@ -61,7 +57,7 @@ export default function OrderInfo() {
         <ul className={`${styles.list} custom-scroll`}>
           {orderIngredients &&
             orderIngredients.map((item, index, array) => {
-              const { count, indexes } = getCountOfIngredientWithIndexes(
+              const { count, indexes } = getTotalCountOfIngredient(
                 item,
                 array
               );
@@ -73,7 +69,7 @@ export default function OrderInfo() {
                       style={{ backgroundImage: `url(${item.image_mobile})` }}
                     ></div>
                     <p
-                      className={`${styles.title} text text_type_main-default`}
+                      className={`${styles.name} text text_type_main-default`}
                     >
                       {item.name}
                     </p>
@@ -121,4 +117,6 @@ export default function OrderInfo() {
       </div>
     </div>
   );
-}
+};
+
+export default OrderInfo;

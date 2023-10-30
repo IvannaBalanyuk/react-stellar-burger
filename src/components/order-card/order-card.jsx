@@ -6,9 +6,10 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./order-card.module.css";
-// import { ingredientPropType } from "../../../../utils/prop-types";
+import { orderPropType } from "../../utils/prop-types";
 import { getIngredientById } from "../../utils/utils";
 import { routes } from "../../utils/constants";
+
 
 const OrderCard = ({ order }) => {
   const location = useLocation();
@@ -71,13 +72,13 @@ const OrderCard = ({ order }) => {
             })}
             {orderIngredients.length > 5 && (
               <li
-                className={styles.counter}
+                className={`${styles.icon} ${styles.icon_with_counter}`}
                 style={{
                   zIndex: 1,
                   backgroundImage: `url(${orderIngredients[5].image_mobile})`,
                 }}
               >
-                <p className={`${styles.counter} text text_type_main-default`}>
+                <p className={`${styles.count} text text_type_main-default`}>
                   {`+${orderIngredients.length - 5}`}
                 </p>
               </li>
@@ -93,8 +94,8 @@ const OrderCard = ({ order }) => {
   );
 };
 
-// OrderCard.propTypes = {
-//   order: ingredientPropType,
-// };
+OrderCard.propTypes = {
+  order: orderPropType,
+};
 
 export default React.memo(OrderCard);

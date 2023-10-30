@@ -24,8 +24,6 @@ import { applyOrder } from "../../services/actions/order";
 import { routes } from "../../utils/constants";
 
 const BurgerConstructor = React.memo(() => {
-  const { section, list, item_type_bun, order, total, element } = styles;
-
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -102,59 +100,57 @@ const BurgerConstructor = React.memo(() => {
   });
 
   return (
-    <>
-      <section className={`${section} pt-25 pb-10 pl-4`} ref={dropTarget}>
-        {bun && (
-          <div className={item_type_bun}>
-            <ConstructorElement
-              type="top"
-              isLocked={true}
-              text={`${bun.name} (верх)`}
-              price={bun.price}
-              thumbnail={bun.image}
-              extraClass={`${element}`}
-            />
-          </div>
-        )}
-        <ul className={`${list} pr-2 pt-4 pb-4 custom-scroll`}>
-          {fillings.length > 0 &&
-            fillings.map((ingredient) => {
-              return (
-                <BurgerIngredient
-                  key={ingredient.index}
-                  ingredient={ingredient}
-                />
-              );
-            })}
-        </ul>
-        {bun && (
-          <div className={item_type_bun}>
-            <ConstructorElement
-              type="bottom"
-              isLocked={true}
-              text={`${bun.name} (низ)`}
-              price={bun.price}
-              thumbnail={bun.image}
-              extraClass={`${element}`}
-            />
-          </div>
-        )}
-        <div className={`${order} mt-10 pr-4`}>
-          <div className={total}>
-            <p className="text text_type_digits-medium">{totalPrice}</p>
-            <CurrencyIcon type="primary" />
-          </div>
-          <Button
-            htmlType="button"
-            type="primary"
-            size="large"
-            onClick={handleOpenModal}
-          >
-            Оформить заказ
-          </Button>
+    <div className={`${styles.container} pl-4`} ref={dropTarget}>
+      {bun && (
+        <div className={styles.item_type_bun}>
+          <ConstructorElement
+            type="top"
+            isLocked={true}
+            text={`${bun.name} (верх)`}
+            price={bun.price}
+            thumbnail={bun.image}
+            extraClass={`${styles.element}`}
+          />
         </div>
-      </section>
-    </>
+      )}
+      <ul className={`${styles.list} pr-2 pt-4 pb-4 custom-scroll`}>
+        {fillings.length > 0 &&
+          fillings.map((ingredient) => {
+            return (
+              <BurgerIngredient
+                key={ingredient.index}
+                ingredient={ingredient}
+              />
+            );
+          })}
+      </ul>
+      {bun && (
+        <div className={styles.item_type_bun}>
+          <ConstructorElement
+            type="bottom"
+            isLocked={true}
+            text={`${bun.name} (низ)`}
+            price={bun.price}
+            thumbnail={bun.image}
+            extraClass={`${styles.element}`}
+          />
+        </div>
+      )}
+      <div className={`${styles.order} mt-10 pr-4`}>
+        <div className={styles.total}>
+          <p className="text text_type_digits-medium">{totalPrice}</p>
+          <CurrencyIcon type="primary" />
+        </div>
+        <Button
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={handleOpenModal}
+        >
+          Оформить заказ
+        </Button>
+      </div>
+    </div>
   );
 });
 

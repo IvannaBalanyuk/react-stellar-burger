@@ -49,30 +49,23 @@
 .icon {
   width: 64px;
   height: 64px;
-  border: 2px solid (var(--colors-interface-accent));
+  border: 2px solid var(--colors-interface-accent);
   border-radius: 100px;
-  position: relative;
+  background: #131316;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 115px 64px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .icon:not(:first-child) {
   margin-left: -20px;
 }
 
-.counter {
-  width: 64px;
-  height: 64px;
-  border: 2px solid (var(--colors-interface-accent));
-  border-radius: 100px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.counter::after {
+.icon_with_counter::after {
   content: "";
   display: block;
   width: 64px;
@@ -81,13 +74,13 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: 20;
   background-color: #1C1C21;
   opacity: .6;
 }
 
-.counter {
-  z-index: 11;
+.count {  
+  z-index: 21;
 }
 
 .total {

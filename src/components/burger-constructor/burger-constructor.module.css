@@ -1,8 +1,5 @@
-.section {
+.container {
   width: 600px;
-  height: calc(100vh - 88px);
-  min-height: 800px;
-  max-height: 912px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -42,7 +39,7 @@
 }
 
 .item_type_bun::before {
-  content: '';
+  content: "";
   width: 24px;
 }
 

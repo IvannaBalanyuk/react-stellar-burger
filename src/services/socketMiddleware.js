@@ -1,5 +1,6 @@
 import { checkOrdersIngredients } from "../utils/utils";
 import { wsUrl } from "../utils/constants";
+import { USER_ORDERS_WS_CONNECTION_START } from "../services/actions/user-orders";
 import { refreshTokenRequest } from "./api";
 
 export const socketMiddleware = (wsActions) => {
@@ -20,17 +21,14 @@ export const socketMiddleware = (wsActions) => {
 
       if (socket) {
         socket.onopen = (event) => {
-          console.log(event.type);
           dispatch({ type: onOpen, payload: event.type });
         };
 
         socket.onerror = (event) => {
-          console.log(event.message);
           dispatch({ type: onError, payload: event.message });
         };
 
         socket.onclose = (event) => {
-          console.log(event);
           if (isConnected) {
             reconnectTimer = setTimeout(() => {
               dispatch({ type: wsInit });
@@ -38,14 +36,13 @@ export const socketMiddleware = (wsActions) => {
           }
 
           if (event.wasClean) {
-            dispatch({ type: onClose, payload: "Closed correct" });
+            dispatch({ type: onClose, payload: "Connection closed correct" });
           } else {
-            dispatch({ type: onClose, payload: "Closed uncorrect" });
+            dispatch({ type: onClose, payload: "Connection closed uncorrect" });
           }
         };
 
         if (type === onStop) {
-          console.log("stop");
           clearTimeout(reconnectTimer);
           isConnected = false;
           reconnectTimer = 0;
@@ -54,7 +51,6 @@ export const socketMiddleware = (wsActions) => {
 
         socket.onmessage = (event) => {
           let data = JSON.parse(event.data);
-          console.log(data);
           if (data.message === "Invalid or missing token") {
             refreshTokenRequest()
               .then((res) => {
@@ -63,8 +59,8 @@ export const socketMiddleware = (wsActions) => {
               })
               .then(() => {
                 dispatch({
-                  type: "USER_ORDERS_WS_CONNECTION_START",
-                  payload: `wss://norma.nomoreparties.space/orders?token=${
+                  type: USER_ORDERS_WS_CONNECTION_START,
+                  payload: `${wsUrl.userOrders}?token=${
                     localStorage.getItem("accessToken").split("Bearer ")[1]
                   }`,
                 });

@@ -9,31 +9,14 @@ export const getCurrentCount = (counters, ingredientId) => {
   }
 };
 
-export function getIngrediencesId(array) {
-  return array.reduce((total, item) => {
-    if (item) {
-      return [...total, item._id];
-    } else {
-      return total;
-    }
-  }, []);
-}
+export const getIngredientById = (array, id) => {
+  return array.find((item) => item._id === id);
+};
 
-export function getCountOfIngredient(ingredient, array) {
-  const count = array.reduce((total, item) => {
-    if (item._id === ingredient._id) {
-      return (total += 1);
-    }
-    return total;
-  }, 0);
-
-  return count;
-}
-
-export function getCountOfIngredientWithIndexes(ingredient, array) {
+export const getTotalCountOfIngredient = (element, array) => {
   const count = array.reduce(
     (total, item, index) => {
-      if (item._id === ingredient._id) {
+      if (item._id === element._id) {
         total.count += 1;
         total.indexes.push(index);
         return total;
@@ -42,15 +25,10 @@ export function getCountOfIngredientWithIndexes(ingredient, array) {
     },
     { count: 0, indexes: [] }
   );
-
   return count;
-}
+};
 
-export function getIngredientById(array, id) {
-  return array.find((item) => item._id === id);
-}
-
-export function checkArrayProperties(array) {
+const checkArray = (array) => {
   let result = true;
   array.forEach((element) => {
     if (!element) {
@@ -58,14 +36,14 @@ export function checkArrayProperties(array) {
     }
   });
   return result;
-}
+};
 
-export function checkOrdersIngredients(array) {
+export const checkOrdersIngredients = (array) => {
   return array.filter((item) => {
-    return checkArrayProperties(item.ingredients);
+    return checkArray(item.ingredients);
   });
-}
+};
 
-export function isEmptyObj(obj) {
+export const isEmptyObj = (obj) => {
   return Object.keys(obj).length === 0;
-}
+};

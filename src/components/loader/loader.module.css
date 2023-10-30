@@ -13,7 +13,7 @@
 
 .wrapper_large {
   width: 100%;
-  min-height: 160px;
+  min-height: 80px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -22,7 +22,7 @@
 
 .wrapper_medium {
   width: 100%;
-  min-height: 100px;
+  min-height: 60px;
   display: flex;
   justify-content: center;
   flex-direction: column;

@@ -5,14 +5,6 @@ import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from "./components/modal-overlay/modal-overlay";
 
 const Modal = ({ heading, onClose, children }) => {
-  const {
-    modal,
-    container,
-    wrapper,
-    title,
-    close,
-  } = styles;
-
   const modalRef = useRef();
 
   const handleEscapeClose = (e) => {
@@ -38,12 +30,12 @@ const Modal = ({ heading, onClose, children }) => {
   });
 
   return (
-    <div className={container}>
+    <div className={styles.container}>
       <ModalOverlay />
-      <div className={`${modal} pt-10 pr-10 pb-15 pl-10`} ref={modalRef}>
-        <div className={wrapper}>
-          <h2 className={`${title} text text_type_main-large`}>{heading}</h2>
-          <span className={close}>
+      <div className={`${styles.modal} pt-10 pr-10 pb-15 pl-10`} ref={modalRef}>
+        <div className={styles.wrapper}>
+          <h2 className={`${styles.title} text text_type_main-large`}>{heading}</h2>
+          <span className={styles.close}>
             <CloseIcon type="primary" onClick={onClose} />
           </span>
         </div>
