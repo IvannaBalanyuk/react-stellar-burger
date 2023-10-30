@@ -56,8 +56,8 @@ const OrderCard = ({ order }) => {
             {order.name}
           </span>
           {location.pathname === routes.profile.orders && (
-            <span className={`${styles.text}text text_type_main-default`}>
-              {order.status === "done" ? "Создан" : "Готовится"}
+            <span className={`${styles.text}text text_type_main-default ${order.status === "done" ? "text_color_success" : ""}`}>
+              {order.status === "done" ? "Выполнен" : "Готовится"}
             </span>
           )}
         </div>
