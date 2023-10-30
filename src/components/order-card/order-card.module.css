@@ -1,0 +1,95 @@
+.card {
+  width: 100%;
+  max-width: 844px;
+  padding: calc(var(--offset-base-size) * 6);
+  border-radius: var(--common-border-radius-s);
+  box-sizing: border-box;
+  background: #1C1C21;
+  display: block;
+}
+
+.link {
+  all: unset;
+  text-decoration: none;
+  transition: opacity .3s;
+  display: flex;
+  flex-direction: column;
+  row-gap: calc(var(--offset-base-size) * 6);
+}
+
+.link:hover {
+  opacity: .6;
+}
+
+.wrapperColumnDirection {
+  display: flex;
+  flex-direction: column;
+  row-gap: calc(var(--offset-base-size) * 2);
+}
+
+.wrapperRowDirection {
+  display: flex;
+  column-gap: calc(var(--offset-base-size) * 6);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text {
+  display: block;
+  text-align: left;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 64px;
+  height: 64px;
+  border: 2px solid var(--colors-interface-accent);
+  border-radius: 100px;
+  background: #131316;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 115px 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.icon:not(:first-child) {
+  margin-left: -20px;
+}
+
+.icon_with_counter {
+  z-index: 1,
+}
+
+.icon_with_counter::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background-color: #1C1C21;
+  opacity: .6;
+}
+
+.count {
+  z-index: 10;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  column-gap: calc(var(--offset-base-size) * 2);
+  flex-wrap: nowrap;
+}

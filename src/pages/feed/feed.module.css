@@ -1,12 +1,26 @@
-.container {
-  width: 600px;
+.content {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  justify-content: center;
+}
+
+.section {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  row-gap: calc(var(--offset-base-size) * 5);
+}
+
+.container {
+  width: 100%;
+  height: calc(100vh - 228px);
+  display: flex;
+  column-gap: calc(var(--offset-base-size) * 15);
 }
 
 .list {
-  width: 100%;
+  width: 600px;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -16,7 +30,7 @@
 
   display: flex;
   flex-direction: column;
-  row-gap: calc(var(--offset-base-size) * 10);
+  row-gap: calc(var(--offset-base-size) * 4);
 }
 
 .list::-webkit-scrollbar {

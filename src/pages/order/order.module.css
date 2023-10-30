@@ -7,8 +7,8 @@
 
 .section {
   min-width: 640px;
-  min-height: 575px;
-  padding-top: 120px;
+  min-height: 620px;
+  padding-top: 122px;
   box-sizing: border-box;
 
   display: flex;

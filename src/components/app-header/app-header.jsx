@@ -11,16 +11,15 @@ import NavPanel from "./components/nav-panel/nav-panel";
 import { routes } from "../../utils/constants";
 
 const AppHeader = React.memo(() => {
-  const { header, content, wrapper, link } = styles;
 
   return (
-    <header className={`${header} pt-4 pb-4`}>
-      <div className={content}>
+    <header className={`${styles.header} pt-4 pb-4`}>
+      <div className={styles.content}>
         <NavPanel>
           <li className="pt-4 pr-5 pb-4 pl-5">
             <NavLink
               to={routes.home}
-              className={link}
+              className={styles.link}
               end
             >
               {({ isActive }) => (
@@ -34,7 +33,7 @@ const AppHeader = React.memo(() => {
           <li className="pt-4 pr-5 pb-4 pl-5">
             <NavLink
               to={routes.feed}
-              className={link}
+              className={styles.link}
               end
             >
               {({ isActive }) => (
@@ -46,14 +45,14 @@ const AppHeader = React.memo(() => {
             </NavLink>
           </li>
         </NavPanel>
-        <div className={wrapper}>
+        <div className={styles.wrapper}>
           <Logo />
         </div>
         <NavPanel>
           <li className="pt-4 pr-5 pb-4 pl-5">
               <NavLink
                 to={routes.profile.index}
-                className={link}
+                className={styles.link}
               >
                 {({ isActive }) => (
                   <>

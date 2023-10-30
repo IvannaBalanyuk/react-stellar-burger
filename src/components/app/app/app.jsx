@@ -12,7 +12,11 @@ import {
   Profile,
   ProfileForm,
   Page404,
+  Feed,
+  ProfileOrders,
+  Order,
 } from "../../../pages/index";
+import OrderInfo from "../../order-info/order-info";
 import ErrorBoundary from "../../error-boundary/error-boundary";
 import AppHeader from "../../app-header/app-header";
 import Modal from "../../modal/modal";
@@ -48,7 +52,13 @@ const App = () => {
         <Routes location={background || location}>
           <Route path={routes.home} element={<Home />} />
           <Route path={routes.ingredientId} element={<Ingredient />} />
-          <Route path={routes.login} element={<OnlyUnAuth component={<Login />} />} />
+          <Route path={routes.feed} element={<Feed />}>
+            <Route path={routes.feedOrderNumber} element={<Order />} />
+          </Route>
+          <Route
+            path={routes.login}
+            element={<OnlyUnAuth component={<Login />} />}
+          />
           <Route
             path={routes.register}
             element={<OnlyUnAuth component={<Register />} />}
@@ -61,8 +71,14 @@ const App = () => {
             path={routes.resetPassword}
             element={<OnlyUnAuth component={<ResetPassword />} />}
           />
-          <Route path={routes.profile.index} element={<OnlyAuth component={<Profile />} />}>
+          <Route
+            path={routes.profile.index}
+            element={<OnlyAuth component={<Profile />} />}
+          >
             <Route index element={<ProfileForm />} />
+            <Route path={routes.profile.orders} element={<ProfileOrders />}>
+              <Route path={routes.profile.orderNumber} element={<Order />} />
+            </Route>
           </Route>
           <Route path={routes.page404} element={<Page404 />} />
         </Routes>
@@ -88,6 +104,23 @@ const App = () => {
                 />
               }
             />
+            <Route
+              path={routes.feedOrderNumber}
+              element={
+                <Modal onClose={handleModalClose}>
+                  <OrderInfo />
+                </Modal>
+              }
+            />
+            <Route
+              path={routes.profile.orderNumber}
+              element={
+                <Modal onClose={handleModalClose}>
+                  <OrderInfo />
+                </Modal>
+              }
+            />
+            <Route path="*" element={<></>} />
           </Routes>
         )}
       </ErrorBoundary>

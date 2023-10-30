@@ -1,22 +1,18 @@
-.container {
-  width: 600px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
 .list {
-  width: 100%;
-  box-sizing: border-box;
+  height: calc(100vh - 128px);
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   padding-right: calc(var(--offset-base-size) * 2);
   list-style-type: none;
-  overflow-y: auto;
+  overflow: auto;
+  overflow-x: hidden;
 
   display: flex;
   flex-direction: column;
-  row-gap: calc(var(--offset-base-size) * 10);
+  row-gap: calc(var(--offset-base-size) * 6);
+  flex-grow: 1;
+  margin-top: calc(var(--offset-base-size) * 10);
 }
 
 .list::-webkit-scrollbar {

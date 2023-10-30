@@ -25,10 +25,13 @@ const Home = () => {
         {ingredientsRequest && <Loader size="large" />}
         {ingredientsFailed && <AppError error={ingredientsRequestError} />}
         {!ingredientsFailed && (
-          <>
-            <BurgerIngredients />
-            <BurgerConstructor />
-          </>
+          <section className={`${styles.section} pt-10 pb-10 pl-5`}>
+            <h2 className="text text_type_main-large">Соберите бургер</h2>
+            <div className={styles.container}>
+              <BurgerIngredients />
+              <BurgerConstructor />
+            </div>
+          </section>
         )}
       </DndProvider>
     </main>

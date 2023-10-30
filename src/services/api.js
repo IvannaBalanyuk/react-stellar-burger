@@ -32,31 +32,32 @@ const postOrderRequest = (data) => {
     }),
     headers: {
       "Content-Type": "application/json",
+      authorization: localStorage.getItem('accessToken'),
     },
   }).then((res) => {
     return checkResult(res);
   });
 };
 
-// const postOrderWithRefreshRequest = (data) => {
-//   return postOrderRequest(data).catch((err) => {
-//     if (err === "jwt expired") {
-//       refreshTokenRequest()
-//         .then((res) => {
-//           localStorage.setItem("refreshToken", res.refreshToken);
-//           localStorage.setItem("accessToken", res.accessToken);
-//         })
-//         .then(() => {
-//           return postOrderRequest(data).catch((err) => {
-//             return Promise.reject(err);
-//           });
-//         })
-//         .catch((err) => {
-//           return Promise.reject(err);
-//         });
-//     }
-//   });
-// };
+const postOrderWithRefreshRequest = (data) => {
+  return postOrderRequest(data).catch((err) => {
+    if (err === "jwt expired") {
+      refreshTokenRequest()
+        .then((res) => {
+          localStorage.setItem("refreshToken", res.refreshToken);
+          localStorage.setItem("accessToken", res.accessToken);
+        })
+        .then(() => {
+          return postOrderRequest(data).catch((err) => {
+            return Promise.reject(err);
+          });
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    }
+  });
+};
 
 const getUserRequest = () => {
   return fetch(`${baseUrl}/auth/user`, {
@@ -201,9 +202,22 @@ const resetPasswordRequest = (data) => {
   });
 };
 
+const getOrderRequest = (data) => {
+  return fetch(`${baseUrl}/orders/${data}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      authorization: localStorage.getItem("accessToken"),
+    },
+  }).then((res) => {
+    return checkResult(res);
+  });
+};
+
 export {
   getIngredientsRequest,
   postOrderRequest,
+  postOrderWithRefreshRequest,
   getUserWithRefreshRequest,
   changeUserWithRefreshRequest,
   loginRequest,
@@ -211,4 +225,6 @@ export {
   registerRequest,
   forgotPasswordRequest,
   resetPasswordRequest,
+  refreshTokenRequest,
+  getOrderRequest,
 };
