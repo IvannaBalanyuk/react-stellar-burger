@@ -21,7 +21,7 @@ const OrderCard = ({ order }) => {
     getIngredientById(ingredients, item)
   );
 
-  const firstFiveIngredients = orderIngredients.slice(0, 4);
+  const firstFiveIngredients = orderIngredients.slice(0, 5);
 
   let sixthIngredient = null;
   if (orderIngredients.length > 5) {
@@ -79,7 +79,7 @@ const OrderCard = ({ order }) => {
               <li
                 className={`${styles.icon} ${styles.icon_with_counter}`}
                 style={{
-                  backgroundImage: `url(${orderIngredients[5].image_mobile})`,
+                  backgroundImage: `url(${sixthIngredient.image_mobile})`,
                 }}
               >
                 <p className={`${styles.count} text text_type_main-default`}>
