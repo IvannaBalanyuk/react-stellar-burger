@@ -24,8 +24,6 @@ const Feed: FC = () => {
     }
   }, []);
 
-  console.log(orders);
-
   return (
     <main className={styles.content}>
       {location.pathname === routes.feed && (

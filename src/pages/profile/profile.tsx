@@ -2,7 +2,7 @@ import { FC, MouseEventHandler } from "react";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 import styles from "./profile.module.css";
 import { useDispatch } from "../../hooks/typedHooks";
-import { loginThunk } from "../../services/actions/auth";
+import { logoutThunk} from "../../services/actions/auth";
 import { routes } from "../../utils/constants";
 
 const Profile: FC = () => {
@@ -11,7 +11,7 @@ const Profile: FC = () => {
 
   const onLogout: MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
-    dispatch(loginThunk());
+    dispatch(logoutThunk());
   }
 
   return (
