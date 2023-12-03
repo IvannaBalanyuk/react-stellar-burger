@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo } from "react";
-import { useSelector } from "react-redux";
 import styles from "./burger-ingredients.module.css";
+import { useSelector } from "../../hooks/typedHooks";
 import TabsPanel from "./components/tabs-panel/tabs-panel";
 import IngredientsCategory from "./components/ingredients-category/ingredients-category";
 import { TIngredient } from "../../utils/types";

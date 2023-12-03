@@ -1,14 +1,14 @@
 import React, { FC } from "react";
-import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import {
   FormattedDate,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./order-card.module.css";
+import { useSelector } from "../../hooks/typedHooks";
 import { getIngredientById } from "../../utils/utils";
 import { routes } from "../../utils/constants";
-import { TOrder, TBurgerIngredient } from "../../utils/types";
+import { TOrder } from "../../utils/types";
 
 type Props = {
   order: TOrder;
@@ -21,9 +21,9 @@ const OrderCard: FC<Props> = ({ order }) => {
     (store) => store.burgerIngredients.ingredients
   );
 
-  const orderIngredients = order.ingredients.map((item: TBurgerIngredient) =>
-    getIngredientById(ingredients, item._id)
-  );
+  const orderIngredients = order.ingredients.map((item: string) => {
+    return getIngredientById({ array: ingredients, id: item });
+  });
 
   const firstFiveIngredients = orderIngredients.slice(0, 5);
 
@@ -32,15 +32,12 @@ const OrderCard: FC<Props> = ({ order }) => {
     sixthIngredient = orderIngredients[5];
   }
 
-  const orderPrice = orderIngredients.reduce<number>(
-    (sum, item) => {
-      if (item) {
-        return sum + item.price;
-      }
-      return sum;
-    },
-    0
-  );
+  const orderPrice = orderIngredients.reduce<number>((sum, item) => {
+    if (item) {
+      return sum + item.price;
+    }
+    return sum;
+  }, 0);
 
   const url =
     location.pathname === routes.feed
@@ -77,29 +74,28 @@ const OrderCard: FC<Props> = ({ order }) => {
         </div>
         <div className={styles.wrapperRowDirection}>
           <ul className={styles.list}>
-            {firstFiveIngredients.map(
-              (item, index) => {
-                if (item) {
-                  return (
-                    <li
-                      className={styles.icon}
-                      key={index}
-                      style={{
-                        zIndex: `${7 - index}`,
-                        backgroundImage: `url(${item.image_mobile})`,
-                      }}
-                    ></li>
-                  );
-                };
-                return <></>;
+            {firstFiveIngredients.map((item, index) => {
+              if (item) {
+                return (
+                  <li
+                    className={styles.icon}
+                    key={index}
+                    style={{
+                      zIndex: `${7 - index}`,
+                      backgroundImage: `url(${item.image_mobile})`,
+                    }}
+                  ></li>
+                );
               }
-            )}
+              return <></>;
+            })}
             {sixthIngredient && (
               <li
                 className={`${styles.icon} ${styles.icon_with_counter}`}
                 style={{
                   backgroundImage: `url(${sixthIngredient.image_mobile})`,
                 }}
+                key={5}
               >
                 <p className={`${styles.count} text text_type_main-default`}>
                   {`+${orderIngredients.length - 5}`}

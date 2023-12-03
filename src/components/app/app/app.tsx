@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import styles from "./app.module.css";
+import { useDispatch } from "../../../hooks/typedHooks";
 import {
   Home,
   Ingredient,
@@ -22,9 +22,9 @@ import AppHeader from "../../app-header/app-header";
 import Modal from "../../modal/modal";
 import IngredientDetails from "../../burger-ingredients/components/ingredient-details/ingredient-details";
 import OrderDetails from "../../burger-constructor/components/order-details/order-details";
-import { checkUserAuth } from "../../../services/actions/auth";
+import { checkUserAuthThunk } from "../../../services/actions/auth";
 import { OnlyAuth, OnlyUnAuth } from "../../protected-route";
-import { getIngredients } from "../../../services/actions/burger-ingredients";
+import { getIngredientsThunk } from "../../../services/actions/burger-ingredients";
 import { routes } from "../../../utils/constants";
 
 const App: FC = () => {
@@ -34,11 +34,11 @@ const App: FC = () => {
   const background = location.state && location.state.background;
 
   useEffect(() => {
-    dispatch(getIngredients());
+    dispatch(getIngredientsThunk());
   }, []);
 
   useEffect(() => {
-    dispatch(checkUserAuth());
+    dispatch(checkUserAuthThunk());
   }, []);
 
   const handleModalClose = () => {

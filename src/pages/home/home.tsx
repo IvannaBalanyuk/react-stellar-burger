@@ -1,8 +1,9 @@
 import { FC } from "react";
-import { useSelector, shallowEqual } from "react-redux";
+import { shallowEqual } from "react-redux";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import styles from "./home.module.css";
+import { useSelector } from "../../hooks/typedHooks";
 import Loader from "../../components/loader/loader";
 import AppError from "../../components/app-error/app-error";
 import BurgerIngredients from "../../components/burger-ingredients/burger-ingredients";
@@ -12,10 +13,10 @@ const Home: FC = () => {
   const { ingredientsRequest, ingredientsFailed, ingredientsRequestError } =
     useSelector(
       (store) => ({
-        ingredientsRequest: store.burgerConstructor.ingredientsRequest,
-        ingredientsFailed: store.burgerConstructor.ingredientsFailed,
+        ingredientsRequest: store.burgerIngredients.ingredientsRequest,
+        ingredientsFailed: store.burgerIngredients.ingredientsFailed,
         ingredientsRequestError:
-          store.burgerConstructor.ingredientsRequestError,
+          store.burgerIngredients.ingredientsRequestError,
       }),
       shallowEqual
     );

@@ -4,7 +4,7 @@ import {
   SET_FEED_DATA,
   SET_FEED_WS_CONNECTION_STATUS,
 } from "../constants/index";
-import { TOrder } from "../../utils/types";
+import { TOrders } from "../../utils/types";
 
 export type TFeedWSConnectionStartAction = {
   readonly type: typeof FEED_WS_CONNECTION_START;
@@ -14,13 +14,11 @@ export type TFeedWSConnectionStopAction = {
 };
 export type TSetFeedDataAction = {
   readonly type: typeof SET_FEED_DATA;
-  readonly orders: TOrder[];
-  readonly total: number;
-  readonly totalToday: number;
+  readonly payload: TOrders;
 };
 export type TSetFeedWSConnectionStatusAction = {
   readonly type: typeof SET_FEED_WS_CONNECTION_STATUS;
-  readonly status: string;
+  readonly payload: string;
 };
 
 export type TFeedOrdersActions =

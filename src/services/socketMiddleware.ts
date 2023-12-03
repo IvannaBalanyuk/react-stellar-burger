@@ -1,11 +1,33 @@
+import { Middleware } from "redux";
 import { checkOrdersIngredients } from "../utils/utils";
 import { wsUrl } from "../utils/constants";
-import { USER_ORDERS_WS_CONNECTION_START } from "../services/constants/index";
+import { USER_ORDERS_WS_CONNECTION_START } from "./constants/index";
 import { refreshTokenRequest } from "./api";
+import { RootState } from "./store";
 
-export const socketMiddleware = (wsActions) => {
+interface TFeedOrders {
+  wsInit: string;
+  onStop: string;
+  onMessage: string;
+  onOpen: string;
+  onError: string;
+  onClose: string;
+}
+
+interface TUserOrders {
+  wsInit: string;
+  onStop: string;
+  onMessage: string;
+  onOpen: string;
+  onError: string;
+  onClose: string;
+}
+
+export const socketMiddleware = (
+  wsActions: TFeedOrders | TUserOrders
+): Middleware<{}, RootState> => {
   return (store) => {
-    let socket = null;
+    let socket: WebSocket | null = null;
     let isConnected = false;
     let reconnectTimer = 0;
     const { wsInit, onOpen, onError, onStop, onClose, onMessage } = wsActions;
@@ -21,16 +43,16 @@ export const socketMiddleware = (wsActions) => {
 
       if (socket) {
         socket.onopen = (event) => {
-          dispatch({ type: onOpen, status: event.type });
+          dispatch({ type: onOpen, payload: event.type });
         };
 
         socket.onerror = (event) => {
-          dispatch({ type: onError, status: event.message });
+          dispatch({ type: onError, payload: "Ошибка" });
         };
 
         socket.onclose = (event) => {
           if (isConnected) {
-            reconnectTimer = setTimeout(() => {
+            reconnectTimer = window.setTimeout(() => {
               dispatch({ type: wsInit });
             }, 3000);
           }
@@ -61,7 +83,7 @@ export const socketMiddleware = (wsActions) => {
                 dispatch({
                   type: USER_ORDERS_WS_CONNECTION_START,
                   payload: `${wsUrl.userOrders}?token=${
-                    localStorage.getItem("accessToken").split("Bearer ")[1]
+                    localStorage.getItem("accessToken")?.split("Bearer ")[1]
                   }`,
                 });
               })
@@ -73,7 +95,10 @@ export const socketMiddleware = (wsActions) => {
             ...data,
             orders: checkOrdersIngredients(data.orders),
           };
-          dispatch({ type: onMessage, payload: chekedData });
+          dispatch({
+            type: onMessage,
+            payload: chekedData,
+          });
         };
       }
 

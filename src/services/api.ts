@@ -1,4 +1,4 @@
-import { TIngredient, TUser, TOrder } from "../utils/types";
+import { TIngredient, TUser, TOrder, TInputValues } from "../utils/types";
 
 const baseUrl = "https://norma.nomoreparties.space/api";
 
@@ -30,6 +30,10 @@ type TUserWithTokenRefreshResponse = TRefreshTokenResponse & {
 
 type TChangeUserResponse = TResponse & {
   message: string;
+};
+
+type TOrderResponse = TResponse & {
+  order: TOrder;
 };
 
 type TOrdersResponse = TResponse & {
@@ -64,7 +68,7 @@ const getIngredientsRequest = () => {
 };
 
 const postOrderRequest = (idArr: string[]) => {
-  return baseRequest<TOrdersResponse>(`${baseUrl}/orders`, {
+  return baseRequest<TOrderResponse>(`${baseUrl}/orders`, {
     method: "POST",
     body: JSON.stringify({
       ingredients: idArr,
@@ -122,12 +126,8 @@ const getUserWithRefreshRequest = () => {
   });
 };
 
-const changeUserRequest = (data: {
-  name: string;
-  email: string;
-  password: string;
-}) => {
-  return baseRequest<TUserWithTokenRefreshResponse>(`${baseUrl}/auth/user`, {
+const changeUserRequest = (data: TInputValues<string>) => {
+  return baseRequest<TUserResponse>(`${baseUrl}/auth/user`, {
     method: "PATCH",
     body: JSON.stringify({
       name: data.name,
@@ -138,12 +138,9 @@ const changeUserRequest = (data: {
   });
 };
 
-const changeUserWithRefreshRequest = (data: {
-  name: string;
-  email: string;
-  password: string;
-}) => {
-  return changeUserRequest(data).catch((err) => {
+const changeUserWithRefreshRequest = (data: TInputValues<string>) => {
+  return changeUserRequest(data)
+  .catch((err: string) => {
     if (err === "jwt expired") {
       refreshTokenRequest()
         .then((res) => {
@@ -151,18 +148,19 @@ const changeUserWithRefreshRequest = (data: {
           localStorage.setItem("accessToken", res.accessToken);
         })
         .then(() => {
-          return changeUserRequest(data).catch((err) => {
+          return changeUserRequest(data).catch((err: string) => {
             return Promise.reject(err);
           });
         })
-        .catch((err) => {
+        .catch((err: string) => {
           return Promise.reject(err);
         });
     }
+    return Promise.reject(err);
   });
 };
 
-const loginRequest = (data: { email: string; password: string }) => {
+const loginRequest = (data: TInputValues<string>) => {
   return baseRequest<TUserWithTokenRefreshResponse>(`${baseUrl}/auth/login`, {
     method: "POST",
     body: JSON.stringify({
@@ -187,11 +185,7 @@ const logoutRequest = () => {
   });
 };
 
-const registerRequest = (data: {
-  name: string;
-  email: string;
-  password: string;
-}) => {
+const registerRequest = (data: TInputValues<string>) => {
   return baseRequest<TUserWithTokenRefreshResponse>(
     `${baseUrl}/auth/register`,
     {
@@ -208,7 +202,7 @@ const registerRequest = (data: {
   );
 };
 
-const forgotPasswordRequest = (data: { email: string }) => {
+const forgotPasswordRequest = (data: TInputValues<string>) => {
   return baseRequest<TChangeUserResponse>(`${baseUrl}/password-reset`, {
     method: "POST",
     body: JSON.stringify({
@@ -220,7 +214,7 @@ const forgotPasswordRequest = (data: { email: string }) => {
   });
 };
 
-const resetPasswordRequest = (data: { password: string; token: string }) => {
+const resetPasswordRequest = (data: TInputValues<string>) => {
   return baseRequest<TChangeUserResponse>(`${baseUrl}/password-reset/reset`, {
     method: "POST",
     body: JSON.stringify({
@@ -233,8 +227,8 @@ const resetPasswordRequest = (data: { password: string; token: string }) => {
   });
 };
 
-const getOrderRequest = (data: { number: string }) => {
-  return baseRequest<TOrdersResponse>(`${baseUrl}/orders/${data.number}`, {
+const getOrderRequest = (data: TInputValues<string>) => {
+  return baseRequest<TOrdersResponse>(`${baseUrl}/orders/${data}`, {
     method: "GET",
   });
 };

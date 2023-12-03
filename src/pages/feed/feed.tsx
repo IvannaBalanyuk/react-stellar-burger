@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Outlet } from "react-router-dom";
 import styles from "./feed.module.css";
+import { useDispatch, useSelector } from "../../hooks/typedHooks";
 import OrderCard from "../../components/order-card/order-card";
 import OrderStatistics from "../../components/order-statistics/order-statistics";
 import { FEED_WS_CONNECTION_START, FEED_WS_CONNECTION_STOP } from "../../services/constants/index";
@@ -16,13 +16,15 @@ const Feed: FC = () => {
   useEffect(() => {
     dispatch({
       type: FEED_WS_CONNECTION_START,
-      orders: wsUrl.feedOrders,
+      payload: wsUrl.feedOrders,
     });
 
     return () => {
       dispatch({ type: FEED_WS_CONNECTION_STOP });
     }
   }, []);
+
+  console.log(orders);
 
   return (
     <main className={styles.content}>
@@ -31,7 +33,7 @@ const Feed: FC = () => {
           <h2 className="text text_type_main-large">Лента заказов</h2>
           <div className={styles.container}>
             <ul className={`${styles.list} custom-scroll`}>
-              {orders.length > 0 &&
+              {orders && orders.length > 0 &&
                 orders.map((order: TOrder) => (
                   <OrderCard key={order._id} order={order} />
                 ))}

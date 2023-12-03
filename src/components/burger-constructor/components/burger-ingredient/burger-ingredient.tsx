@@ -1,7 +1,8 @@
 import React, { FC, useCallback } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { shallowEqual } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import styles from "./burger-ingredient.module.css";
+import { useDispatch, useSelector } from "../../../../hooks/typedHooks";
 import { getCurrentCount } from "../../../../utils/utils";
 import {
   DragIcon,
@@ -40,12 +41,12 @@ const BurgerIngredient: FC<Props> = ({ ingredient }) => {
       const currentCount = getCurrentCount(counters, ingredient._id);
 
       if (currentCount > 1) {
-        dispatch({ type: DECREASE_COUNTER, id: ingredient._id });
+        dispatch({ type: DECREASE_COUNTER, payload: ingredient._id });
       } else {
-        dispatch({ type: DELETE_COUNTER, id: ingredient._id });
+        dispatch({ type: DELETE_COUNTER, ipayloadd: ingredient._id });
       }
 
-      dispatch({ type: DELETE_FILLING, id: ingredient._id });
+      dispatch({ type: DELETE_FILLING, payload: ingredient._id });
     },
     [dispatch, ingredient, counters]
   );
@@ -67,8 +68,10 @@ const BurgerIngredient: FC<Props> = ({ ingredient }) => {
         );
         dispatch({
           type: SORT_FILLINGS,
-          dragIndex: dragIndex,
-          dropIndex: dropIndex,
+          payload: {
+            dragIndex: dragIndex,
+            dropIndex: dropIndex,
+          }
         });
       },
       drop: (item: TBurgerIngredient) => {
@@ -77,8 +80,10 @@ const BurgerIngredient: FC<Props> = ({ ingredient }) => {
         );
         dispatch({
           type: SORT_FILLINGS,
-          dragIndex: dragIndex,
-          dropIndex: dropIndex,
+          payload: {
+            dragIndex: dragIndex,
+            dropIndex: dropIndex,
+          }
         });
       },
     }),

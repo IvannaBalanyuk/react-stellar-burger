@@ -4,18 +4,18 @@ import {
   APPLY_ORDER_FAILED,
 } from "../constants/index";
 import { postOrderWithRefreshRequest } from "../api";
-
+import { AppDispatch, TAppThunk } from "../store";
 
 export type TApplyOrderRequestAction = {
   readonly type: typeof APPLY_ORDER_REQUEST;
 };
 export type TApplyOrderSuccessAction = {
   readonly type: typeof APPLY_ORDER_SUCCESS;
-  readonly number: number;
+  readonly payload: number;
 };
 export type TApplyOrderFailedAction = {
   readonly type: typeof APPLY_ORDER_FAILED;
-  readonly error: string;
+  readonly payload: string;
 };
 
 export type TOrderActions =
@@ -23,9 +23,8 @@ export type TOrderActions =
   | TApplyOrderSuccessAction
   | TApplyOrderFailedAction;
 
-
-export const applyOrder = (idArr: string[]) => {
-  return function (dispatch) {
+export const applyOrderThunk: TAppThunk = (idArr: string[]) => {
+  return function (dispatch: AppDispatch) {
     dispatch({
       type: APPLY_ORDER_REQUEST,
     });
@@ -33,14 +32,14 @@ export const applyOrder = (idArr: string[]) => {
       .then((res) => {
         dispatch({
           type: APPLY_ORDER_SUCCESS,
-          number: res.order.number,
+          payload: res.order.number,
         });
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
         dispatch({
           type: APPLY_ORDER_FAILED,
-          error: `${err}`,
+          payload: `${err}`,
         });
       });
   };

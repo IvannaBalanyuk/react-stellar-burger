@@ -4,7 +4,7 @@ import {
   SET_USER_ORDERS_DATA,
   SET_USER_ORDERS_WS_CONNECTION_STATUS,
 } from "../constants/index";
-import { TOrder } from "../../utils/types";
+import { TOrders } from "../../utils/types";
 
 export type TUserOrdersWSConnectionStartAction = {
   readonly type: typeof USER_ORDERS_WS_CONNECTION_START;
@@ -14,11 +14,11 @@ export type TUserOrdersWSConnectionStopAction = {
 };
 export type TSetUserOrdersDataAction = {
   readonly type: typeof SET_USER_ORDERS_DATA;
-  readonly orders: TOrder[];
+  readonly payload: TOrders;
 };
 export type TSetUserOrdersWSConnectionStatusAction = {
   readonly type: typeof SET_USER_ORDERS_WS_CONNECTION_STATUS;
-  readonly status: string;
+  readonly payload: string;
 };
 
 export type TUserOrdersActions =

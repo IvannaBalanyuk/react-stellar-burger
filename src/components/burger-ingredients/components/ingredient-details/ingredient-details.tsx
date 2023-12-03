@@ -1,7 +1,7 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import styles from "./ingredient-details.module.css";
+import { useSelector } from "../../../../hooks/typedHooks";
 import { TIngredient } from "../../../../utils/types";
 
 

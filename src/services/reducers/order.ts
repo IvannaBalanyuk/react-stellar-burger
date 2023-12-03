@@ -33,7 +33,7 @@ export const orderReducer = (state = orderInitialState, action: TOrderActions): 
     case APPLY_ORDER_SUCCESS: {
       return {
         ...state,
-        orderNumber: action.number,
+        orderNumber: action.payload,
         orderFailed: false,
         orderRequest: false,
       };
@@ -41,7 +41,7 @@ export const orderReducer = (state = orderInitialState, action: TOrderActions): 
     case APPLY_ORDER_FAILED: {
       return {
         ...state,
-        orderRequestError: action.error,
+        orderRequestError: action.payload,
         orderFailed: true,
         orderRequest: false,
       };

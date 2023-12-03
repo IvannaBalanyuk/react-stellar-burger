@@ -20,12 +20,12 @@ export const authReducer = (state = initialState, action: TAuthActions): TAuthSt
     case GET_USER_SUCCESS:
       return {
         ...state,
-        user: action.user,
+        user: action.payload,
       };
     case SET_AUTH_CHECKED:
       return {
         ...state,
-        isAuthChecked: action.isAuthChecked,
+        isAuthChecked: action.payload,
       };
     default:
       return state;

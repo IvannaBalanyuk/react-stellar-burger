@@ -7,15 +7,16 @@ import {
   logoutRequest,
   registerRequest,
 } from "../api";
+import { AppDispatch, TAppThunk } from "../store";
 
 export type TGetUserSuccessAction = {
   readonly type: typeof GET_USER_SUCCESS;
-  readonly user: TUser;
+  readonly payload: TUser;
 };
 
 export type TSetAuthCheckedAction = {
   readonly type: typeof SET_AUTH_CHECKED;
-  readonly isAuthChecked: boolean;
+  readonly payload: boolean;
 };
 
 export type TAuthActions = TGetUserSuccessAction | TSetAuthCheckedAction;
@@ -30,40 +31,42 @@ const setUser = (user: TUser | null) => ({
   payload: user,
 });
 
-export const getUser = () => {
-  return (dispatch) => {
+export const getUserThunk: TAppThunk = () => {
+  return (dispatch: AppDispatch | TAppThunk) => {
     return getUserWithRefreshRequest().then((res) => {
       dispatch(setUser(res.user));
     });
   };
 };
 
-export const checkUserAuth = () => {
-  return (dispatch) => {
+export const checkUserAuthThunk: TAppThunk = () => {
+  return (dispatch: AppDispatch | TAppThunk) => {
     if (localStorage.getItem("accessToken")) {
-      dispatch(getUser())
-        .catch(() => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch(setUser(null));
-        })
-        .finally(() => dispatch(setAuthChecked(true)));
+      try {
+        dispatch(getUserThunk());
+      } catch (error) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        dispatch(setUser(null));
+      } finally {
+        dispatch(setAuthChecked(true));
+      }
     } else {
       dispatch(setAuthChecked(true));
     }
   };
 };
 
-export const changeUser = (data: TInputValues<string>) => {
-  return (dispatch) => {
+export const changeUserThunk: TAppThunk = (data: TInputValues<string>) => {
+  return (dispatch: AppDispatch | TAppThunk) => {
     return changeUserWithRefreshRequest(data).then((res) => {
       dispatch(setUser(res.user));
     });
   };
 };
 
-export const login = (data: TInputValues<string>) => {
-  return (dispatch) => {
+export const loginThunk: TAppThunk = (data: TInputValues<string>) => {
+  return (dispatch: AppDispatch | TAppThunk) => {
     return loginRequest(data).then((res) => {
       localStorage.setItem("accessToken", res.accessToken);
       localStorage.setItem("refreshToken", res.refreshToken);
@@ -73,8 +76,8 @@ export const login = (data: TInputValues<string>) => {
   };
 };
 
-export const logout = () => {
-  return (dispatch) => {
+export const logoutThunk: TAppThunk = () => {
+  return (dispatch: AppDispatch | TAppThunk) => {
     return logoutRequest().then(() => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
@@ -83,8 +86,8 @@ export const logout = () => {
   };
 };
 
-export const register = (data: TInputValues<string>) => {
-  return (dispatch) => {
+export const registerThunk: TAppThunk = (data: TInputValues<string>) => {
+  return (dispatch: AppDispatch | TAppThunk) => {
     return registerRequest(data).then((res) => {
       localStorage.setItem("accessToken", res.accessToken);
       localStorage.setItem("refreshToken", res.refreshToken);

@@ -23,12 +23,12 @@ export const userOrdersWsReducer = (state = userOrdersInitialState, action: TUse
       return {
         ...state,
         socketConnected: true,
-        orders: action.orders,
+        orders: action.payload.orders,
       };
     case SET_USER_ORDERS_WS_CONNECTION_STATUS:
       return {
         ...state,
-        connectionStatus: action.status,
+        connectionStatus: action.payload,
       };
     default:
       return state;

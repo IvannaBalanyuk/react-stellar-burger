@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styles from "./order-info.module.css";
+import { useSelector } from "../../hooks/typedHooks";
 import {
   FormattedDate,
   CurrencyIcon,
@@ -25,14 +25,14 @@ const OrderInfo: FC = () => {
     data: null,
     error: false,
   });
-  const { number } = useParams();
+  const { number } = useParams<string>();
 
   let orderIngredients;
   let orderPrice;
 
   if (order.data !== null && !isEmptyObj(order.data)) {
-    orderIngredients = order.data.ingredients.map((item) =>
-      getIngredientById(ingredients, item._id)
+    orderIngredients = order.data.ingredients.map((item: string) =>
+      getIngredientById({array: ingredients, id: item})
     );
     orderPrice = orderIngredients.reduce((acc, item) => {
       return acc + item.price;
@@ -40,9 +40,11 @@ const OrderInfo: FC = () => {
   }
 
   useEffect(() => {
-    getOrderRequest(number).then((res) => {
-      setOrder({ ...order, data: res.orders[0] });
-    });
+    if (number) {
+      getOrderRequest({number: number}).then((res) => {
+        setOrder({ ...order, data: res.orders[0] });
+      });
+    }
   }, []);
 
   const getDate = () => {

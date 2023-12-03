@@ -1,4 +1,4 @@
-import { TIngredient, TOrder, TCounters } from "./types";
+import { TIngredient, TOrder, TOrders, TCounters } from "./types";
 
 export const getCurrentCount = (
   counters: TCounters,
@@ -14,11 +14,11 @@ export const getCurrentCount = (
   }
 };
 
-export const getIngredientById = (
-  array: TIngredient[],
-  id: string
-) => {
-  return array.find((item) => item._id === id) as TIngredient;
+export const getIngredientById = (data: {
+  array: TIngredient[];
+  id: string;
+}) => {
+  return data.array.find((item) => item._id === data.id) as TIngredient;
 };
 
 export const getTotalCountOfIngredient = (
@@ -39,7 +39,7 @@ export const getTotalCountOfIngredient = (
   return count;
 };
 
-const checkArray = (array: TIngredient[]): boolean => {
+const checkArray = (array: string[]): boolean => {
   let result = true;
   array.forEach((element) => {
     if (!element) {

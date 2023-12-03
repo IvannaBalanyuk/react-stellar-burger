@@ -10,34 +10,38 @@ import {
 } from "../constants/index";
 import { getIngredientsRequest } from "../api";
 import { TIngredient } from "../../utils/types";
+import { AppDispatch, TAppThunk } from "../store";
+
 
 export type TGetIngredientsRequestAction = {
   readonly type: typeof GET_INGREDIENTS_REQUEST;
 };
 export type TGetIngredientsSuccessAction = {
   readonly type: typeof GET_INGREDIENTS_SUCCESS;
-  readonly ingredients: TIngredient[];
+  readonly payload: TIngredient[];
 };
 export type TGetIngredientsFailedAction = {
   readonly type: typeof GET_INGREDIENTS_FAILED;
-  readonly error: string;
+  readonly payload: string;
 };
 export type TSetCounterAction = {
   readonly type: typeof SET_COUNTER;
-  readonly id: string;
-  readonly name: string;
+  readonly payload: {
+    readonly id: string;
+    readonly name: string;
+  }
 };
 export type TIncreaseCounterAction = {
   readonly type: typeof INCREASE_COUNTER;
-  readonly id: string;
+  readonly payload: string;
 };
 export type TDecreaseCounterAction = {
   readonly type: typeof DECREASE_COUNTER;
-  readonly id: string;
+  readonly payload: string;
 };
 export type TDeleteCounterAction = {
   readonly type: typeof DELETE_COUNTER;
-  readonly id: string;
+  readonly payload: string;
 };
 
 export type TBurgerIngredientsActions =
@@ -49,8 +53,8 @@ export type TBurgerIngredientsActions =
   | TDecreaseCounterAction
   | TDeleteCounterAction;
 
-export const getIngredients = () => {
-  return function (dispatch) {
+export const getIngredientsThunk: TAppThunk = () => {
+  return function (dispatch: AppDispatch) {
     dispatch({
       type: GET_INGREDIENTS_REQUEST,
     });
@@ -61,17 +65,19 @@ export const getIngredients = () => {
         );
         dispatch({
           type: GET_INGREDIENTS_SUCCESS,
-          ingredients: res.data,
+          payload: res.data,
         });
         if (initialBun) {
           dispatch({
             type: SET_BUN,
-            bun: initialBun,
+            payload: initialBun,
           });
           dispatch({
             type: SET_COUNTER,
-            id: initialBun._id,
-            name: initialBun.name,
+            payload: {
+              id: initialBun._id,
+              name: initialBun.name,
+            }
           });
         }
       })
@@ -79,7 +85,7 @@ export const getIngredients = () => {
         console.log(`Ошибка: ${err}`);
         dispatch({
           type: GET_INGREDIENTS_FAILED,
-          error: `${err}`,
+          payload: `${err}`,
         });
       });
   };

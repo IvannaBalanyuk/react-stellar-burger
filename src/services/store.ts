@@ -1,6 +1,6 @@
-import { combineReducers } from "redux";
+import { Action, ActionCreator, combineReducers } from "redux";
 import { compose, createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
+import thunk, { ThunkAction } from "redux-thunk";
 import { burgerIngredientsReducer } from "./reducers/burger-ingredients";
 import { burgerConstructorReducer } from "./reducers/burger-constructor";
 import { orderReducer } from "./reducers/order";
@@ -18,26 +18,30 @@ import {
   SET_USER_ORDERS_DATA,
   SET_USER_ORDERS_WS_CONNECTION_STATUS,
 } from "./constants/index";
+import { TAuthActions } from "./actions/auth";
+import { TBurgerConstructorActions } from "./actions/burger-constructor";
+import { TBurgerIngredientsActions } from "./actions/burger-ingredients";
+import { TFeedOrdersActions } from "./actions/feed-orders";
+import { TOrderActions } from "./actions/order";
+import { TUserOrdersActions } from "./actions/user-orders";
 
-
-const wsActions = {
-  feedOrders: {
+const wsActionsFeedOrders = {
     wsInit: FEED_WS_CONNECTION_START,
     onStop: FEED_WS_CONNECTION_STOP,
     onMessage: SET_FEED_DATA,
     onOpen: SET_FEED_WS_CONNECTION_STATUS,
     onError: SET_FEED_WS_CONNECTION_STATUS,
     onClose: SET_FEED_WS_CONNECTION_STATUS,
-  },
-  userOrders: {
+  };
+
+const wsActionsUserOrders = {
     wsInit: USER_ORDERS_WS_CONNECTION_START,
     onStop: USER_ORDERS_WS_CONNECTION_STOP,
     onMessage: SET_USER_ORDERS_DATA,
     onOpen: SET_USER_ORDERS_WS_CONNECTION_STATUS,
     onError: SET_USER_ORDERS_WS_CONNECTION_STATUS,
     onClose: SET_USER_ORDERS_WS_CONNECTION_STATUS,
-  },
-};
+  };
 
 const rootReducer = combineReducers({
   burgerIngredients: burgerIngredientsReducer,
@@ -49,16 +53,33 @@ const rootReducer = combineReducers({
 });
 
 const composeEnhancers =
-  typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+  typeof window === "object" &&
+  (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
     : compose;
 
 const enhancer = composeEnhancers(
   applyMiddleware(
     thunk,
-    socketMiddleware(wsActions.feedOrders),
-    socketMiddleware(wsActions.userOrders)
+    socketMiddleware(wsActionsFeedOrders),
+    socketMiddleware(wsActionsUserOrders)
   )
 );
 
 export const store = createStore(rootReducer, enhancer);
+
+export type RootState = ReturnType<typeof rootReducer>;
+
+export type TAppActions =
+  | TAuthActions
+  | TBurgerConstructorActions
+  | TBurgerIngredientsActions
+  | TFeedOrdersActions
+  | TOrderActions
+  | TUserOrdersActions;
+
+export type TAppThunk<TReturn = void> = ActionCreator<
+  ThunkAction<TReturn, Action, RootState, TAppActions>
+>;
+
+export type AppDispatch = typeof store.dispatch;

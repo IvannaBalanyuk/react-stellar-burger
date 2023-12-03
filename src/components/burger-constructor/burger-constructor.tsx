@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { shallowEqual } from "react-redux";
 import { useDrop } from "react-dnd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -9,6 +9,7 @@ import {
   ConstructorElement,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useDispatch, useSelector } from "../../hooks/typedHooks";
 import { getCurrentCount } from "../../utils/utils";
 import BurgerIngredient from "./components/burger-ingredient/burger-ingredient";
 import {
@@ -18,7 +19,7 @@ import {
   SET_BUN,
   ADD_FILLING,
 } from "../../services/constants/index";
-import { applyOrder } from "../../services/actions/order";
+import { applyOrderThunk } from "../../services/actions/order";
 import { routes } from "../../utils/constants";
 import { TIngredient, TBurgerIngredient } from "../../utils/types";
 
@@ -39,8 +40,8 @@ const BurgerConstructor: FC = React.memo(() => {
   const counters = useSelector((store) => store.burgerIngredients.counters);
 
   const totalPrice = useMemo(() => {
-    if (fillings.length > 0) {
-      const fillingsTotalPrice = fillings.reduce((acc: number, item: TIngredient) => {
+    if (fillings.length > 0 && bun) {
+      const fillingsTotalPrice = fillings.reduce((acc: number, item: TBurgerIngredient) => {
         return acc + item.price;
       }, 0);
       return fillingsTotalPrice + bun.price;
@@ -52,15 +53,15 @@ const BurgerConstructor: FC = React.memo(() => {
   }, [fillings, bun]);
 
   const handleOpenModal = () => {
-    const idArr = [...fillings, bun].map((item) => item._id);
+    const idArr = [...fillings, bun].map((item) => item && item._id);
     if (idArr.length >= 1) {
       navigate(routes.order, { state: { background: location } });
-      dispatch(applyOrder(idArr));
+      dispatch(applyOrderThunk(idArr));
     }
   };
 
   const onDropHandler = (ingredient: TIngredient) => {
-    if (bun._id === ingredient._id) return;
+    if (bun && bun._id === ingredient._id) return;
 
     const currentCount = getCurrentCount(counters, ingredient._id);
     const newBurgerIngredient = {
@@ -68,28 +69,32 @@ const BurgerConstructor: FC = React.memo(() => {
       index: `${uuidv4()}`,
     };
 
-    if (newBurgerIngredient.type === "bun") {
-      dispatch({ type: DELETE_COUNTER, id: bun._id });
+    if (newBurgerIngredient.type === "bun" && bun) {
+      dispatch({ type: DELETE_COUNTER, payload: bun._id });
       dispatch({
         type: SET_COUNTER,
-        id: newBurgerIngredient._id,
-        name: newBurgerIngredient.name,
+        payload: {
+          id: newBurgerIngredient._id,
+          name: newBurgerIngredient.name,
+        }
       });
-      dispatch({ type: SET_BUN, bun: newBurgerIngredient });
+      dispatch({ type: SET_BUN, payload: newBurgerIngredient });
       return;
     }
 
     if (currentCount === 0) {
       dispatch({
         type: SET_COUNTER,
-        id: newBurgerIngredient._id,
-        name: newBurgerIngredient.name,
+        payload: {
+          id: newBurgerIngredient._id,
+          name: newBurgerIngredient.name,
+        }
       });
     } else {
-      dispatch({ type: INCREASE_COUNTER, id: newBurgerIngredient._id });
+      dispatch({ type: INCREASE_COUNTER, payload: newBurgerIngredient._id });
     }
 
-    dispatch({ type: ADD_FILLING, filling: newBurgerIngredient });
+    dispatch({ type: ADD_FILLING, payload: newBurgerIngredient });
   };
 
   const [, dropTarget] = useDrop({

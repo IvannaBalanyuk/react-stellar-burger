@@ -1,5 +1,4 @@
 import { FC, FormEvent } from "react";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   Input,
@@ -8,8 +7,9 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./register.module.css";
+import { useDispatch } from "../../hooks/typedHooks";
 import useForm from "../../hooks/useForm";
-import { register } from "../../services/actions/auth";
+import { registerThunk } from "../../services/actions/auth";
 import { routes } from "../../utils/constants";
 
 const Register: FC = () => {
@@ -22,7 +22,7 @@ const Register: FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(register({ ...values }));
+    dispatch(registerThunk({ ...values }));
   };
 
   return (

@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Outlet } from "react-router-dom";
 import styles from "./profile-orders.module.css";
+import { useSelector, useDispatch } from "../../hooks/typedHooks";
 import OrderCard from "../../components/order-card/order-card";
 import {
   USER_ORDERS_WS_CONNECTION_START,

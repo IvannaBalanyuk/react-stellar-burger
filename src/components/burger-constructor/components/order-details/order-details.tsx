@@ -1,5 +1,6 @@
-import { useSelector, shallowEqual } from "react-redux";
+import { shallowEqual } from "react-redux";
 import styles from "./order-details.module.css";
+import { useSelector } from "../../../../hooks/typedHooks";
 import doneImage from "../../../../images/order-accpeted-popup-done.png";
 import Loader from '../../../loader/loader';
 import AppError from "../../../app-error/app-error";

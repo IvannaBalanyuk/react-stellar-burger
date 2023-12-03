@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "../hooks/typedHooks";
 import { routes } from "../utils/constants";
 
 type OnlyAuthProps = {

@@ -4,12 +4,12 @@ import {
   DELETE_FILLING,
   SORT_FILLINGS,
 } from '../constants/index';
-import { TBurgerIngredient } from "../../utils/types";
+import { TBurgerIngredient, TIngredient } from "../../utils/types";
 import { TBurgerConstructorActions } from "../actions/burger-constructor";
 
 type TBurgerConstructorState = {
   fillings: TBurgerIngredient[];
-  bun: TBurgerIngredient | null;
+  bun: TBurgerIngredient | TIngredient | null;
 };
 
 const burgerConstructorInitialState: TBurgerConstructorState = {
@@ -22,27 +22,27 @@ export const burgerConstructorReducer = (state = burgerConstructorInitialState, 
     case SET_BUN: {
       return {
         ...state,
-        bun: action.bun,
+        bun: action.payload,
       };
     }
     case ADD_FILLING: {
       return {
         ...state,
-        fillings: [...state.fillings, action.filling],
+        fillings: [...state.fillings, action.payload],
       };
     }
     case DELETE_FILLING: {
       return {
         ...state,
-        fillings: [...state.fillings].filter((item) => item._id !== action.id),
+        fillings: [...state.fillings].filter((item) => item._id !== action.payload),
       };
     }
     case SORT_FILLINGS: {
       const fillings = [...state.fillings];
       fillings.splice(
-        action.dropIndex,
+        action.payload.dropIndex,
         0,
-        fillings.splice(action.dragIndex, 1)[0] 
+        fillings.splice(action.payload.dragIndex, 1)[0] 
       )
       return {
         ...state,

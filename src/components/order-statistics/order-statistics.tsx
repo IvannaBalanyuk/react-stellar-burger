@@ -1,6 +1,7 @@
 import { FC } from "react";
-import { useSelector, shallowEqual } from "react-redux";
+import { shallowEqual } from "react-redux";
 import styles from "./order-statistics.module.css";
+import { useSelector } from "../../hooks/typedHooks";
 import { TOrder } from "../../utils/types";
 
 const OrderStatistics: FC = () => {
@@ -19,7 +20,7 @@ const OrderStatistics: FC = () => {
         <div className={styles.status}>
           <p className="text text_type_main-medium pb-6">Готовы:</p>
           <ul className={`${styles.list} custom-scroll`}>
-            {orders.map((order: TOrder) => {
+            {orders && orders.map((order: TOrder) => {
               if (order.status === "done") {
                 return (
                   <li
@@ -37,7 +38,7 @@ const OrderStatistics: FC = () => {
         <div className={styles.status}>
           <p className="text text_type_main-medium pb-6">В работе:</p>
           <div className={styles.numbers}>
-            {orders.map((order: TOrder) => {
+            {orders && orders.map((order: TOrder) => {
               if (order.status !== "done") {
                 return (
                   <p className="text text_type_digits-default" key={order._id}>

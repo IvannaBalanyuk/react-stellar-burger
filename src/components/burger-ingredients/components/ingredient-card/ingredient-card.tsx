@@ -1,8 +1,8 @@
 import React, { FC, useMemo } from "react";
-import { useSelector } from "react-redux";
 import { useDrag } from "react-dnd";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./ingredient-card.module.css";
+import { useSelector } from "../../../../hooks/typedHooks";
 import {
   Counter,
   CurrencyIcon,

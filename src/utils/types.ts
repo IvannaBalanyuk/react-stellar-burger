@@ -19,7 +19,7 @@ export type TBurgerIngredient = TIngredient & {
 
 export type TOrder = {
   createdAt: string;
-  ingredients: TBurgerIngredient[];
+  ingredients: string[];
   name: string;
   number: number;
   owner: string;
@@ -27,6 +27,14 @@ export type TOrder = {
   updatedAt: string;
   __v: number;
   _id: string;
+};
+
+export type TOrders = {
+  success: boolean,
+  orders: TOrder[],
+  total: number | null,
+  totalToday: number | null,
+  socketConnectionStatus: string | null
 };
 
 export type TUser = { email: string; name: string };

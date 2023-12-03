@@ -39,7 +39,7 @@ export const burgerIngredientsReducer = (state = burgerIngredientsInitialState, 
     case GET_INGREDIENTS_SUCCESS: {
       return {
         ...state,
-        ingredients: action.ingredients,
+        ingredients: action.payload,
         ingredientsFailed: false,
         ingredientsRequest: false,
       };
@@ -47,7 +47,7 @@ export const burgerIngredientsReducer = (state = burgerIngredientsInitialState, 
     case GET_INGREDIENTS_FAILED: {
       return {
         ...state,
-        ingredientsRequestError: action.error,
+        ingredientsRequestError: action.payload,
         ingredientsFailed: true,
         ingredientsRequest: false,
       };
@@ -58,8 +58,8 @@ export const burgerIngredientsReducer = (state = burgerIngredientsInitialState, 
         counters: [
           ...state.counters,
           {
-            id: action.id,
-            name: action.name,
+            id: action.payload.id,
+            name: action.payload.name,
             count: 1,
           },
         ],
@@ -69,7 +69,7 @@ export const burgerIngredientsReducer = (state = burgerIngredientsInitialState, 
       return {
         ...state,
         counters: [...state.counters].map((item) =>
-          item.id === action.id ? { ...item, count: ++item.count } : item
+          item.id === action.payload ? { ...item, count: ++item.count } : item
         ),
       };
     }
@@ -77,14 +77,14 @@ export const burgerIngredientsReducer = (state = burgerIngredientsInitialState, 
       return {
         ...state,
         counters: [...state.counters].map((item) =>
-          item.id === action.id ? { ...item, count: --item.count } : item
+          item.id === action.payload ? { ...item, count: --item.count } : item
         ),
       };
     }
     case DELETE_COUNTER: {
       return {
         ...state,
-        counters: [...state.counters].filter((item) => item.id !== action.id),
+        counters: [...state.counters].filter((item) => item.id !== action.payload),
       };
     }
     default: {

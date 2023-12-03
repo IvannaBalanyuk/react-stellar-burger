@@ -1,5 +1,4 @@
 import { FC, FormEvent } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   EmailInput,
@@ -7,8 +6,9 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./login.module.css";
+import { useDispatch } from "../../hooks/typedHooks";
 import useForm from "../../hooks/useForm";
-import { login } from "../../services/actions/auth";
+import { loginThunk } from "../../services/actions/auth";
 import { routes } from "../../utils/constants";
 
 const Login: FC = () => {
@@ -23,7 +23,7 @@ const Login: FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await dispatch(login({ ...values }));
+    await dispatch(loginThunk({ ...values }));
     navigate(location?.state?.from || routes.home);
   };
 

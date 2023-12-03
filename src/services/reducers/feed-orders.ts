@@ -9,8 +9,8 @@ type TFeedOrdersState = {
   socketConnected: boolean;
   error: string | null;
   orders: TOrder[];
-  total: number;
-  totalToday: number;
+  total: number | null;
+  totalToday: number | null;
   connectionStatus?: string | null;
 };
 
@@ -32,14 +32,14 @@ export const feedOrdersWsReducer = (
       return {
         ...state,
         socketConnected: true,
-        orders: action.orders,
-        total: action.total,
-        totalToday: action.totalToday,
+        orders: action.payload.orders,
+        total: action.payload.total,
+        totalToday: action.payload.totalToday,
       };
     case SET_FEED_WS_CONNECTION_STATUS:
       return {
         ...state,
-        connectionStatus: action.status,
+        connectionStatus: action.payload,
       };
     default:
       return state;

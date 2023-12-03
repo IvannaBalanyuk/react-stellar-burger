@@ -1,5 +1,4 @@
 import { useState, useRef, FC, FormEvent } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import styles from "./profile-form.module.css";
 import {
   Input,
@@ -7,16 +6,17 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useSelector, useDispatch } from "../../hooks/typedHooks";
 import useForm from "../../hooks/useForm";
-import { changeUser } from "../../services/actions/auth";
+import { changeUserThunk } from "../../services/actions/auth";
 
 const ProfileForm: FC = () => {
   const [isChanged, setIsChanged] = useState<boolean>(false);
   const dispatch = useDispatch();
   const user = useSelector((store) => store.auth.user);
 
-  const currentName = user.name;
-  const currentEmail = user.email;
+  const currentName = (user && user.name) as string;
+  const currentEmail = (user && user.email) as string;
   const currentPassword = "";
 
   const { values, handleChange, setValues } = useForm({
@@ -48,7 +48,7 @@ const ProfileForm: FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsChanged(false);
-    await dispatch(changeUser({ ...values }));
+    await dispatch(changeUserThunk({ ...values }));
     setValues({
       ...values,
       password: currentPassword,
