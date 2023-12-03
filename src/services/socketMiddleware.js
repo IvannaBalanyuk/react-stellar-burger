@@ -1,6 +1,6 @@
 import { checkOrdersIngredients } from "../utils/utils";
 import { wsUrl } from "../utils/constants";
-import { USER_ORDERS_WS_CONNECTION_START } from "../services/actions/user-orders";
+import { USER_ORDERS_WS_CONNECTION_START } from "../services/constants/index";
 import { refreshTokenRequest } from "./api";
 
 export const socketMiddleware = (wsActions) => {
@@ -21,11 +21,11 @@ export const socketMiddleware = (wsActions) => {
 
       if (socket) {
         socket.onopen = (event) => {
-          dispatch({ type: onOpen, payload: event.type });
+          dispatch({ type: onOpen, status: event.type });
         };
 
         socket.onerror = (event) => {
-          dispatch({ type: onError, payload: event.message });
+          dispatch({ type: onError, status: event.message });
         };
 
         socket.onclose = (event) => {

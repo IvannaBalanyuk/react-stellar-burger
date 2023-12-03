@@ -13,13 +13,11 @@ import {
   FEED_WS_CONNECTION_STOP,
   SET_FEED_DATA,
   SET_FEED_WS_CONNECTION_STATUS,
-} from "./actions/feed-orders";
-import {
   USER_ORDERS_WS_CONNECTION_START,
   USER_ORDERS_WS_CONNECTION_STOP,
   SET_USER_ORDERS_DATA,
   SET_USER_ORDERS_WS_CONNECTION_STATUS,
-} from "./actions/user-orders";
+} from "./constants/index";
 
 
 const wsActions = {
